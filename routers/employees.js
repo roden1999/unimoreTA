@@ -31,7 +31,7 @@ router.post("/", async (request, response) => {
 	});
 	try {
 		const employee = await newEmployee.save();
-		response.status(200).json({ employee: employee.employeeNo + " " + employee.firstName });
+		response.status(200).json({ employee: employee.employeeNo + " - " + employee.firstName });
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
@@ -47,7 +47,7 @@ router.put("/:id", async (request, response) => {
 			updates,
 			options
 		);
-		response.status(200).json(updatedEmployee);
+		response.status(200).json({ employee: updatedEmployee.employeeNo + " - " + updatedEmployee.firstName + " " + updatedEmployee.middleName + " " + updatedEmployee.lastName});
 	} catch (error) {
 		response.status(500).json({ error: "Error" });
 	}
@@ -108,6 +108,18 @@ router.post("/list", async (request, response) => {
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
+});
+
+// list total employee
+router.get("/total-employees", async (request, response) => {
+    try {
+        // const data = await timeLogsModel.find().sort('employeeName');
+        const data = await employeeModel.find();
+
+        response.status(200).json(data.length);
+    } catch (error) {
+        response.status(500).json({ error: error.message });
+    }
 });
 
 //For search options

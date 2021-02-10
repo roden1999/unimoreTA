@@ -5,13 +5,13 @@ const departmentSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	timeStart: {
+	timePerDay: {
 		type: String,
 		required: true,
     },
-	timeEnd: {
-        type: String,
-        required: true,
-    },
+	dayNightShift: {
+		type: Boolean,
+		required: true,
+	}
 });
 module.exports = mongoose.model("department", departmentSchema);

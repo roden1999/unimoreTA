@@ -15,6 +15,6 @@ const timeLogsSchema = new mongoose.Schema({
 	dateTime: {
         type: Date,
         required: true,
-    },
+	},
 });
 module.exports = mongoose.model("timeLogs", timeLogsSchema);

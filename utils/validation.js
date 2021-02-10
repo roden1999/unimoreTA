@@ -8,12 +8,14 @@ const departmentValidation = (data) => {
 		department: Joi.string().required().messages({
 			"string.empty": `Department is required`,
 		}),
-		timeStart: Joi.string().required().messages({
-			"string.empty": `Time Start is required`,
-		}),
-		timeEnd: Joi.string().required().messages({
-			"string.empty": `Time End is required`,
-		}),
+		// timeStart: Joi.string().required().messages({
+		// 	"string.empty": `Time Start is required`,
+		// }),
+		// timeEnd: Joi.string().required().messages({
+		// 	"string.empty": `Time End is required`,
+		// }),
+		timeStart: Joi.string().allow(''),
+		timeEnd: Joi.string().allow(''),
 	});
 	return schema.validate(data, { abortEarly: false });
 };

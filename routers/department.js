@@ -18,11 +18,24 @@ router.post("/", async (request, response) => {
 	if (deptExist)
 		return response.status(400).json({ message: "Department already exist." });
 
+	var timePerDay = [
+		{ "day": "Monday", "timeStart": "8:00", "timeEnd": "6:00" },
+		{ "day": "Tuesday", "timeStart": "8:00", "timeEnd": "6:00" },
+		{ "day": "Wednesday", "timeStart": "8:00", "timeEnd": "6:00" },
+		{ "day": "Thursday", "timeStart": "8:00", "timeEnd": "6:00" },
+		{ "day": "Friday", "timeStart": "8:00", "timeEnd": "6:00" },
+		{ "day": "Saturday", "timeStart": "8:00", "timeEnd": "6:00" }
+	];
+
+	var convert2string = JSON.stringify(timePerDay);
+
 	//Create new user
 	const newDept = new departmentModel({
-        department: request.body.department,
-		timeStart: request.body.timeStart,
-		timeEnd: request.body.timeEnd,
+		department: request.body.department,
+		timePerDay: convert2string,
+		dayNightShift: request.body.dayNightShift
+		// timeStart: request.body.timeStart,
+		// timeEnd: request.body.timeEnd,
 	});
 	try {
 		const department = await newDept.save();
