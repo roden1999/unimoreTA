@@ -7,7 +7,6 @@ const timeLogsSchema = new mongoose.Schema({
 	},
 	employeeName: {
 		type: String,
-		required: true,
     },
     timeInOut: {
         type: String,

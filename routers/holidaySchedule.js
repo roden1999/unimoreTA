@@ -1,52 +1,32 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const verify = require("../utils/verifyToken");
-const departmentModel = require("../models/department");
+const holidaySchedModel = require("../models/holidaySchedule");
 const fs = require('fs');
-const { departmentValidation } = require("../utils/validation");
+const { holidaySchedValidation } = require("../utils/validation");
 
-//Insert new department to the database
+//Insert new hs to the database
 router.post("/", async (request, response) => {
 	//Validate before creating
-	const { error } = departmentValidation(request.body);
+	const { error } = holidaySchedValidation(request.body);
 	if (error) return response.status(400).send(error.details[0].message);
 
-	//Check if department exist
-	const deptExist = await departmentModel.findOne({
+	//Check if hs exist
+	const hsExist = await holidaySchedModel.findOne({
 		department: request.body.department,
 	});
-	if (deptExist)
+	if (hsExist)
 		return response.status(400).json({ message: "Department already exist." });
 
-	var timePerDay = request.body.timePerDay;
-	for (const i in timePerDay) {
-		var tS = timePerDay[i].timeStart;
-		var tE = timePerDay[i].timeEnd;
-        if (tS === "") return response.status(400).json("Time Start must have value.");
-
-        if (tE === "") return response.status(400).json("Time End must have value.");
-	}
-
-	/* var timePerDay = [
-		{ "day": "Monday", "timeStart": "8:00", "timeEnd": "6:00" },
-		{ "day": "Tuesday", "timeStart": "8:00", "timeEnd": "6:00" },
-		{ "day": "Wednesday", "timeStart": "8:00", "timeEnd": "6:00" },
-		{ "day": "Thursday", "timeStart": "8:00", "timeEnd": "6:00" },
-		{ "day": "Friday", "timeStart": "8:00", "timeEnd": "6:00" },
-		{ "day": "Saturday", "timeStart": "8:00", "timeEnd": "6:00" }
-	]; */
-
-	var convert2string = JSON.stringify(request.body.timePerDay);
-
-	//Create new user
-	const newDept = new departmentModel({
-		department: request.body.department,
-		timePerDay: convert2string,
-		dayNightShift: request.body.dayNightShift
+	//Create new hs
+	const newHs = new departmentModel({
+		date: request.body.date,
+		title: request.body.title,
+		remarks: request.body.remarks
 	});
 	try {
-		const department = await newDept.save();
-		response.status(200).json({ department: department.department });
+		const holidaySchedule = await newHs.save();
+		response.status(200).json({ hs: holidaySchedule.date });
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
@@ -68,9 +48,10 @@ router.put("/:id", async (request, response) => {
 	}
 });
 
-//List of Department
+//List of HS
 router.post("/list", async (request, response) => {
 	try {
+        // var date = request.body.date ?  
 		if (Object.keys(request.body).length > 0) {
 			var id = [];
 			var data = request.body;
@@ -80,22 +61,12 @@ router.post("/list", async (request, response) => {
 			}
 			const dept = await departmentModel.find({
 				'$or': id,
-			}).sort('department');
+			}).sort('date');
 			response.status(200).json(dept);
 		} else {
 			const dept = await departmentModel.find().sort('department');
 			response.status(200).json(dept);
 		}
-	} catch (error) {
-		response.status(500).json({ error: error.message });
-	}
-});
-
-//For search options
-router.get("/options", async (request, response) => {
-	try {
-		const dept = await departmentModel.find().sort('department');
-		response.status(200).json(dept);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}

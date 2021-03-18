@@ -1,12 +1,15 @@
 version: '3'
 services: 
   app: 
-    container_name: unimore-trading-ta
+    container_name: unimore-trading-time-and-attendance-payroll
     restart: always
     build: .
     ports: 
       - '8080:5000'
-    links: 
+    # links: 
+    networks: 
+      - mern-app
+    depends_on: 
       - mongo
   mongo: 
     container_name: mongo
@@ -14,3 +17,12 @@ services:
     image: mongo
     ports: 
       - '27017:27017'
+    networks: 
+      - mern-app
+    volumes:
+      - mongo-data:/data/db
+networks: 
+  mern-app: 
+    driver: bridge
+volumes: 
+  mongo-data:

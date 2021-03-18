@@ -7,5 +7,7 @@ module.exports = function () {
 		useUnifiedTopology: true,
 		useCreateIndex: true,
 		useFindAndModify: false,
-	}).catch(err => console.log(err));
+	})
+	.then(() => console.log('MongoDB Connected'))
+	.catch(err => console.log(err));
 };

@@ -25,6 +25,18 @@ app.use(express.static("client/build"));
 const employeesRouter = require("./routers/employees");
 app.use("/employees", employeesRouter);
 
+//Route to salary
+const salaryRouter = require("./routers/salary");
+app.use("/salary", salaryRouter);
+
+//Route to payroll
+const payrollRouter = require("./routers/payroll");
+app.use("/payroll", payrollRouter);
+
+//Route to holiday sched
+const hsRouter = require("./routers/holidaySchedule");
+app.use("/holiday-schedule", hsRouter);
+
 //Route to department
 const departmentRouter = require("./routers/department");
 app.use("/department", departmentRouter);
