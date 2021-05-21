@@ -56,15 +56,16 @@ router.put("/:id", async (request, response) => {
 //List of Users
 router.post("/list", async (request, response) => {
 	try {
-		if (Object.keys(request.body).length > 0) {
+		if (Object.keys(request.body.selectedEmployee).length > 0) {
 			var id = [];
-			var data = request.body;
+			var data = request.body.selectedEmployee;
 			for (const i in data) {
 				// console.log(`_id: ${request.body[i].value}`);
-				id.push({ _id: request.body[i].value });
+				id.push({ _id: request.body.selectedEmployee[i].value });
 			}
 			const employees = await employeeModel.find({
 				'$or': id,
+				IsDeleted: false
 			}).sort('firstName');
 
 			var data = [];
@@ -76,6 +77,7 @@ router.post("/list", async (request, response) => {
 					"firstName": employees[i].firstName,
 					"middleName": employees[i].middleName,
 					"lastName": employees[i].lastName,
+					"deptId": dept._id,
 					"department": dept.department,
 					"contactNo": employees[i].contactNo,
 					"gender": employees[i].gender,
@@ -85,7 +87,7 @@ router.post("/list", async (request, response) => {
 			}
 			response.status(200).json(data);
 		} else {
-			const employees = await employeeModel.find().sort('firstName');
+			const employees = await employeeModel.find({ IsDeleted: false }).sort('firstName');
 			var data = [];
 			for (const i in employees) {
 				const dept = await departmentModel.findById(employees[i].department);
@@ -95,6 +97,7 @@ router.post("/list", async (request, response) => {
 					"firstName": employees[i].firstName,
 					"middleName": employees[i].middleName,
 					"lastName": employees[i].lastName,
+					"deptId": dept._id,
 					"department": dept.department,
 					"contactNo": employees[i].contactNo,
 					"gender": employees[i].gender,
@@ -114,7 +117,7 @@ router.post("/list", async (request, response) => {
 router.get("/total-employees", async (request, response) => {
     try {
         // const data = await timeLogsModel.find().sort('employeeName');
-        const data = await employeeModel.find();
+        const data = await employeeModel.find({ IsDeleted: false });
 
         response.status(200).json(data.length);
     } catch (error) {
@@ -125,7 +128,7 @@ router.get("/total-employees", async (request, response) => {
 //For search options
 router.get("/options", async (request, response) => {
 	try {
-		const employees = await employeeModel.find().sort('firstName');
+		const employees = await employeeModel.find({ IsDeleted: false }).sort('firstName');
 		response.status(200).json(employees);
 	} catch (error) {
 		response.status(500).json({ error: error.message });

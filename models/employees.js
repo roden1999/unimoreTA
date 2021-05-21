@@ -27,6 +27,11 @@ const employeesSchema = new mongoose.Schema({
     },
     address: {
         type: String,
+    },
+    IsDeleted: {
+		type: Boolean,
+        required: true,
+        default: false
     }
 });
 module.exports = mongoose.model("employees", employeesSchema);

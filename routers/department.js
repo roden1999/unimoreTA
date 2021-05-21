@@ -71,12 +71,12 @@ router.put("/:id", async (request, response) => {
 //List of Department
 router.post("/list", async (request, response) => {
 	try {
-		if (Object.keys(request.body).length > 0) {
+		if (Object.keys(request.body.selectedDepartment).length > 0) {
 			var id = [];
-			var data = request.body;
+			var data = request.body.selectedDepartment;
 			for (const i in data) {
 				// console.log(`_id: ${request.body[i].value}`);
-				id.push({_id: request.body[i].value});				
+				id.push({_id: request.body.selectedDepartment[i].value});				
 			}
 			const dept = await departmentModel.find({
 				'$or': id,

@@ -17,26 +17,27 @@ router.post("/import", async (request, response) => {
             var id = [];
             var data = request.body.data;
             for (const i in data) {
-                if (!data[i].EnNo && !data[i].DaiGong) response.status(400).json({ error: "The file you are trying to import can't be read. Are you sure this is the correct file?" });
+                if (!data[i].EnNo && !data[i].DaiGong) response.status(400).json({ error: `The file you are trying to import can't be read. Are you sure this is the correct file?` });
 
                 const employees = await employeeModel.findOne({ employeeNo: data[i].EnNo });
 
-                var utc_days = Math.floor(data[i].DaiGong - 25569);
-                var utc_value = utc_days * 86400;
-                var date_info = new Date(utc_value * 1000);
+                // var utc_days = Math.floor(data[i].DaiGong - 25569);
+                // var utc_value = utc_days * 86400;
+                // var date_info = new Date(utc_value * 1000);
 
-                var fractional_day = data[i].DaiGong - Math.floor(data[i].DaiGong) + 0.0000001;
+                // var fractional_day = data[i].DaiGong - Math.floor(data[i].DaiGong) + 0.0000001;
 
-                var total_seconds = Math.floor(86400 * fractional_day);
+                // var total_seconds = Math.floor(86400 * fractional_day);
 
-                var seconds = total_seconds % 60;
+                // var seconds = total_seconds % 60;
 
-                total_seconds -= seconds;
+                // total_seconds -= seconds;
 
-                var hours = Math.floor(total_seconds / (60 * 60));
-                var minutes = Math.floor(total_seconds / 60) % 60;
+                // var hours = Math.floor(total_seconds / (60 * 60));
+                // var minutes = Math.floor(total_seconds / 60) % 60;
 
-                const dateTime = new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+                // const dateTime = new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+                const dateTime = moment(data[i].DaiGong);
 
                 console.log(moment(dateTime).format("MM-DD-yyyy h:mm A"));
 
@@ -50,7 +51,7 @@ router.post("/import", async (request, response) => {
                 });
                 const logs = await timelogs.save();
             }
-            response.status(200).json('Success');
+            response.status(200).json({ logs: "Logs successfully imported." });
         }
 
         if (Object.keys(request.body.data).length === 0) response.status(400).json({ error: 'Please select file before importing!' });
@@ -73,7 +74,7 @@ router.post("/raw-list", async (request, response) => {
             }
             const logs = await timeLogsModel.find({
                 '$or': empNo,
-            }).skip((page - 1) * perPage).limit(perPage).sort({ dateTime: -1 });
+            }).skip((page) * perPage).limit(perPage).sort({ dateTime: -1 });
 
             var data = [];
             for (const i in logs) {
@@ -90,7 +91,7 @@ router.post("/raw-list", async (request, response) => {
             // response.status(200).json(data.splice((page - 1) * perPage, page * perPage));
             response.status(200).json(data);
         } else {
-            const logs = await timeLogsModel.find().skip((page - 1) * perPage).limit(perPage).sort({ dateTime: -1 });
+            const logs = await timeLogsModel.find().skip((page) * perPage).limit(perPage).sort({ dateTime: -1 });
             var data = [];
             for (const i in logs) {
                 const emp = await employeeModel.findOne({ employeeNo: logs[i].employeeNo });
@@ -158,7 +159,7 @@ router.post("/detailed-list", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).skip((page - 1) * perPage).limit(perPage).sort("firstName");
+            }).skip((page) * perPage).limit(perPage).sort("firstName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -193,11 +194,13 @@ router.post("/detailed-list", async (request, response) => {
                     var timeIn = "";
                     var timeOut = "";
 
+                    var dt = dateTime;
+
                     if (Object.keys(dtr).length > 0) {
                         timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     } else {
-                        var dt = dateTime;
+                        // var dt = dateTime;
                         if (dep.dayNightShift === false) {
                             var date = new Date();
                             date.setDate(theDate.getDate() + 1);
@@ -238,7 +241,7 @@ router.post("/detailed-list", async (request, response) => {
                     var remarks = "";
 
                     var late = 0;
-                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime()) {
+                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
                         var date1 = new Date(convertedDTI).getTime();
 
                         var date2 = new Date(convertedTI).getTime();
@@ -250,7 +253,7 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     var ut = 0;
-                    if (new Date(convertedTO).getTime() < new Date(convertedDTO).getTime()) {
+                    if (new Date(convertedTO).getTime() < new Date(convertedDTO).getTime() && day !== "Sunday") {
                         var date1 = new Date(convertedTO).getTime();
                         var date2 = new Date(convertedDTO).getTime();
 
@@ -262,11 +265,11 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     var ot = 0;
-                    if (moment(timeOut, "h:mm").hours() > moment(depOut).hours())
+                    if (moment(timeOut, "h:mm").hours() > moment(depOut).hours() && day !== "Sunday")
                         ot = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment(depOut, "h:mm").hours();
 
                     var hoursWork = 0;
-                    if (timeIn && timeOut) {
+                    if (timeIn && timeOut && day !== "Sunday") {
                         var date1 = depIn > timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = new Date(convertedDTO).getTime();
 
@@ -278,8 +281,18 @@ router.post("/detailed-list", async (request, response) => {
                         hoursWork = mins / 60;
                     }
 
+                    if (timeIn && timeOut && day === "Sunday") {
+                        var date1 = new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        hoursWork = mins / 60;
+                    }
+
                     remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
-                    if (remarks === "Overtime") {
+                    if (remarks === "Overtime" && day !== "Sunday") {
                         if (timeIn && timeOut) {
                             var date1 = new Date(convertedTI).getTime();
                             var date2 = new Date(convertedTO).getTime();
@@ -299,28 +312,28 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime()) {
+                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && day !== "Sunday") {
                         ot = 0;
                         remarks = "OT For Approval";
                     }
 
-                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60)) {
+                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
                     }
 
-                    if (!timeIn && !timeOut) remarks = "Absent";
+                    if (!timeIn && !timeOut && day !== "Sunday") remarks = "Absent";
 
-                    if (!timeIn && timeOut) {
+                    if (!timeIn && timeOut && day !== "Sunday") {
                         remarks = "Halfday";
                         hoursWork = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment("1:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
                     }
 
-                    if (timeIn && !timeOut) {
+                    if (timeIn && !timeOut && day !== "Sunday") {
                         remarks = "Halfday";
                         hoursWork = moment(timeIn, "h:mm").hours() + (moment(timeIn, "h:mm").minutes() / 60) - moment("12:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
                     }
 
-                    if (day === "Sunday") {
+                    if (day === "Sunday" && Object.keys(dtr).length === 0) {
                         timeIn = "";
                         timeOut = "";
                         hoursWork = 0;
@@ -375,7 +388,8 @@ router.post("/detailed-list", async (request, response) => {
             var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
-            const emp = await employeeModel.find().skip((page - 1) * perPage).limit(perPage).sort("firstName");
+            //(page -1)
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("firstName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -410,11 +424,13 @@ router.post("/detailed-list", async (request, response) => {
                     var timeIn = "";
                     var timeOut = "";
 
+                    var dt = dateTime;
+
                     if (Object.keys(dtr).length > 0) {
                         timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     } else {
-                        var dt = dateTime;
+                        // var dt = dateTime;
                         if (dep.dayNightShift === false) {
                             var date = new Date();
                             date.setDate(theDate.getDate() + 1);
@@ -455,7 +471,7 @@ router.post("/detailed-list", async (request, response) => {
                     var remarks = "";
 
                     var late = 0;
-                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime()) {
+                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
                         var date1 = new Date(convertedDTI).getTime();
 
                         var date2 = new Date(convertedTI).getTime();
@@ -467,7 +483,7 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     var ut = 0;
-                    if (new Date(convertedTO).getTime() < new Date(convertedDTO).getTime() && timeOut !== "") {
+                    if (new Date(convertedTO).getTime() < new Date(convertedDTO).getTime() && timeOut !== "" && day !== "Sunday") {
                         var date1 = new Date(convertedTO).getTime();
                         var date2 = new Date(convertedDTO).getTime();
 
@@ -483,7 +499,7 @@ router.post("/detailed-list", async (request, response) => {
                         ot = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment(depOut, "h:mm").hours();
 
                     var hoursWork = 0;
-                    if (timeIn && timeOut) {
+                    if (timeIn && timeOut && day !== "Sunday") {
                         var date1 = depIn > timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = new Date(convertedDTO).getTime();
 
@@ -495,8 +511,18 @@ router.post("/detailed-list", async (request, response) => {
                         hoursWork = mins / 60;
                     }
 
+                    if (timeIn && timeOut && day === "Sunday") {
+                        var date1 = new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        hoursWork = mins / 60;
+                    }
+
                     remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
-                    if (remarks === "Overtime") {
+                    if (remarks === "Overtime" && day !== "Sunday") {
                         if (timeIn && timeOut) {
                             var date1 = new Date(convertedTI).getTime();
                             var date2 = new Date(convertedTO).getTime();
@@ -516,28 +542,28 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime()) {
+                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && day !== "Sunday") {
                         ot = 0;
                         remarks = "OT For Approval";
                     }
 
-                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60)) {
+                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
                     }
 
                     if (!timeIn && !timeOut) remarks = "Absent";
 
-                    if (!timeIn && timeOut) {
+                    if (!timeIn && timeOut && day !== "Sunday") {
                         remarks = "Halfday";
                         hoursWork = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment("1:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
                     }
 
-                    if (timeIn && !timeOut) {
+                    if (timeIn && !timeOut && day !== "Sunday") {
                         remarks = "Halfday";
                         hoursWork = moment(timeIn, "h:mm").hours() + (moment(timeIn, "h:mm").minutes() / 60) - moment("12:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
                     }
 
-                    if (day === "Sunday") {
+                    if (day === "Sunday" && Object.keys(dtr).length === 0) {
                         timeIn = "";
                         timeOut = "";
                         hoursWork = 0;
@@ -632,8 +658,8 @@ router.post("/dtr-correction", async (request, response) => {
                     var reason = "";
 
                     if (Object.keys(dtr).length > 0) {
-                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm").format("h:mm") : "";
-                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm").format("h:mm") : "";
+                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                         remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : "";
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
                     } else {
@@ -649,27 +675,25 @@ router.post("/dtr-correction", async (request, response) => {
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
-                        timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("h:mm") : "";
-                        timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("h:mm") : "";
+                        timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("hh:mm A") : "";
+                        timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("hh:mm A") : "";
                         remarks = "";
                         reason = "";
-                    }
 
-                    if (day === "Sunday") {
-                        timeIn = "";
-                        timeOut = "";
-                        remarks = "Rest Day";
+                        if (day === "Sunday") {
+                            remarks = "Rest Day";
+                        }
                     }
-
 
                     var logs = {
+                        "empId": emp[i]._id,
                         "empNo": emp[i].employeeNo,
                         "empName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
                         "department": emp[i].department,
                         "day": day,
                         "date": dateTime,
-                        "timeIn": timeIn !== "" ? moment(timeIn, "h:mm").format("h:mm") : "",
-                        "timeOut": timeOut !== "" ? moment(timeOut, "h:mm").format("h:mm") : "",
+                        "timeIn": timeIn !== "" ? moment(timeIn, "h:mm A").format("h:mm A") : "",
+                        "timeOut": timeOut !== "" ? moment(timeOut, "h:mm A").format("h:mm A") : "",
                         "remarks": remarks,
                         "reason": reason
                     }
@@ -718,8 +742,8 @@ router.post("/dtr-correction", async (request, response) => {
                     var reason = "";
 
                     if (Object.keys(dtr).length > 0) {
-                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm").format("h:mm") : "";
-                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm").format("h:mm") : "";
+                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "hh:mm A").format("hh:mm A") : "";
+                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "hh:mm A").format("hh:mm A") : "";
                         remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : "";
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
                     } else {
@@ -735,27 +759,25 @@ router.post("/dtr-correction", async (request, response) => {
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
-                        timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("h:mm") : "";
-                        timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("h:mm") : "";
+                        timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("hh:mm A") : "";
+                        timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("hh:mm A") : "";
                         remarks = "";
                         reason = "";
-                    }
 
-                    if (day === "Sunday") {
-                        timeIn = "";
-                        timeOut = "";
-                        remarks = "Rest Day";
+                        if (day === "Sunday") {
+                            remarks = "Rest Day";
+                        }
                     }
-
 
                     var logs = {
+                        "empId": emp[i]._id,
                         "empNo": emp[i].employeeNo,
                         "empName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
                         "department": emp[i].department,
                         "day": day,
                         "date": dateTime,
-                        "timeIn": timeIn !== "" ? moment(timeIn, "h:mm").format("h:mm") : "",
-                        "timeOut": timeOut !== "" ? moment(timeOut, "h:mm").format("h:mm") : "",
+                        "timeIn": timeIn !== "" ? moment(timeIn, "h:mm A").format("h:mm A") : "",
+                        "timeOut": timeOut !== "" ? moment(timeOut, "h:mm A").format("h:mm A") : "",
                         "remarks": remarks,
                         "reason": reason
                     }
@@ -833,7 +855,7 @@ router.post("/approved-dtr-correction", async (request, response) => {
 
             const dtrc = await dtrCorrection.save();
 
-            response.status(200).json({ dtrc: dtrc.employeeName + " Time Correction successfully filed." });
+            response.status(200).json({ dtrc: dtrc.employeeName + " Record successfully filed." });
         } else {
             response.status(400).json({ error: errors });
         }
