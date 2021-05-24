@@ -12,6 +12,11 @@ const departmentSchema = new mongoose.Schema({
 	dayNightShift: {
 		type: Boolean,
 		required: true,
+	},
+	IsDeleted: {
+		type: Boolean,
+		required: true,
+		default: false
 	}
 });
 module.exports = mongoose.model("department", departmentSchema);

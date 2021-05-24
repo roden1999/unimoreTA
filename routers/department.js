@@ -22,9 +22,9 @@ router.post("/", async (request, response) => {
 	for (const i in timePerDay) {
 		var tS = timePerDay[i].timeStart;
 		var tE = timePerDay[i].timeEnd;
-        if (tS === "") return response.status(400).json("Time Start must have value.");
+		if (tS === "") return response.status(400).json("Time Start must have value.");
 
-        if (tE === "") return response.status(400).json("Time End must have value.");
+		if (tE === "") return response.status(400).json("Time End must have value.");
 	}
 
 	/* var timePerDay = [
@@ -76,14 +76,15 @@ router.post("/list", async (request, response) => {
 			var data = request.body.selectedDepartment;
 			for (const i in data) {
 				// console.log(`_id: ${request.body[i].value}`);
-				id.push({_id: request.body.selectedDepartment[i].value});				
+				id.push({ _id: request.body.selectedDepartment[i].value });
 			}
 			const dept = await departmentModel.find({
 				'$or': id,
+				IsDeleted: false
 			}).sort('department');
 			response.status(200).json(dept);
 		} else {
-			const dept = await departmentModel.find().sort('department');
+			const dept = await departmentModel.find({ IsDeleted: false }).sort('department');
 			response.status(200).json(dept);
 		}
 	} catch (error) {
@@ -94,7 +95,7 @@ router.post("/list", async (request, response) => {
 //For search options
 router.get("/options", async (request, response) => {
 	try {
-		const dept = await departmentModel.find().sort('department');
+		const dept = await departmentModel.find({ IsDeleted: false }).sort('department');
 		response.status(200).json(dept);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
@@ -105,11 +106,18 @@ router.get("/options", async (request, response) => {
 router.delete("/:id", async (request, response) => {
 	try {
 		const dept = await departmentModel.findById(request.params.id);
-		const deletedDept = await dept.delete();
+		// const deletedDept = await dept.delete();
+		const updates = { IsDeleted: true };
+		const options = { new: true };
+		const deletedDept = await departmentModel.findByIdAndUpdate(
+			dept,
+			updates,
+			options
+		);
 		response.status(200).json(deletedDept);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
 });
 
-module.exports = router;    
+module.exports = router;

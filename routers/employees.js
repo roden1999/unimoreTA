@@ -47,7 +47,7 @@ router.put("/:id", async (request, response) => {
 			updates,
 			options
 		);
-		response.status(200).json({ employee: updatedEmployee.employeeNo + " - " + updatedEmployee.firstName + " " + updatedEmployee.middleName + " " + updatedEmployee.lastName});
+		response.status(200).json({ employee: updatedEmployee.employeeNo + " - " + updatedEmployee.firstName + " " + updatedEmployee.middleName + " " + updatedEmployee.lastName });
 	} catch (error) {
 		response.status(500).json({ error: "Error" });
 	}
@@ -115,14 +115,14 @@ router.post("/list", async (request, response) => {
 
 // list total employee
 router.get("/total-employees", async (request, response) => {
-    try {
-        // const data = await timeLogsModel.find().sort('employeeName');
-        const data = await employeeModel.find({ IsDeleted: false });
+	try {
+		// const data = await timeLogsModel.find().sort('employeeName');
+		const data = await employeeModel.find({ IsDeleted: false });
 
-        response.status(200).json(data.length);
-    } catch (error) {
-        response.status(500).json({ error: error.message });
-    }
+		response.status(200).json(data.length);
+	} catch (error) {
+		response.status(500).json({ error: error.message });
+	}
 });
 
 //For search options
@@ -139,7 +139,13 @@ router.get("/options", async (request, response) => {
 router.delete("/:id", async (request, response) => {
 	try {
 		const employee = await employeeModel.findById(request.params.id);
-		const deletedEmployee = await employee.delete();
+		const updates = { IsDeleted: true };
+		const options = { new: true };
+		const deletedDept = await employeeModel.findByIdAndUpdate(
+			employee,
+			updates,
+			options
+		);
 		response.status(200).json(deletedEmployee);
 	} catch (error) {
 		response.status(500).json({ error: error.message });

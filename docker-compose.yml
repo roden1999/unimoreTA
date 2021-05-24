@@ -5,7 +5,7 @@ services:
     restart: always
     build: .
     ports: 
-      - '8080:5000'
+      - '8081:5001'
     # links: 
     networks: 
       - mern-app

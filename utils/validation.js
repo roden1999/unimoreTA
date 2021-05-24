@@ -84,10 +84,10 @@ const holidaySchedValidation = (data) => {
 		date: Joi.string().required().messages({
 			"string.empty": `Date is required.`,
 		}),
-		title: Joi.boolean().required().messages({
+		title: Joi.string().required().messages({
 			"string.empty": `Title is required.`
 		}),
-		remarks: Joi.array().required().messages({
+		type: Joi.string().required().messages({
 			"string.empty": "Remarks is required."
 		})
 	});

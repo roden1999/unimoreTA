@@ -4,6 +4,7 @@ const verify = require("../utils/verifyToken");
 const holidaySchedModel = require("../models/holidaySchedule");
 const fs = require('fs');
 const { holidaySchedValidation } = require("../utils/validation");
+const moment = require('moment');
 
 //Insert new hs to the database
 router.post("/", async (request, response) => {
@@ -11,18 +12,21 @@ router.post("/", async (request, response) => {
 	const { error } = holidaySchedValidation(request.body);
 	if (error) return response.status(400).send(error.details[0].message);
 
+	var dt = request.body.date;
+
 	//Check if hs exist
 	const hsExist = await holidaySchedModel.findOne({
-		department: request.body.department,
+		date: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
+		IsDeleted: false
 	});
 	if (hsExist)
-		return response.status(400).json({ message: "Department already exist." });
+		return response.status(400).json({ message: "Holiday already assigned on this date." });
 
 	//Create new hs
-	const newHs = new departmentModel({
+	const newHs = new holidaySchedModel({
 		date: request.body.date,
 		title: request.body.title,
-		remarks: request.body.remarks
+		type: request.body.type
 	});
 	try {
 		const holidaySchedule = await newHs.save();
@@ -34,53 +38,59 @@ router.post("/", async (request, response) => {
 
 router.put("/:id", async (request, response) => {
 	try {
-		const dept = await departmentModel.findById(request.params.id);
+		const holiday = await holidaySchedModel.findById(request.params.id);
 		const updates = request.body;
 		const options = { new: true };
-		const updatedDept = await departmentModel.findByIdAndUpdate(
-			dept,
+		const updatedHoliday = await holidaySchedModel.findByIdAndUpdate(
+			holiday,
 			updates,
 			options
 		);
-		response.status(200).json(updatedDept);
+		response.status(200).json(updatedHoliday);
 	} catch (error) {
 		response.status(500).json({ error: "Error" });
 	}
 });
 
 //List of HS
-router.post("/list", async (request, response) => {
+router.get("/list", async (request, response) => {
 	try {
-        // var date = request.body.date ?  
-		if (Object.keys(request.body).length > 0) {
-			var id = [];
-			var data = request.body;
-			for (const i in data) {
-				// console.log(`_id: ${request.body[i].value}`);
-				id.push({_id: request.body[i].value});				
+		const holiday = await holidaySchedModel.find({ IsDeleted: false }).sort('department');
+		var data = [];
+
+		for (const i in holiday) {
+			var date = moment(holiday[i].date).format("MM/DD/yyyy");
+			var holidayData = {
+				id: holiday[i]._id,
+				title: holiday[i].title,
+				type: holiday[i].type,
+				start: new Date(date),
+				end: new Date(date)
 			}
-			const dept = await departmentModel.find({
-				'$or': id,
-			}).sort('date');
-			response.status(200).json(dept);
-		} else {
-			const dept = await departmentModel.find().sort('department');
-			response.status(200).json(dept);
+
+			data.push(holidayData);
 		}
+		response.status(200).json(data);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
 });
 
-//Delete department from the database based on id
+//Delete sched from the database based on id
 router.delete("/:id", async (request, response) => {
 	try {
-		const dept = await departmentModel.findById(request.params.id);
-		const deletedDept = await dept.delete();
-		response.status(200).json(deletedDept);
+		const sched = await holidaySchedModel.findById(request.params.id);
+		const updates = { IsDeleted: true };
+        const options = { new: true };
+		const deletedSched = await holidaySchedModel.findByIdAndUpdate(
+			sched,
+			updates,
+			options
+		);
+		response.status(200).json(deletedSched);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
 });
 
-module.exports = router;    
+module.exports = router;

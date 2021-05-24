@@ -9,9 +9,14 @@ const holidayScheduleSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	remarks: {
+	type: {
 		type: String,
 		required: true,
 	},
+	IsDeleted: {
+		type: Boolean,
+		required: true,
+		default: false
+	}
 });
 module.exports = mongoose.model("holidaySchedule", holidayScheduleSchema);

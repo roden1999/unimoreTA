@@ -23,6 +23,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { Save, Edit, Delete, Add } from '@material-ui/icons/';
 import { useSpring, animated } from 'react-spring/web.cjs';
 import Select from 'react-select';
+import Portal from '@material-ui/core/Portal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { TextField } from '@material-ui/core';
@@ -357,8 +358,10 @@ const RawLogs = () => {
 
     return (
         <div className={classes.root}>
-
-            <ToastContainer />
+            <Portal>
+                <ToastContainer />
+            </Portal>
+            
             <Button
                 size="large"
                 style={{ float: 'left' }}
