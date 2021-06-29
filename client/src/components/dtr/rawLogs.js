@@ -361,7 +361,7 @@ const RawLogs = () => {
             <Portal>
                 <ToastContainer />
             </Portal>
-            
+
             <Button
                 size="large"
                 style={{ float: 'left' }}
@@ -401,7 +401,8 @@ const RawLogs = () => {
                             <TableRow>
                                 <StyledTableCell>Employee No</StyledTableCell>
                                 <StyledTableCell>Employee Name</StyledTableCell>
-                                <StyledTableCell>Time In / Time Out</StyledTableCell>
+                                <StyledTableCell>Mode</StyledTableCell>
+                                <StyledTableCell>Time</StyledTableCell>
                                 <StyledTableCell>Date</StyledTableCell>
                             </TableRow>
                         </TableHead>
@@ -416,6 +417,9 @@ const RawLogs = () => {
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         {x.timeInOut === "S" ? "Time In" : "Time Out"}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {moment(x.dateTime).format("hh:mm A")}
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         {moment(x.dateTime).format("MMM DD, yyyy")}

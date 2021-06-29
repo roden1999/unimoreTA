@@ -192,6 +192,9 @@ const DetailedLogs = () => {
             department: x.department,
             timeLogs: x.timeLogs,
             totalHoursWork: x.totalHoursWork,
+            totalRestday: x.totalRestday,
+            totalHoliday: x.totalHoliday,
+            totalSpecialHoliday: x.totalSpecialHoliday,
             totalLate: x.totalLate,
             totalUT: x.totalUT,
             totalOT: x.totalOT,
@@ -442,7 +445,7 @@ const DetailedLogs = () => {
                                         {x.department}
                                     </Typography>
 
-                                    <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100%', minHeight: '40vh', maxHeight: '40vh', overFlowY: 'auto' }}>
+                                    <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 10, height: '100%', minHeight: '40vh', maxHeight: '40vh', overFlowY: 'auto' }}>
                                         <TableContainer className={classes.tbcontainer}>
                                             <Table stickyHeader aria-label="sticky table">
                                                 <TableHead>
@@ -500,11 +503,24 @@ const DetailedLogs = () => {
                                     </div>
                                 </CardContent>
                                 <CardActions>
-                                    <Typography variant="h6" component="h2" style={{ marginRight: 57 }}>Total Hours Work: {x.totalHoursWork}</Typography>
-                                    <Typography variant="h6" component="h2" style={{ marginRight: 57 }}>Total Late: {x.totalLate}</Typography>
-                                    <Typography variant="h6" component="h2" style={{ marginRight: 57 }}>Total Undertime: {x.totalUT}</Typography>
-                                    <Typography variant="h6" component="h2" style={{ marginRight: 57 }}>Total Overtime: {x.totalOT}</Typography>
-                                    <Typography variant="h6" component="h2" style={{ marginRight: 57 }}>Total Absent: {x.totalAbsent}</Typography>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={3}>
+                                            <Typography style={{ fontSize: 18 }}><b>Total Hours Work: {x.totalHoursWork}</b></Typography>
+                                            <Typography style={{ fontSize: 18 }}><b>Total Overtime: {x.totalOT}</b></Typography>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography style={{ fontSize: 18 }}><b>Total Restday Hours Works: {x.totalRestday}</b></Typography>
+                                            <Typography style={{ fontSize: 18 }}><b>Total Late: {x.totalLate}</b></Typography>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography style={{ fontSize: 18 }}><b>Total Holiday Hours Works: {x.totalHoliday}</b></Typography>
+                                            <Typography style={{ fontSize: 18 }}><b>Total Undertime: {x.totalUT}</b></Typography>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <Typography style={{ fontSize: 18 }}><b>Total SH Hours Works: {x.totalSpecialHoliday}</b></Typography>
+                                            <Typography style={{ fontSize: 18 }}><b>Total Absent: {x.totalAbsent}</b></Typography>
+                                        </Grid>
+                                    </Grid>
                                 </CardActions>
                             </Card>
                         </Grid>

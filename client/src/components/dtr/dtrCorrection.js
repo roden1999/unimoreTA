@@ -307,8 +307,10 @@ const DtrCorrection = () => {
             { label: "Vacation Leave", value: "Vacation Leave" },
             { label: "Working Rest Day", value: "Working Rest Day" },
             { label: "Working Holiday", value: "Working Holiday" },
+            { label: "Working Special Holiday", value: "Working Special Holiday" },
             { label: "Rest Day OT", value: "Rest Day OT" },
             { label: "Holiday OT", value: "Holiday OT" },
+            { label: "SH OT", value: "SH OT" },
             { label: "Offset", value: "Offset" },
         ];
 
@@ -568,36 +570,42 @@ const DtrCorrection = () => {
 
                                 <br />
 
-                                <div>
-                                    <label style={{ fontSize: '17px' }}><strong>Time In</strong></label><br />
-                                    <KeyboardTimePicker
-                                        margin="normal"
-                                        id="time-picker"
-                                        // label="Time picker"
-                                        inputVariant="outlined"
-                                        value={timeIn}
-                                        onChange={e => setTimeIn(e)}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change time',
-                                        }}
-                                    />
-                                </div>
+                                {Object.keys(remarks).length > 0 && remarks.value !== "Overtime" &&
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>Time In</strong></label><br />
+                                        <KeyboardTimePicker
+                                            margin="normal"
+                                            id="time-picker"
+                                            // label="Time picker"
+                                            inputVariant="outlined"
+                                            value={timeIn}
+                                            onChange={e => setTimeIn(e)}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change time',
+                                            }}
+                                        />
+                                    </div>
+                                }
+
                                 <br />
 
-                                <div>
-                                    <label style={{ fontSize: '17px' }}><strong>Time Out</strong></label><br />
-                                    <KeyboardTimePicker
-                                        margin="normal"
-                                        id="time-picker"
-                                        // label="Time picker"
-                                        inputVariant="outlined"
-                                        value={timeOut}
-                                        onChange={e => setTimeOut(e)}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change time',
-                                        }}
-                                    />
-                                </div>
+                                {Object.keys(remarks).length > 0 && remarks.value !== "Overtime" &&
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>Time Out</strong></label><br />
+                                        <KeyboardTimePicker
+                                            margin="normal"
+                                            id="time-picker"
+                                            // label="Time picker"
+                                            inputVariant="outlined"
+                                            value={timeOut}
+                                            onChange={e => setTimeOut(e)}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change time',
+                                            }}
+                                        />
+                                    </div>
+                                }
+
                                 <br />
 
                                 <div>
