@@ -53,9 +53,11 @@ router.put("/:id", async (request, response) => {
 	}
 });
 
-//List of Users
+//List of Employee
 router.post("/list", async (request, response) => {
 	try {
+		var page = request.body.page !== "" ? request.body.page : 0;
+        var perPage = 20;
 		if (Object.keys(request.body.selectedEmployee).length > 0) {
 			var id = [];
 			var data = request.body.selectedEmployee;
@@ -66,7 +68,7 @@ router.post("/list", async (request, response) => {
 			const employees = await employeeModel.find({
 				'$or': id,
 				IsDeleted: false
-			}).sort('firstName');
+			}).skip((page) * perPage).limit(perPage).sort('firstName');
 
 			var data = [];
 			for (const i in employees) {
@@ -87,7 +89,7 @@ router.post("/list", async (request, response) => {
 			}
 			response.status(200).json(data);
 		} else {
-			const employees = await employeeModel.find({ IsDeleted: false }).sort('firstName');
+			const employees = await employeeModel.find({ IsDeleted: false }).skip((page) * perPage).limit(perPage).sort('firstName');
 			var data = [];
 			for (const i in employees) {
 				const dept = await departmentModel.findById(employees[i].department);

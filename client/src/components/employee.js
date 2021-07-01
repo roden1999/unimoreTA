@@ -9,6 +9,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import TablePagination from '@material-ui/core/TablePagination';
 import Input from '@material-ui/core/Input';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -120,7 +121,7 @@ const Employee = () => {
   const [deletePopup, setDeletePopup] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [totalEmp, setTotalEmp] = useState(0);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     var data = {
@@ -151,7 +152,7 @@ const Employee = () => {
       .finally(function () {
         // always executed
       });
-  }, [selectedEmployee, loader]);
+  }, [page, selectedEmployee, loader]);
 
   const employeeList = employeeData
     ? employeeData.map((x) => ({
@@ -503,6 +504,10 @@ const Employee = () => {
     setAddress("");
   }
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <div className={classes.root}>
 
@@ -539,7 +544,7 @@ const Employee = () => {
         />
       </div>
 
-      <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '75vh', maxHeight: '75vh', overFlowY: 'auto' }}>
+      <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '75vh', maxHeight: '75vh', overflowY: 'scroll' }}>
         <Grid container spacing={3}>
           {employeeList.length > 0 && employeeList.map(x =>
             <Grid item xs={3}>
@@ -554,9 +559,9 @@ const Employee = () => {
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
                       Department: {x.department} <br />
-                    Gender: {x.gender} <br />
-                    Contact No: {x.contactNo} <br />
-                    Address: {x.address}
+                      Gender: {x.gender} <br />
+                      Contact No: {x.contactNo} <br />
+                      Address: {x.address}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -573,6 +578,18 @@ const Employee = () => {
           )}
         </Grid>
       </div>
+
+      <TablePagination
+        // rowsPerPageOptions={[10, 25, 100]}
+        labelRowsPerPage=''
+        rowsPerPageOptions={[]}
+        component="div"
+        count={totalEmp}
+        rowsPerPage={20}
+        page={page}
+        onChangePage={handleChangePage}
+      // onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
 
       <Modal
         aria-labelledby="spring-modal-title"
