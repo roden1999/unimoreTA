@@ -633,7 +633,7 @@ const Department = () => {
                                             {x.department}
                                         </Typography>
                                         <Typography gutterBottom variant="p" component="h3">
-                                            <Typography component="div">
+                                            {/* <Typography component="div">
                                                 <Grid component="label" container alignItems="center" spacing={1}>
                                                     <Grid item>Night</Grid>
                                                     <Grid item>
@@ -641,7 +641,7 @@ const Department = () => {
                                                     </Grid>
                                                     <Grid item>Day</Grid>
                                                 </Grid>
-                                            </Typography>
+                                            </Typography> */}
                                         </Typography>
                                     </CardContent>
                                     <CardContent>
@@ -710,7 +710,7 @@ const Department = () => {
 
                             <br />
 
-                            <Typography gutterBottom variant="p" component="h3">
+                            {/* <Typography gutterBottom variant="p" component="h3">
                                 <Typography component="div">
                                     <Grid component="label" container alignItems="center" spacing={1}>
                                         <Grid item>Night</Grid>
@@ -720,7 +720,7 @@ const Department = () => {
                                         <Grid item>Day</Grid>
                                     </Grid>
                                 </Typography>
-                            </Typography>
+                            </Typography> */}
 
                             <br />
 
@@ -970,7 +970,7 @@ const Department = () => {
 
                             <br />
 
-                            <Typography gutterBottom variant="p" component="h3">
+                            {/* <Typography gutterBottom variant="p" component="h3">
                                 <Typography component="div">
                                     <Grid component="label" container alignItems="center" spacing={1}>
                                         <Grid item>Night</Grid>
@@ -980,7 +980,7 @@ const Department = () => {
                                         <Grid item>Day</Grid>
                                     </Grid>
                                 </Typography>
-                            </Typography>
+                            </Typography> */}
 
                             <br />
 
