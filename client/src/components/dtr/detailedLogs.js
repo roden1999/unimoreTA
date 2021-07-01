@@ -35,6 +35,12 @@ import { TextField } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone'
 import XLSX from "xlsx";
 
+//import pdfmake
+import pdfMake from 'pdfmake/build/pdfmake.js';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 const axios = require("axios");
 const moment = require("moment");
 
@@ -362,6 +368,36 @@ const DetailedLogs = () => {
         setAddModal(false);
     }
 
+    const exportToPDF = (e) => {
+        const employees = [
+            { "firstName": "John", "lastName": "Doe" },
+            { "firstName": "Anna", "lastName": "Smith" },
+            { "firstName": "Peter", "lastName": "Jones" }
+        ];
+        const document = { content: [{ text: e.employeeName, fontStyle: 15, lineHeight: 2 }] }
+
+        document.content.push({
+            columns: [
+                { text: e.department, width: 50, fontStyle: 15, },
+            ],
+            lineHeight: 2
+        });
+
+        e.timeLogs.forEach(employee => {
+            document.content.push({
+                columns: [
+                    { text: 'firstname', width: 60 },
+                    { text: ':', width: 10 },
+                    { text: employee.firstName, width: 50 },
+                    { text: 'lastName', width: 60 },
+                    { text: ':', width: 10 }, { text: employee.lastName, width: 50 }
+                ],
+                lineHeight: 2
+            });
+        });
+        pdfMake.createPdf(document).download();
+    }
+
     return (
         <div className={classes.root}>
 
@@ -444,6 +480,14 @@ const DetailedLogs = () => {
                                     <Typography color="textSecondary">
                                         {x.department}
                                     </Typography>
+
+                                    <Button
+                                        size="small"
+                                        style={{ float: 'right' }}
+                                        variant="contained"
+                                        color="default"
+                                        startIcon={<Add />}
+                                        onClick={() => exportToPDF(x)}>Export to PDF</Button>
 
                                     <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 10, height: '100%', minHeight: '40vh', maxHeight: '40vh', overFlowY: 'auto' }}>
                                         <TableContainer className={classes.tbcontainer}>

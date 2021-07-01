@@ -169,10 +169,12 @@ router.post("/detailed-list", async (request, response) => {
                 var depOut = '';
 
                 var totalHrsWork = 0;
+                var totalRestday = 0;
+                var totalHoliday = 0;
+                var totalSpecialHoliday = 0;
                 var totalLate = 0;
                 var totalUT = 0;
                 var totalOT = 0;
-                var totalAbsent = 0;
 
                 var timeLogs = [];
                 const theDate = new Date(fromDate);
