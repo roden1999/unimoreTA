@@ -26,7 +26,7 @@ import {
     KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { Save, Edit, Delete, Add } from '@material-ui/icons/';
+import { Save, Edit, Delete, Add, PictureAsPdf, Print } from '@material-ui/icons/';
 import { useSpring, animated } from 'react-spring/web.cjs';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
@@ -369,33 +369,109 @@ const DetailedLogs = () => {
     }
 
     const exportToPDF = (e) => {
-        const employees = [
-            { "firstName": "John", "lastName": "Doe" },
-            { "firstName": "Anna", "lastName": "Smith" },
-            { "firstName": "Peter", "lastName": "Jones" }
-        ];
-        const document = { content: [{ text: e.employeeName, fontStyle: 15, lineHeight: 2 }] }
-
-        document.content.push({
-            columns: [
-                { text: e.department, width: 50, fontStyle: 15, },
+        const document = {
+            content: [
+                { image: 'unimore', width: 180, height: 60 },
+                { text: e.employeeName, fontStyle: 15, bold: true, lineHeight: 1 },
+                { text: e.department, fontStyle: 15, bold: true, lineHeight: 1 },
             ],
-            lineHeight: 2
+            images: {
+                unimore: 'https://i.ibb.co/mTwt2jt/unimore-logo-back-black.png'
+            }
+        }
+        document.content.push({
+            // layout: 'lightHorizontalLines',
+            table: {
+                headerRows: 1,
+                widths: ['*', 50, '*', '*', '*', 35, 30, 30, 100],
+                body: [
+                    //Data
+                    //Header
+                    [
+                        { text: 'Day', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'Date', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'In', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'Out', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'Hours Work', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'Late', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'UT', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'OT', bold: true, fontSize: 11, alignment: "center" },
+                        { text: 'Remarks', bold: true, fontSize: 11, alignment: "center" }
+                    ],
+                ]
+            },
         });
 
-        e.timeLogs.forEach(employee => {
+        e.timeLogs.forEach(y => {
             document.content.push({
-                columns: [
-                    { text: 'firstname', width: 60 },
-                    { text: ':', width: 10 },
-                    { text: employee.firstName, width: 50 },
-                    { text: 'lastName', width: 60 },
-                    { text: ':', width: 10 }, { text: employee.lastName, width: 50 }
-                ],
-                lineHeight: 2
+                // layout: 'lightHorizontalLines',
+                table: {
+                    headerRows: 1,
+                    widths: ['*', 50, '*', '*', '*', 35, 30, 30, 100],
+                    body: [
+                        //Data
+                        [
+                            { text: y.day.toString(), fontSize: 9, alignment: "center" },
+                            { text: moment(y.dateTime).format("MM/DD/yyyy").toString(), fontSize: 9, alignment: "center" },
+                            { text: y.timeIn !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 9, alignment: "center" },
+                            { text: y.timeOut !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 9, alignment: "center" },
+                            { text: y.hoursWork.toString(), fontSize: 9, alignment: "right" },
+                            { text: y.late.toString(), fontSize: 9, alignment: "right" },
+                            { text: y.UT.toString(), fontSize: 9, alignment: "right" },
+                            { text: y.OT.toString(), fontSize: 9, alignment: "right" },
+                            { text: y.remarks.toString(), fontSize: 9, alignment: "center" }
+                        ],
+                    ],
+                    lineHeight: 2
+                },
             });
         });
-        pdfMake.createPdf(document).download();
+
+        var totalhrswrk = "Total Hours Work: " + e.totalHoursWork;
+        var totalRestdayHrsWrk = "Total Restday Hours Work: " + e.totalRestday;
+        var totalHoliday = "Total Holiday Hours Work: " + e.totalHoliday;
+        var totalSh = "Total Special Holiday Hours Work: " + e.totalSpecialHoliday;
+        var totalUT = "Total UT: " + e.totalUT;
+        var totalOT = "Total OT: " + e.totalOT;
+        var totalLate = "Total Late: " + e.totalLate;
+        var totalAbsent = "Total Absent: " + e.totalAbsent;
+
+        document.content.push([
+                { text: totalhrswrk, fontStyle: 9, bold: true, lineHeight: 1, },
+                { text: totalRestdayHrsWrk, fontStyle: 9, bold: true, lineHeight: 1, },
+                { text: totalHoliday, fontStyle: 9, bold: true, lineHeight: 1, },
+                { text: totalSh, fontStyle: 9, bold: true, lineHeight: 1, },
+                { text: totalUT, fontStyle: 9, bold: true, lineHeight: 1, },
+                { text: totalOT, fontStyle: 9, bold: true, lineHeight: 1, },
+                { text: totalLate, fontStyle: 9, bold: true, lineHeight: 1, },
+                { text: totalAbsent, fontStyle: 9, bold: true, lineHeight: 1, },
+        ]);
+
+        pdfMake.tableLayouts = {
+            exampleLayout: {
+                hLineWidth: function (i, node) {
+                    if (i === 0 || i === node.table.body.length) {
+                        return 0;
+                    }
+                    return (i === node.table.headerRows) ? 2 : 1;
+                },
+                vLineWidth: function (i) {
+                    return 0;
+                },
+                hLineColor: function (i) {
+                    return i === 1 ? 'black' : '#aaa';
+                },
+                paddingLeft: function (i) {
+                    return i === 0 ? 0 : 8;
+                },
+                paddingRight: function (i, node) {
+                    return (i === node.table.widths.length - 1) ? 0 : 8;
+                }
+            }
+        };
+
+        // pdfMake.createPdf(document).download();
+        pdfMake.createPdf(document).print({}, window.frames['printPdf']);
     }
 
     return (
@@ -471,6 +547,14 @@ const DetailedLogs = () => {
                         <Grid item xs={12}>
                             <Card>
                                 <CardContent>
+                                    <Button
+                                        size="small"
+                                        style={{ float: 'right' }}
+                                        variant="contained"
+                                        color="default"
+                                        startIcon={<Print />}
+                                        onClick={() => exportToPDF(x)}>Print Logs</Button>
+
                                     <Typography style={{ fontSize: 14 }} color="textSecondary" gutterBottom>
                                         {x.employeeNo}
                                     </Typography>
@@ -480,14 +564,6 @@ const DetailedLogs = () => {
                                     <Typography color="textSecondary">
                                         {x.department}
                                     </Typography>
-
-                                    <Button
-                                        size="small"
-                                        style={{ float: 'right' }}
-                                        variant="contained"
-                                        color="default"
-                                        startIcon={<Add />}
-                                        onClick={() => exportToPDF(x)}>Export to PDF</Button>
 
                                     <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 10, height: '100%', minHeight: '40vh', maxHeight: '40vh', overFlowY: 'auto' }}>
                                         <TableContainer className={classes.tbcontainer}>
