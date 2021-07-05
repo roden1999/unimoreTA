@@ -17,6 +17,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import Input from '@material-ui/core/Input';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -371,7 +372,7 @@ const DetailedLogs = () => {
     const exportToPDF = (e) => {
         const document = {
             content: [
-                { image: 'unimore', width: 180, height: 60 },
+                { image: 'unimore', width: 160, height: 60 },
                 { text: e.employeeName, fontStyle: 15, bold: true, lineHeight: 1 },
                 { text: e.department, fontStyle: 15, bold: true, lineHeight: 1 },
             ],
@@ -388,15 +389,15 @@ const DetailedLogs = () => {
                     //Data
                     //Header
                     [
-                        { text: 'Day', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'Date', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'In', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'Out', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'Hours Work', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'Late', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'UT', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'OT', bold: true, fontSize: 11, alignment: "center" },
-                        { text: 'Remarks', bold: true, fontSize: 11, alignment: "center" }
+                        { text: 'Day', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'Date', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'In', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'Out', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'Hours Work', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'Late', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'UT', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'OT', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'Remarks', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' }
                     ],
                 ]
             },
@@ -411,15 +412,15 @@ const DetailedLogs = () => {
                     body: [
                         //Data
                         [
-                            { text: y.day.toString(), fontSize: 9, alignment: "center" },
-                            { text: moment(y.dateTime).format("MM/DD/yyyy").toString(), fontSize: 9, alignment: "center" },
-                            { text: y.timeIn !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 9, alignment: "center" },
-                            { text: y.timeOut !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 9, alignment: "center" },
-                            { text: y.hoursWork.toString(), fontSize: 9, alignment: "right" },
-                            { text: y.late.toString(), fontSize: 9, alignment: "right" },
-                            { text: y.UT.toString(), fontSize: 9, alignment: "right" },
-                            { text: y.OT.toString(), fontSize: 9, alignment: "right" },
-                            { text: y.remarks.toString(), fontSize: 9, alignment: "center" }
+                            { text: y.day.toString(), fontSize: 7, alignment: "center", color: y.day === "Sunday" ? "red" : "black" },
+                            { text: moment(y.dateTime).format("MM/DD/yyyy").toString(), fontSize: 7, alignment: "center" },
+                            { text: y.timeIn !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 7, alignment: "center" },
+                            { text: y.timeOut !== "Invalid date" ? y.timeOut.toString() : "", fontSize: 7, alignment: "center" },
+                            { text: y.hoursWork.toString(), fontSize: 7, alignment: "right" },
+                            { text: y.late.toString(), fontSize: 7, alignment: "right" },
+                            { text: y.UT.toString(), fontSize: 7, alignment: "right" },
+                            { text: y.OT.toString(), fontSize: 7, alignment: "right" },
+                            { text: y.remarks.toString(), fontSize: 7, alignment: "center" }
                         ],
                     ],
                     lineHeight: 2
@@ -437,14 +438,14 @@ const DetailedLogs = () => {
         var totalAbsent = "Total Absent: " + e.totalAbsent;
 
         document.content.push([
-                { text: totalhrswrk, fontStyle: 9, bold: true, lineHeight: 1, },
-                { text: totalRestdayHrsWrk, fontStyle: 9, bold: true, lineHeight: 1, },
-                { text: totalHoliday, fontStyle: 9, bold: true, lineHeight: 1, },
-                { text: totalSh, fontStyle: 9, bold: true, lineHeight: 1, },
-                { text: totalUT, fontStyle: 9, bold: true, lineHeight: 1, },
-                { text: totalOT, fontStyle: 9, bold: true, lineHeight: 1, },
-                { text: totalLate, fontStyle: 9, bold: true, lineHeight: 1, },
-                { text: totalAbsent, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalhrswrk, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalRestdayHrsWrk, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalHoliday, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalSh, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalUT, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalOT, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalLate, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalAbsent, fontStyle: 9, bold: true, lineHeight: 1, },
         ]);
 
         pdfMake.tableLayouts = {
@@ -613,7 +614,147 @@ const DetailedLogs = () => {
                                                                 {y.OT}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
-                                                                {y.remarks}
+                                                                {y.remarks === "Absent" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="secondary"
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "OT For Approval" && 
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Undertime" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#FFE633' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Rest Day" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#33FEE5' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Working Rest Day" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'##00A2FF' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Rest Day OT" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'##00A2FF' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Regular Holiday" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#7BFF66' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Special Holiday" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#7BFF66' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Working Holiday" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Holiday OT" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Working Special Holiday" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "SH OT" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Overtime" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="primary"
+                                                                        // style={{ backgroundColor:'#20E700' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Late" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="primary"
+                                                                        style={{ backgroundColor:'#FFA908 ' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Late" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#FFA908 ' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Offset" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#233A46' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Sick Leave" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#FF00F3' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Vacation Leave" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor:'#FF00F3' }}
+                                                                    />
+                                                                }
                                                             </StyledTableCell>
                                                         </StyledTableRow>
                                                     </TableBody>

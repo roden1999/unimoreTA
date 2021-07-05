@@ -800,6 +800,8 @@ router.post("/detailed-list", async (request, response) => {
 //dtr correction logs
 router.post("/dtr-correction", async (request, response) => {
     try {
+        var page = request.body.page !== "" ? request.body.page : 0;
+        var perPage = 5;
         if (Object.keys(request.body.selectedDtrcLogs).length > 0) {
             var params = request.body;
             var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
@@ -812,7 +814,7 @@ router.post("/dtr-correction", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).sort("firstName");
+            }).skip((page) * perPage).limit(perPage).sort("firstName");
 
             var data = [];
             for (const i in emp) {
@@ -822,12 +824,13 @@ router.post("/dtr-correction", async (request, response) => {
                 const theDate = new Date(fromDate);
                 while (theDate <= new Date(toDate)) {
                     var dateTime = moment(theDate, "yyyy-MM-DD");
+                    var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
                     var day = moment(theDate).format("dddd");
 
                     const dtr = await dtrcModel.find({
                         employeeNo: emp[i].employeeNo,
                         date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    }).sort({ dateApproved: 1 });
+                    }).sort({ dateApproved: -1 });
 
                     var timeIn = "";
                     var timeOut = "";
@@ -835,8 +838,8 @@ router.post("/dtr-correction", async (request, response) => {
                     var reason = "";
 
                     if (Object.keys(dtr).length > 0) {
-                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
-                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "hh:mm A").format("hh:mm A") : "";
+                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "hh:mm A").format("hh:mm A") : "";
                         remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : "";
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
                     } else {
@@ -864,7 +867,6 @@ router.post("/dtr-correction", async (request, response) => {
                         } else {
                             timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
                         }
-
 
                         // timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("hh:mm A") : "";
                         // timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("hh:mm A") : "";
@@ -911,7 +913,7 @@ router.post("/dtr-correction", async (request, response) => {
             var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
-            const emp = await employeeModel.find().sort("firstName");
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("firstName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -926,7 +928,7 @@ router.post("/dtr-correction", async (request, response) => {
                     const dtr = await dtrcModel.find({
                         employeeNo: emp[i].employeeNo,
                         date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    }).sort({ dateApproved: 1 });
+                    }).sort({ dateApproved: -1 });
 
                     var timeIn = "";
                     var timeOut = "";
