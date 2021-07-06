@@ -316,7 +316,7 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn > timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = new Date(convertedDTO).getTime();
 
                         var msec = date2 - date1;
@@ -634,7 +634,7 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn > timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = new Date(convertedDTO).getTime();
 
                         var msec = date2 - date1;

@@ -680,7 +680,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                        style={{ backgroundColor:'#20E700' }}
                                                                     />
                                                                 }
 
@@ -688,7 +688,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                        style={{ backgroundColor:'#20E700' }}
                                                                     />
                                                                 }
 
@@ -696,7 +696,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                        style={{ backgroundColor:'#20E700' }}
                                                                     />
                                                                 }
 
@@ -704,7 +704,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'##20E700' }}
+                                                                        style={{ backgroundColor:'#20E700' }}
                                                                     />
                                                                 }
 
