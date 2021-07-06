@@ -328,7 +328,8 @@ router.post("/detailed-list", async (request, response) => {
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        hoursWork = mins / 60;
+                        var hw = mins / 60;
+                        hoursWork = hw > 5 ? hw - 1 : hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -355,7 +356,8 @@ router.post("/detailed-list", async (request, response) => {
                             var msecOT = date2 - date3;
                             var otMins = Math.floor(msecOT / 60000);
 
-                            hoursWork = mins / 60;
+                            var hw = mins / 60;
+                            hoursWork = hw > 5 ? hw - 1 : hw;
                             ot = otMins / 60;
 
                             remarks = "Overtime";
@@ -369,7 +371,8 @@ router.post("/detailed-list", async (request, response) => {
                             const hrswrk = Math.abs(date2 - date1);
                             const nsecOt = Math.abs(date2 - date3);
 
-                            hoursWork = hrswrk / 36e5;
+                            var hw = hrswrk / 36e5;
+                            hoursWork = hw > 5 ? hw - 1 : hw;
                             ot = nsecOt / 36e5;
 
                         }
@@ -651,7 +654,8 @@ router.post("/detailed-list", async (request, response) => {
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        hoursWork = mins / 60;
+                        var hw = mins / 60;
+                        hoursWork = hw > 5 ? hw - 1 : hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -678,7 +682,8 @@ router.post("/detailed-list", async (request, response) => {
                             var msecOT = date2 - date3;
                             var otMins = Math.floor(msecOT / 60000);
 
-                            hoursWork = mins / 60;
+                            var hw = mins / 60;
+                            hoursWork = hw > 5 ? hw - 1 : hw;
                             ot = otMins / 60;
 
                             remarks = "Overtime";
@@ -692,7 +697,9 @@ router.post("/detailed-list", async (request, response) => {
                             const hrswrk = Math.abs(date2 - date1);
                             const nsecOt = Math.abs(date2 - date3);
 
-                            hoursWork = hrswrk / 36e5;
+                            var hw = hrswrk / 36e5;
+
+                            hoursWork = hw > 5 ? hw - 1 : hw;
                             ot = nsecOt / 36e5;
 
                         }
