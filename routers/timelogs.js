@@ -206,6 +206,8 @@ router.post("/detailed-list", async (request, response) => {
                     var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
                     var nxtDayOT = [];
 
+                    var reason = "";
+
                     if (Object.keys(dtr).length > 0) {
                         const dateTimeIn = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
@@ -235,6 +237,8 @@ router.post("/detailed-list", async (request, response) => {
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                             timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                         }
+
+                        reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -445,7 +449,8 @@ router.post("/detailed-list", async (request, response) => {
                         "late": late.toFixed(2),
                         "UT": ut.toFixed(2),
                         "OT": ot.toFixed(2),
-                        "remarks": remarks
+                        "remarks": remarks,
+                        "reason": reason
                     }
 
                     timeLogs.push(logs);
@@ -524,6 +529,8 @@ router.post("/detailed-list", async (request, response) => {
                     var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
                     var nxtDayOT = [];
 
+                    var reason = "";
+
                     if (Object.keys(dtr).length > 0) {
                         const dateTimeIn = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
@@ -553,6 +560,8 @@ router.post("/detailed-list", async (request, response) => {
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                             timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                         }
+
+                        reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -763,7 +772,8 @@ router.post("/detailed-list", async (request, response) => {
                         "late": late.toFixed(2),
                         "UT": ut.toFixed(2),
                         "OT": ot.toFixed(2),
-                        "remarks": remarks
+                        "remarks": remarks,
+                        "reason": reason
                     }
 
                     timeLogs.push(logs);

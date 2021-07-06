@@ -384,20 +384,22 @@ const DetailedLogs = () => {
             // layout: 'lightHorizontalLines',
             table: {
                 headerRows: 1,
-                widths: ['*', 50, '*', '*', '*', 35, 30, 30, 100],
+                widths: [37, 50, 65, 30, 30, 30, 25, 22, 22, 55, 70],
                 body: [
                     //Data
                     //Header
                     [
                         { text: 'Day', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
                         { text: 'Date', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'Schedule', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
                         { text: 'In', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
                         { text: 'Out', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
                         { text: 'Hours Work', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
                         { text: 'Late', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
                         { text: 'UT', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
                         { text: 'OT', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Remarks', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' }
+                        { text: 'Remarks', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
+                        { text: 'Reason', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' }
                     ],
                 ]
             },
@@ -408,19 +410,21 @@ const DetailedLogs = () => {
                 // layout: 'lightHorizontalLines',
                 table: {
                     headerRows: 1,
-                    widths: ['*', 50, '*', '*', '*', 35, 30, 30, 100],
+                    widths: [37, 50, 65, 30, 30, 30, 25, 22, 22, 55, 70],
                     body: [
                         //Data
                         [
                             { text: y.day.toString(), fontSize: 7, alignment: "center", color: y.day === "Sunday" ? "red" : "black" },
                             { text: moment(y.dateTime).format("MM/DD/yyyy").toString(), fontSize: 7, alignment: "center" },
+                            { text: y.timeStartEnd.toString(), fontSize: 7, alignment: "center" },
                             { text: y.timeIn !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 7, alignment: "center" },
                             { text: y.timeOut !== "Invalid date" ? y.timeOut.toString() : "", fontSize: 7, alignment: "center" },
                             { text: y.hoursWork.toString(), fontSize: 7, alignment: "right" },
                             { text: y.late.toString(), fontSize: 7, alignment: "right" },
                             { text: y.UT.toString(), fontSize: 7, alignment: "right" },
                             { text: y.OT.toString(), fontSize: 7, alignment: "right" },
-                            { text: y.remarks.toString(), fontSize: 7, alignment: "center" }
+                            { text: y.remarks !== "OT For Approval" ? y.remarks.toString() : "", fontSize: 7, alignment: "center" },
+                            { text: y.reason.toString(), fontSize: 7, alignment: "left" }
                         ],
                     ],
                     lineHeight: 2
@@ -438,14 +442,14 @@ const DetailedLogs = () => {
         var totalAbsent = "Total Absent: " + e.totalAbsent;
 
         document.content.push([
-            { text: totalhrswrk, fontStyle: 9, bold: true, lineHeight: 1, },
-            { text: totalRestdayHrsWrk, fontStyle: 9, bold: true, lineHeight: 1, },
-            { text: totalHoliday, fontStyle: 9, bold: true, lineHeight: 1, },
-            { text: totalSh, fontStyle: 9, bold: true, lineHeight: 1, },
-            { text: totalUT, fontStyle: 9, bold: true, lineHeight: 1, },
-            { text: totalOT, fontStyle: 9, bold: true, lineHeight: 1, },
-            { text: totalLate, fontStyle: 9, bold: true, lineHeight: 1, },
-            { text: totalAbsent, fontStyle: 9, bold: true, lineHeight: 1, },
+            { text: totalhrswrk, fontSize: 9, bold: true, lineHeight: 1, },
+            { text: totalRestdayHrsWrk, fontSize: 9, bold: true, lineHeight: 1, },
+            { text: totalHoliday, fontSize: 9, bold: true, lineHeight: 1, },
+            { text: totalSh, fontSize: 9, bold: true, lineHeight: 1, },
+            { text: totalUT, fontSize: 9, bold: true, lineHeight: 1, },
+            { text: totalOT, fontSize: 9, bold: true, lineHeight: 1, },
+            { text: totalLate, fontSize: 9, bold: true, lineHeight: 1, },
+            { text: totalAbsent, fontSize: 9, bold: true, lineHeight: 1, },
         ]);
 
         pdfMake.tableLayouts = {
@@ -571,21 +575,28 @@ const DetailedLogs = () => {
                                             <Table stickyHeader aria-label="sticky table">
                                                 <TableHead>
                                                     <TableRow>
+                                                        <StyledTableCell>Day</StyledTableCell>
+                                                        <StyledTableCell>Date</StyledTableCell>
                                                         <StyledTableCell>Time In</StyledTableCell>
                                                         <StyledTableCell>Time Out</StyledTableCell>
                                                         <StyledTableCell>Time Start / End</StyledTableCell>
-                                                        <StyledTableCell>Date</StyledTableCell>
-                                                        <StyledTableCell>Day</StyledTableCell>
                                                         <StyledTableCell>Hours Work</StyledTableCell>
                                                         <StyledTableCell>Late</StyledTableCell>
                                                         <StyledTableCell>UT</StyledTableCell>
                                                         <StyledTableCell>OT</StyledTableCell>
                                                         <StyledTableCell>Remarks</StyledTableCell>
+                                                        <StyledTableCell>Reason</StyledTableCell>
                                                     </TableRow>
                                                 </TableHead>
                                                 {x.timeLogs.map(y =>
                                                     <TableBody>
                                                         <StyledTableRow hover role="checkbox" tabIndex={-1} key={y.id}>
+                                                            <StyledTableCell>
+                                                                {y.day}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell>
+                                                                {moment(y.dateTime).format("MMM DD, yyyy")}
+                                                            </StyledTableCell>
                                                             <StyledTableCell>
                                                                 {y.timeIn !== "Invalid date" ? y.timeIn : ""}
                                                             </StyledTableCell>
@@ -594,12 +605,6 @@ const DetailedLogs = () => {
                                                             </StyledTableCell>
                                                             <StyledTableCell>
                                                                 {y.timeStartEnd}
-                                                            </StyledTableCell>
-                                                            <StyledTableCell>
-                                                                {moment(y.dateTime).format("MMM DD, yyyy")}
-                                                            </StyledTableCell>
-                                                            <StyledTableCell>
-                                                                {y.day}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
                                                                 {y.hoursWork}
@@ -621,7 +626,7 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
-                                                                {y.remarks === "OT For Approval" && 
+                                                                {y.remarks === "OT For Approval" &&
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
@@ -632,7 +637,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#FFE633' }}
+                                                                        style={{ backgroundColor: '#FFE633' }}
                                                                     />
                                                                 }
 
@@ -640,7 +645,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#33FEE5' }}
+                                                                        style={{ backgroundColor: '#33FEE5' }}
                                                                     />
                                                                 }
 
@@ -648,7 +653,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'##00A2FF' }}
+                                                                        style={{ backgroundColor: '##00A2FF' }}
                                                                     />
                                                                 }
 
@@ -656,7 +661,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'##00A2FF' }}
+                                                                        style={{ backgroundColor: '##00A2FF' }}
                                                                     />
                                                                 }
 
@@ -664,7 +669,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#7BFF66' }}
+                                                                        style={{ backgroundColor: '#7BFF66' }}
                                                                     />
                                                                 }
 
@@ -672,7 +677,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#7BFF66' }}
+                                                                        style={{ backgroundColor: '#7BFF66' }}
                                                                     />
                                                                 }
 
@@ -680,7 +685,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#20E700' }}
+                                                                        style={{ backgroundColor: '#20E700' }}
                                                                     />
                                                                 }
 
@@ -688,7 +693,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#20E700' }}
+                                                                        style={{ backgroundColor: '#20E700' }}
                                                                     />
                                                                 }
 
@@ -696,7 +701,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#20E700' }}
+                                                                        style={{ backgroundColor: '#20E700' }}
                                                                     />
                                                                 }
 
@@ -704,7 +709,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#20E700' }}
+                                                                        style={{ backgroundColor: '#20E700' }}
                                                                     />
                                                                 }
 
@@ -712,7 +717,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="primary"
-                                                                        // style={{ backgroundColor:'#20E700' }}
+                                                                    // style={{ backgroundColor:'#20E700' }}
                                                                     />
                                                                 }
 
@@ -720,7 +725,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="primary"
-                                                                        style={{ backgroundColor:'#FFA908 ' }}
+                                                                        style={{ backgroundColor: '#FFA908 ' }}
                                                                     />
                                                                 }
 
@@ -728,7 +733,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#FFA908 ' }}
+                                                                        style={{ backgroundColor: '#FFA908 ' }}
                                                                     />
                                                                 }
 
@@ -736,7 +741,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#233A46' }}
+                                                                        style={{ backgroundColor: '#233A46' }}
                                                                     />
                                                                 }
 
@@ -744,7 +749,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#FF00F3' }}
+                                                                        style={{ backgroundColor: '#FF00F3' }}
                                                                     />
                                                                 }
 
@@ -752,9 +757,12 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor:'#FF00F3' }}
+                                                                        style={{ backgroundColor: '#FF00F3' }}
                                                                     />
                                                                 }
+                                                            </StyledTableCell>
+                                                            <StyledTableCell>
+                                                                {y.reason}
                                                             </StyledTableCell>
                                                         </StyledTableRow>
                                                     </TableBody>
