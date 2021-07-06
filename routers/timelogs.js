@@ -378,7 +378,7 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && day !== "Sunday" || remarks !== "Overtime" && Object.keys(nxtDayOT).length > 0 && day !== "Sunday") {
+                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && Object.keys(dtr).length === 0 && day !== "Sunday" || remarks !== "Overtime" && Object.keys(dtr).length === 0 && Object.keys(nxtDayOT).length > 0 && day !== "Sunday") {
                         ot = 0;
                         remarks = "OT For Approval";
                     }
@@ -426,7 +426,7 @@ router.post("/detailed-list", async (request, response) => {
                     if (Object.keys(holiday).length > 0 && Object.keys(dtr).length === 0) {
                         timeIn = "";
                         timeOut = "";
-                        hoursWork = 0;
+                        hoursWork = 8;
                         late = 0;
                         ut = 0;
                         ot = 0;
@@ -705,7 +705,7 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && day !== "Sunday" || remarks !== "Overtime" && Object.keys(nxtDayOT).length > 0 && day !== "Sunday") {
+                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && Object.keys(dtr).length === 0 && day !== "Sunday" || remarks !== "Overtime" && Object.keys(nxtDayOT).length > 0 && Object.keys(dtr).length === 0 && day !== "Sunday") {
                         ot = 0;
                         remarks = "OT For Approval";
                     }
@@ -753,7 +753,7 @@ router.post("/detailed-list", async (request, response) => {
                     if (Object.keys(holiday).length > 0 && Object.keys(dtr).length === 0) {
                         timeIn = "";
                         timeOut = "";
-                        hoursWork = 0;
+                        hoursWork = 8;
                         late = 0;
                         ut = 0;
                         ot = 0;
