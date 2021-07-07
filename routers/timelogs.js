@@ -391,7 +391,10 @@ router.post("/detailed-list", async (request, response) => {
                             var msec = date2 > date1 ? date2 - date1 : date1 - date2;
                             var mins = Math.floor(msec / 60000);
 
-                            hoursWork = mins / 60;
+                            var hw = mins / 60;
+                            hoursWork = remarks !== "Offset" ? hw + 8 : hw;
+                            
+                            ut = 0;
 
                             remarks = remarks;
                         }
@@ -445,7 +448,7 @@ router.post("/detailed-list", async (request, response) => {
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
-                        "timeStartEnd": moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A"),
+                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
                         "day": day,
                         "hoursWork": hoursWork.toFixed(2),
@@ -718,7 +721,11 @@ router.post("/detailed-list", async (request, response) => {
                             var msec = date2 > date1 ? date2 - date1 : date1 - date2;
                             var mins = Math.floor(msec / 60000);
 
-                            hoursWork = mins / 60;
+                            var hw = mins / 60;
+                            hoursWork = remarks !== "Offset" ? hw + 8 : hw;
+
+                            ut = 0;
+
 
                             remarks = remarks;
                         }
@@ -772,7 +779,7 @@ router.post("/detailed-list", async (request, response) => {
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
-                        "timeStartEnd": moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A"),
+                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
                         "day": day,
                         "hoursWork": hoursWork.toFixed(2),
