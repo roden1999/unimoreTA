@@ -400,6 +400,8 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
+                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
                     }
@@ -443,7 +445,7 @@ router.post("/detailed-list", async (request, response) => {
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
                     totalOT = totalOT + ot;
-                    totalAbsent = remarks === "Absent" ? totalAbsent + 1 : totalAbsent;
+                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
@@ -731,6 +733,8 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
+                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
                     }
@@ -774,7 +778,7 @@ router.post("/detailed-list", async (request, response) => {
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
                     totalOT = totalOT + ot;
-                    totalAbsent = remarks === "Absent" ? totalAbsent + 1 : totalAbsent;
+                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
@@ -1061,19 +1065,20 @@ router.post("/approved-dtr-correction", async (request, response) => {
         if (data.remarks === "Overtime" && moment(data.timeOut, "h:mm").hours() + (moment(data.timeOut, "h:mm").minutes() / 60) <= moment(dept.timeEnd, "h:mm").hours())
             errors.push({ error: "Can't approved OT with timeout is less than or equal to end time." });
 
-
-        if (data.remarks === "Vacation Leave" || data.remarks === "Sick Leave" || data.remarks === "Offset") {
+        if (data.remarks === "VL w/ Pay" || data.remarks === "VL w/o Pay" || data.remarks === "SL w/ Pay" || data.remarks === "SL w/o Pay" || data.remarks === "Offset") {
             for (const i in timePerDay) {
                 if (day === timePerDay[i].day) {
-                    timeIn = timePerDay[i].timeStart;
-                    timeOut = timePerDay[i].timeEnd;
+                    // timeIn = timePerDay[i].timeStart;
+                    // timeOut = timePerDay[i].timeEnd;
+                    timeIn = "";
+                    timeOut = "";
                 }
             }
         }
 
         if (Object.keys(errors).length === 0) {
 
-            const dtrCorrection = new dtrcModel({
+            const dtrCorrection = new dtrcModel({  
                 employeeNo: data.employeeNo,
                 date: date,
                 timeIn: timeIn,

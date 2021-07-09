@@ -591,7 +591,7 @@ const DetailedLogs = () => {
                                                 {x.timeLogs.map(y =>
                                                     <TableBody>
                                                         <StyledTableRow hover role="checkbox" tabIndex={-1} key={y.id}>
-                                                            <StyledTableCell>
+                                                            <StyledTableCell style={{ color: y.day === "Sunday" ? "red" : "" }}>
                                                                 {y.day}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
@@ -627,10 +627,11 @@ const DetailedLogs = () => {
                                                                 }
 
                                                                 {y.remarks === "OT For Approval" &&
-                                                                    <Chip
-                                                                        label={y.remarks}
-                                                                        color="default"
-                                                                    />
+                                                                    ""
+                                                                }
+
+                                                                {y.remarks === "" &&
+                                                                    ""
                                                                 }
 
                                                                 {y.remarks === "Undertime" &&
@@ -729,14 +730,6 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
-                                                                {y.remarks === "Late" &&
-                                                                    <Chip
-                                                                        label={y.remarks}
-                                                                        color="default"
-                                                                        style={{ backgroundColor: '#FFA908 ' }}
-                                                                    />
-                                                                }
-
                                                                 {y.remarks === "Offset" &&
                                                                     <Chip
                                                                         label={y.remarks}
@@ -745,7 +738,7 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
-                                                                {y.remarks === "Sick Leave" &&
+                                                                {y.remarks === "SL w/ Pay" &&
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
@@ -753,7 +746,23 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
-                                                                {y.remarks === "Vacation Leave" &&
+                                                                {y.remarks === "SL w/o Pay" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor: '#FF00F3' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "VL w/ Pay" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor: '#FF00F3' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "VL w/o Pay" &&
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"

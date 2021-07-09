@@ -303,14 +303,16 @@ const DtrCorrection = () => {
     function RemarksOption(item) {
         var list = [
             { label: "Overtime", value: "Overtime" },
-            { label: "Sick Leave", value: "Sick Leave" },
-            { label: "Vacation Leave", value: "Vacation Leave" },
+            { label: "Sick Leave w/ Pay", value: "SL w/ Pay" },
+            { label: "Sick Leave w/o Pay", value: "SL w/o Pay" },
+            { label: "Vacation Leave w/ Pay", value: "VL w/ Pay" },
+            { label: "Vacation Leave w/o Pay", value: "VL w/o Pay" },
             { label: "Working Rest Day", value: "Working Rest Day" },
             { label: "Working Holiday", value: "Working Holiday" },
             { label: "Working Special Holiday", value: "Working Special Holiday" },
             { label: "Rest Day OT", value: "Rest Day OT" },
             { label: "Holiday OT", value: "Holiday OT" },
-            { label: "SH OT", value: "SH OT" },
+            { label: "Special Holiday OT", value: "SH OT" },
             { label: "Offset", value: "Offset" },
         ];
 
@@ -570,7 +572,13 @@ const DtrCorrection = () => {
 
                                 <br />
 
-                                {Object.keys(remarks).length > 0 && remarks.value !== "Overtime" &&
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value !== "Overtime" &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>Time In</strong></label><br />
                                         <KeyboardTimePicker
@@ -589,7 +597,13 @@ const DtrCorrection = () => {
 
                                 <br />
 
-                                {Object.keys(remarks).length > 0 && remarks.value !== "Overtime" &&
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value !== "Overtime" &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>Time Out</strong></label><br />
                                         <KeyboardTimePicker
