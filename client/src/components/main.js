@@ -21,6 +21,7 @@ import Employee from "./employee";
 import Department from "./department";
 import TimeLogs from "./timeLogs";
 import HolidaySchedule from "./holidaySchedule";
+import SalaryAndDeduction from "./salaryAndDeductions";
 
 const drawerWidth = 240;
 
@@ -117,9 +118,9 @@ function Main(props) {
                         <ListItemIcon>{<LocalAtm />}</ListItemIcon>
                         <ListItemText primary={"Payroll"} />
                     </ListItem>
-                    <ListItem button onClick={() => handlePage("Deductions")}>
+                    <ListItem button onClick={() => handlePage("Salary & Deductions")}>
                         <ListItemIcon>{<MoneyOff />}</ListItemIcon>
-                        <ListItemText primary={"Deductions"} />
+                        <ListItemText primary={"Salary & Deductions"} />
                     </ListItem>
                 </List>
             </List>
@@ -195,6 +196,10 @@ function Main(props) {
 
                 {pageName === "Holiday Schedule" &&
                     <HolidaySchedule />
+                }
+
+                {pageName === "Salary & Deductions" &&
+                    <SalaryAndDeduction />
                 }
 
             </main>

@@ -13,27 +13,39 @@ router.post("/", async (request, response) => {
     const { error } = salaryValidation(request.body);
     if (error) return response.status(400).send(error.details[0].message);
 
-    //Check if department exist
-    const deptExist = await salaryModel.findOne({
+    //Check if employee's salary exist
+    const empSalaryExist = await salaryModel.findOne({
         employeeId: request.body.employeeId,
     });
-    if (deptExist)
-        return response.status(400).json({ message: "Employee already have a salary." });
 
-    //Create new user
-    const newSalary = new salaryModel({
-        employeeId: request.body.employeeId,
-        salary: request.body.salary,
-        sss: request.body.sss,
-        phic: request.body.phic,
-        hdmf: request.body.hdmf,
-        sssLoan: request.body.sssLoan,
-        pagibigLoan: request.body.pagibigLoan,
-        careHealthPlus: request.body.careHealthPlus
-    });
     try {
-        const salary = await newSalary.save();
-        response.status(200).json({ salary: "Salary successfully saved." });
+        if (empSalaryExist) {
+            // return response.status(400).json({ message: "Employee already have a salary." });
+            const salary = await salaryModel.find({ employeeId: request.body.employeeId });
+            const updates = request.body;
+            const options = { new: true };
+            const updatedDept = await salaryModel.findByIdAndUpdate(
+                salary,
+                updates,
+                options
+            );
+            response.status(200).json({ salary: `employee's salary successfully edited.` });
+        } else {
+
+            //Create new user
+            const newSalary = new salaryModel({
+                employeeId: request.body.employeeId,
+                salary: request.body.salary,
+                sss: request.body.sss,
+                phic: request.body.phic,
+                hdmf: request.body.hdmf,
+                sssLoan: request.body.sssLoan,
+                pagibigLoan: request.body.pagibigLoan,
+                careHealthPlus: request.body.careHealthPlus
+            });
+            const salary = await newSalary.save();
+            response.status(200).json({ salary: "Salary successfully saved." });
+        }
     } catch (error) {
         response.status(500).json({ error: error.message });
     }
@@ -60,11 +72,11 @@ router.put("/:id", async (request, response) => {
     }
 });
 
-//List of Department
+//List of Employee
 router.post("/list", async (request, response) => {
     try {
         var page = request.body.page !== "" ? request.body.page : 0;
-        var perPage = 10;
+        var perPage = 20;
         if (Object.keys(request.body.selectedEmployee).length > 0) {
             var id = [];
             var data = request.body.selectedEmployee;
@@ -73,12 +85,12 @@ router.post("/list", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).skip((page - 1) * perPage).limit(perPage).sort("firstName");
+            }).skip((page) * perPage).limit(perPage).sort("firstName");
 
             var employees = [];
             for (const i in emp) {
                 const salary = await salaryModel.findOne({
-                    employeeId: emp[i]._id,
+                    employeeId: emp[i].employeeNo,
                 });
 
                 const dept = await departmentModel.findById(emp[i].department);
@@ -99,6 +111,7 @@ router.post("/list", async (request, response) => {
                     "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
                     "department": !dept.department ? "" : dept.department,
                     // "salaryAndDeductions": [salaryAndDeduction]
+                    "salaryId": !salary ? "No Salary" : salary._id,
                     "salary": !salary ? 0 : salary.salary,
                     "sss": !salary ? 0 : salary.sss,
                     "phic": !salary ? 0 : salary.phic,
@@ -112,12 +125,12 @@ router.post("/list", async (request, response) => {
             }
             response.status(200).json(employees);
         } else {
-            const emp = await employeeModel.find().sort('firstName');
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort('firstName');
 
             var employees = [];
             for (const i in emp) {
                 const salary = await salaryModel.findOne({
-                    employeeId: emp[i]._id,
+                    employeeId: emp[i].employeeNo,
                 });
 
                 const dept = await departmentModel.findById(emp[i].department);
@@ -138,6 +151,7 @@ router.post("/list", async (request, response) => {
                     "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
                     "department": dept.department,
                     // "salaryAndDeductions": [salaryAndDeduction]
+                    "salaryId": !salary ? "No Salary" : salary._id,
                     "salary": !salary ? 0 : salary.salary,
                     "sss": !salary ? 0 : salary.sss,
                     "phic": !salary ? 0 : salary.phic,
@@ -169,12 +183,12 @@ router.get("/options", async (request, response) => {
 //Delete department from the database based on id
 router.delete("/:id", async (request, response) => {
     try {
-        const dept = await departmentModel.findById(request.params.id);
-        const deletedDept = await dept.delete();
+        const dept = await salaryModel.findById(request.params.id);
+        const deletedDept = await salaryModel.delete();
         response.status(200).json(deletedDept);
     } catch (error) {
         response.status(500).json({ error: error.message });
     }
 });
 
-module.exports = router;    
+module.exports = router;

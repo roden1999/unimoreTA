@@ -1178,7 +1178,7 @@ const Department = () => {
 
                             <br />
 
-                            <div>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                 <Button
                                     size="large"
                                     // style={{ float: 'right' }}
