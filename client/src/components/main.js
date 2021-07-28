@@ -22,6 +22,7 @@ import Department from "./department";
 import TimeLogs from "./timeLogs";
 import HolidaySchedule from "./holidaySchedule";
 import SalaryAndDeduction from "./salaryAndDeductions";
+import Payroll from "./payroll";
 
 const drawerWidth = 240;
 
@@ -200,6 +201,10 @@ function Main(props) {
 
                 {pageName === "Salary & Deductions" &&
                     <SalaryAndDeduction />
+                }
+
+                {pageName === "Payroll" &&
+                    <Payroll />
                 }
 
             </main>

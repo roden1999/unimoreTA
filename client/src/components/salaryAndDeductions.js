@@ -164,6 +164,7 @@ const SalaryAndDeduction = () => {
             // deptId: x.deptId,
             department: x.department,
             salary: x.salary,
+            salaryId: x.salaryId,
             sss: x.sss,
             phic: x.phic,
             hdmf: x.hdmf,
@@ -299,7 +300,7 @@ const SalaryAndDeduction = () => {
         setEditModal(true);
         setLoader(false);
         setId(params.id);
-        setEmployeeNo(params.employeeNo);
+        setEmployeeNo(params.id);
         setEmployeeName(params.employeeName);
         setSalary(params.salary);
         setSSS(params.sss);
@@ -335,7 +336,7 @@ const SalaryAndDeduction = () => {
             .then(function (response) {
                 // handle success
                 if (response.status <= 200) {
-                    toast.success('Employee successfully deleted.', {
+                    toast.success(`Employee's salary successfully deleted.`, {
                         position: "top-center"
                     })
                     setId(-1);
@@ -441,9 +442,11 @@ const SalaryAndDeduction = () => {
                                     <Button size="small" color="primary" onClick={() => handleOpenEditModal(x)}>
                                         Edit
                                     </Button>
-                                    <Button size="small" color="primary" onClick={() => handleOpenDeletePopup(x.id)}>
-                                        Delete
-                                    </Button>
+                                    {x.salaryId !== "No Salary" &&
+                                        <Button size="small" color="primary" onClick={() => handleOpenDeletePopup(x.salaryId)}>
+                                            Delete
+                                        </Button>
+                                    }
                                 </CardActions>
                             </Card>
                         </Grid>

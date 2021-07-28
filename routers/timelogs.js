@@ -392,7 +392,7 @@ router.post("/detailed-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = remarks !== "Offset" ? hw + 8 : hw;
+                            hoursWork = remarks !== "Offset" ? hw : hw;
                             
                             ut = 0;
 
@@ -724,7 +724,7 @@ router.post("/detailed-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = remarks !== "Offset" ? hw + 8 : hw;
+                            hoursWork = remarks !== "Offset" ? hw : hw;
 
                             ut = 0;
 

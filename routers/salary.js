@@ -90,7 +90,7 @@ router.post("/list", async (request, response) => {
             var employees = [];
             for (const i in emp) {
                 const salary = await salaryModel.findOne({
-                    employeeId: emp[i].employeeNo,
+                    employeeId: emp[i]._id,
                 });
 
                 const dept = await departmentModel.findById(emp[i].department);
@@ -130,7 +130,7 @@ router.post("/list", async (request, response) => {
             var employees = [];
             for (const i in emp) {
                 const salary = await salaryModel.findOne({
-                    employeeId: emp[i].employeeNo,
+                    employeeId: emp[i]._id,
                 });
 
                 const dept = await departmentModel.findById(emp[i].department);
@@ -183,9 +183,9 @@ router.get("/options", async (request, response) => {
 //Delete department from the database based on id
 router.delete("/:id", async (request, response) => {
     try {
-        const dept = await salaryModel.findById(request.params.id);
-        const deletedDept = await salaryModel.delete();
-        response.status(200).json(deletedDept);
+        const salary = await salaryModel.findById(request.params.id);
+        const deletedSalary = await salary.delete();
+        response.status(200).json(deletedSalary);
     } catch (error) {
         response.status(500).json({ error: error.message });
     }
