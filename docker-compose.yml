@@ -12,7 +12,7 @@ services:
     depends_on: 
       - mongo
   mongo: 
-    container_name: mongo
+    container_name: mongo-payroll
     restart: always
     image: mongo
     ports: 
@@ -20,9 +20,9 @@ services:
     networks: 
       - mern-app
     volumes:
-      - mongo-data:/data/db
+      - mongo-payroll-data:/data/db
 networks: 
   mern-app: 
     driver: bridge
 volumes: 
-  mongo-data:
+  mongo-payroll-data:

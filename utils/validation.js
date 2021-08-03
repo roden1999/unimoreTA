@@ -2,7 +2,58 @@
 const Joi = require("@hapi/joi");
 const { allow } = require("@hapi/joi");
 
-//Registration Validation
+//Login Validation
+const loginValidation = (data) => {
+	const schema = Joi.object({
+		userName: Joi.string().required().messages({
+			"string.empty": `User Name is required`,
+		}),
+		password: Joi.string().required().messages({
+			"string.empty": `Password is required`,
+		}),
+	});
+	return schema.validate(data, { abortEarly: false });
+};
+
+//Regsistration Validation
+const registrationValidation = (data) => {
+	const schema = Joi.object({
+		userName: Joi.string().required().messages({
+			"string.empty": `Username is required.`,
+		}),
+		name: Joi.string().required().messages({
+			"string.empty": `Name is required.`,
+		}),
+		password: Joi.string().required().messages({
+			"string.empty": `Password is required.`,
+		}),
+		confirmPassword: Joi.string().required().messages({
+			"string.empty": `Confirm Password is required.`,
+		}),
+		role: Joi.string().required().messages({
+			"string.empty": `Role is required.`,
+		}),
+	});
+	return schema.validate(data, { abortEarly: false });
+};
+
+//Regsistration Edit Validation
+const registrationEditValidation = (data) => {
+	const schema = Joi.object({
+		UserName: Joi.string().required().messages({
+			"string.empty": `Username is required.`,
+		}),
+		Name: Joi.string().required().messages({
+			"string.empty": `Name is required.`,
+		}),
+		Role: Joi.string().required().messages({
+			"string.empty": `Role is required.`,
+		}),
+	});
+	return schema.validate(data, { abortEarly: false });
+};
+
+//Dept Validation
 const departmentValidation = (data) => {
 	const schema = Joi.object({
 		department: Joi.string().required().messages({
@@ -94,6 +145,9 @@ const holidaySchedValidation = (data) => {
 	return schema.validate(data, { abortEarly: false });
 };
 
+module.exports.loginValidation = loginValidation;
+module.exports.registrationValidation = registrationValidation;
+module.exports.registrationEditValidation = registrationEditValidation;
 module.exports.departmentValidation = departmentValidation;
 module.exports.employeeValidation = employeeValidation;
 module.exports.salaryValidation = salaryValidation;

@@ -170,8 +170,15 @@ router.post("/detailed-list", async (request, response) => {
 
                 var totalHrsWork = 0;
                 var totalRestday = 0;
+                var totalRestdayOt = 0;
                 var totalHoliday = 0;
+                var totalHolidayOt = 0;
                 var totalSpecialHoliday = 0;
+                var totalSpecialHolidayOt = 0;
+                var totalHolidayRestday = 0;
+                var totalHolidayRestdayOt = 0;
+                var totalSpecialHolidayRestday = 0;
+                var totalSpecialHolidayRestdayOt = 0;
                 var totalLate = 0;
                 var totalUT = 0;
                 var totalOT = 0;
@@ -383,7 +390,18 @@ router.post("/detailed-list", async (request, response) => {
                         remarks = "OT For Approval";
                     }
 
-                    if (remarks === "Working Rest Day" || remarks === "Restday OT" || remarks === "Working Holiday" || remarks === "Holiday OT" || remarks === "Working Special Holiday" || remarks === "SH OT" || remarks === "Offset") {
+                    if (remarks === "Working Rest Day" ||
+                        remarks === "Restday OT" ||
+                        remarks === "Working Holiday" ||
+                        remarks === "Holiday OT" ||
+                        remarks === "Working Special Holiday" ||
+                        remarks === "SH OT" ||
+                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Holiday Rest Day OT" ||
+                        remarks === "Working Special Holiday Rest Day" ||
+                        remarks === "Special Holiday Rest Day OT" ||
+                        remarks === "Offset") {
+
                         if (timeIn && timeOut) {
                             var date1 = new Date(convertedTI).getTime();
                             var date2 = new Date(convertedTO).getTime();
@@ -393,7 +411,7 @@ router.post("/detailed-list", async (request, response) => {
 
                             var hw = mins / 60;
                             hoursWork = remarks !== "Offset" ? hw : hw;
-                            
+
                             ut = 0;
 
                             remarks = remarks;
@@ -501,8 +519,15 @@ router.post("/detailed-list", async (request, response) => {
 
                 var totalHrsWork = 0;
                 var totalRestday = 0;
+                var totalRestdayOt = 0;
                 var totalHoliday = 0;
+                var totalHolidayOt = 0;
                 var totalSpecialHoliday = 0;
+                var totalSpecialHolidayOt = 0;
+                var totalHolidayRestday = 0;
+                var totalHolidayRestdayOt = 0;
+                var totalSpecialHolidayRestday = 0;
+                var totalSpecialHolidayRestdayOt = 0;
                 var totalLate = 0;
                 var totalUT = 0;
                 var totalOT = 0;
@@ -715,7 +740,18 @@ router.post("/detailed-list", async (request, response) => {
                         remarks = "OT For Approval";
                     }
 
-                    if (remarks === "Working Rest Day" || remarks === "Restday OT" || remarks === "Working Holiday" || remarks === "Holiday OT" || remarks === "Working Special Holiday" || remarks === "SH OT" || remarks === "Offset") {
+                    if (remarks === "Working Rest Day" ||
+                        remarks === "Restday OT" ||
+                        remarks === "Working Holiday" ||
+                        remarks === "Holiday OT" ||
+                        remarks === "Working Special Holiday" ||
+                        remarks === "SH OT" ||
+                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Holiday Rest Day OT" ||
+                        remarks === "Working Special Holiday Rest Day" ||
+                        remarks === "Special Holiday Rest Day OT" ||
+                        remarks === "Offset") {
+
                         if (timeIn && timeOut) {
                             var date1 = new Date(convertedTI).getTime();
                             var date2 = new Date(convertedTO).getTime();
@@ -1078,7 +1114,7 @@ router.post("/approved-dtr-correction", async (request, response) => {
 
         if (Object.keys(errors).length === 0) {
 
-            const dtrCorrection = new dtrcModel({  
+            const dtrCorrection = new dtrcModel({
                 employeeNo: data.employeeNo,
                 date: date,
                 timeIn: timeIn,

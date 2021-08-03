@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -6,12 +6,14 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Mail as MailIcon, PeopleAlt, HomeWork, EventNote, LocalAtm, MoneyOff, Today } from '@material-ui/icons/';
+import Badge from '@material-ui/core/Badge';
+import { Mail as MailIcon, PeopleAlt, HomeWork, EventNote, LocalAtm, MoneyOff, Today, AccountCircle, PeopleAltSharp } from '@material-ui/icons/';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -23,6 +25,8 @@ import TimeLogs from "./timeLogs";
 import HolidaySchedule from "./holidaySchedule";
 import SalaryAndDeduction from "./salaryAndDeductions";
 import Payroll from "./payroll";
+import User from "./user";
+import UserContext from './context/userContext';
 
 const drawerWidth = 240;
 
@@ -41,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
             width: `calc(100% - ${drawerWidth}px)`,
             marginLeft: drawerWidth,
         },
+    },
+    title: {
+        flexGrow: 1,
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -61,14 +68,35 @@ const useStyles = makeStyles((theme) => ({
         minHeight: '100vh',
         maxHeight: '100vh'
     },
+
+    customBadge: {
+        backgroundColor: "#1AEC02",
+        color: "white"
+    }
 }));
 
 function Main(props) {
     const { window } = props;
     const classes = useStyles();
     const theme = useTheme();
+    const { userData, setUserData } = useContext(UserContext);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [pageName, setPageName] = useState("Time Logs")
+    const [pageName, setPageName] = useState("Employee");
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    useEffect(() => {
+        const data = sessionStorage.getItem('page');
+        if (data) setPageName(data);
+
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        setRole(user.role);
+        setName(user.Name);
+    }, []);
+    useEffect(() => {
+        sessionStorage.setItem('page', pageName);
+    });
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -77,6 +105,26 @@ function Main(props) {
     const handlePage = (value) => {
         setPageName(value);
     }
+
+    const logOut = () => {
+        setUserData({
+            token: undefined,
+            user: undefined
+        });
+        sessionStorage.setItem("auth-token", "");
+        sessionStorage.setItem("userData", "");
+        sessionStorage.setItem("user", "");
+        sessionStorage.setItem("page", "Employee");
+        // Storage.empty();
+    }
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const drawer = (
         <div>
@@ -125,6 +173,17 @@ function Main(props) {
                     </ListItem>
                 </List>
             </List>
+
+            <Divider />
+
+            <List>
+                <List>
+                    <ListItem button onClick={() => handlePage("Users")}>
+                        <ListItemIcon>{<PeopleAltSharp />}</ListItemIcon>
+                        <ListItemText primary={"Users"} />
+                    </ListItem>
+                </List>
+            </List>
         </div>
     );
 
@@ -144,9 +203,37 @@ function Main(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap className={classes.title}>
                         {pageName}
                     </Typography>
+                    <IconButton
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        edge="end"
+                        onClick={handleClick}
+                        color="inherit"
+                    >
+                        <Badge variant="dot" color="secondary" classes={{ badge: classes.customBadge }}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                        >
+                            <AccountCircle />
+                        </Badge>
+                        <Typography noWrap style={{ marginLeft: 7 }}>{name}</Typography>
+                    </IconButton>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={logOut}>Logout</MenuItem>
+                    </Menu>
+
                 </Toolbar>
             </AppBar>
             <nav className={classes.drawer} aria-label="mailbox folders">
@@ -205,6 +292,10 @@ function Main(props) {
 
                 {pageName === "Payroll" &&
                     <Payroll />
+                }
+
+                {pageName === "Users" &&
+                    <User />
                 }
 
             </main>

@@ -249,7 +249,7 @@ const SalaryAndDeduction = () => {
 
         var data = {
             // id: id,
-            employeeId: employeeNo,
+            employeeId: id,
             salary: salary,
             sss: sss,
             phic: phic,
@@ -300,7 +300,7 @@ const SalaryAndDeduction = () => {
         setEditModal(true);
         setLoader(false);
         setId(params.id);
-        setEmployeeNo(params.id);
+        setEmployeeNo(params.employeeNo);
         setEmployeeName(params.employeeName);
         setSalary(params.salary);
         setSSS(params.sss);

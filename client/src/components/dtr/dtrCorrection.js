@@ -310,9 +310,13 @@ const DtrCorrection = () => {
             { label: "Working Rest Day", value: "Working Rest Day" },
             { label: "Working Holiday", value: "Working Holiday" },
             { label: "Working Special Holiday", value: "Working Special Holiday" },
+            { label: "Working Holiday Rest Day", value: "Working Holiday Rest Day" },
+            { label: "Working Special Holiday Rest Day OT", value: "Working Special Holiday Rest Day OT" },
             { label: "Rest Day OT", value: "Rest Day OT" },
             { label: "Holiday OT", value: "Holiday OT" },
+            { label: "Holiday Rest Day OT", value: "Holiday Rest Day OT" },
             { label: "Special Holiday OT", value: "SH OT" },
+            { label: "Special Holiday Rest Day OT", value: "Special Holiday Rest Day OT" },
             { label: "Offset", value: "Offset" },
         ];
 

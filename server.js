@@ -21,6 +21,14 @@ app.use(express.static(path.join(__dirname, "/app_data")));
 
 app.use(express.static("client/build"));
 
+// Route to login
+const loginRouter = require("./routers/login");
+app.use("/login", loginRouter);
+
+// Route to users
+const usersRouter = require("./routers/user");
+app.use("/users", usersRouter);
+
 //Route to employees
 const employeesRouter = require("./routers/employees");
 app.use("/employees", employeesRouter);

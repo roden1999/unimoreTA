@@ -260,6 +260,10 @@ router.post("/payroll-list", async (request, response) => {
                 var totalHolidayOt = 0;
                 var totalSpecialHoliday = 0;
                 var totalSpecialHolidayOt = 0;
+                var totalHolidayRestday = 0;
+                var totalHolidayRestdayOt = 0;
+                var totalSpecialHolidayRestday = 0;
+                var totalSpecialHolidayRestdayOt = 0;
                 var totalLate = 0;
                 var totalUT = 0;
                 var totalOT = 0;
@@ -472,7 +476,18 @@ router.post("/payroll-list", async (request, response) => {
                         remarks = "OT For Approval";
                     }
 
-                    if (remarks === "Working Rest Day" || remarks === "Restday OT" || remarks === "Working Holiday" || remarks === "Holiday OT" || remarks === "Working Special Holiday" || remarks === "SH OT" || remarks === "Offset") {
+                    if (remarks === "Working Rest Day" ||
+                        remarks === "Restday OT" ||
+                        remarks === "Working Holiday" ||
+                        remarks === "Holiday OT" ||
+                        remarks === "Working Special Holiday" ||
+                        remarks === "SH OT" ||
+                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Holiday Rest Day OT" ||
+                        remarks === "Working Special Holiday Rest Day OT" ||
+                        remarks === "Special Holiday Rest Day OT" ||
+                        remarks === "Offset") {
+
                         if (timeIn && timeOut) {
                             var date1 = new Date(convertedTI).getTime();
                             var date2 = new Date(convertedTO).getTime();
@@ -534,6 +549,10 @@ router.post("/payroll-list", async (request, response) => {
                     totalHoliday = remarks === "Working Holiday" ? totalHoliday + hoursWork : totalHoliday;
                     totalHolidayOt = remarks === "Holiday OT" ? totalHolidayOt + hoursWork : totalHolidayOt;
                     totalSpecialHoliday = remarks === "Working Special Holiday" || remarks === "SH OT" ? totalSpecialHoliday + hoursWork : totalHoliday;
+                    totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + hoursWork : totalHolidayRestday;
+                    totalHolidayRestdayOt = remarks === "Holiday Rest Day OT" ? totalHolidayRestdayOt + hoursWork : totalHolidayRestdayOt;
+                    totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + hoursWork : totalSpecialHolidayRestday;
+                    totalSpecialHolidayRestdayOt = remarks === "Special Holiday Rest Day OT" ? totalSpecialHolidayRestdayOt + hoursWork : totalSpecialHolidayRestdayOt;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
                     totalOT = totalOT + ot;
@@ -564,27 +583,40 @@ router.post("/payroll-list", async (request, response) => {
 
                 var monthly = params.type === "Full Month" ? 26 : 26 / 2;
 
-                var totalMonthly = !salary ? 0 : salary.salary; 
+                var totalMonthly = !salary ? 0 : salary.salary;
                 var basicMetalAsia = totalMonthly >= 373 * 26 ? 373 * 26 : totalMonthly;
                 var allowanceMetalAsia = totalMonthly > basicMetalAsia ? totalMonthly - basicMetalAsia - 0 : 0;
-                var dailyRate = (basicMetalAsia + allowanceMetalAsia) / monthly;                
+                var dailyRate = (basicMetalAsia + allowanceMetalAsia) / monthly;
 
                 var basic = params.type === "Full Month" ? basicMetalAsia : basicMetalAsia / 2;
                 var allowance = params.type === "Full Month" ? allowanceMetalAsia : allowanceMetalAsia / 2;
 
                 var absensesTardiness = (basic + allowance) / monthly * totalAbsent;
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
-                var tmonthPayMetalAsia = ((basic + allowance - absensesTardiness) / 12);
+                var tmonthPayMetalAsia = ((basic + allowance + absensesTardiness) / 12);
 
-                var amountOt = ((((basicMetalAsia / monthly / 8) * totalOT) * 1.25 / 2) + (allowanceMetalAsia / monthly / 8) * totalOT / 2);
-                var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.32 : dailyRate / 8 * totalRestday * 1.3;
-                var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.32 * 1.32 : dailyRate / 8 * totalRestdayOt * 0.13 * 13;
+                var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);;
+                var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
+                var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalRestdayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalRestdayOt);
                 var amountHoliday = params.type === "Full Month" ? (basic / 26) / 8 * totalHoliday * 1 : (basic / 13) / 8 * totalHoliday * 1;
-                var amountHolidayOt = params.type === "Full Month" ? (basic /26) / 8 * totalHolidayOt * 2 * 1.3 : (basic / 13) / 8 * totalHolidayOt * 2 * 1.3;
+                var amountHolidayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayOt * 2 * 1.3 : ((basic / 13) / 8 * totalHolidayOt * 2 * 1.3) + ((allowance / 13) / 8 * totalHolidayOt);
                 var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
-                var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : (basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3;
+                var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayOt);
+                var amountHolidayRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestday * 2 * 1.3 : (basic / 13) / 8 * totalHolidayRestday * 2 * 1.3;
+                var amountHolidayRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3 : ((basic / 13) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3) + ((allowance / 13) / 8 * totalHolidayRestdayOt);
+                var amountSHRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestday * 1.5 : ((basic / 13) / 8 * totalSpecialHolidayRestday * 1.5);
+                var amountSHRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayRestdayOt);
 
-                var tmonthPay = ((basic + allowance - absensesTardiness) / 12);
+                // Old Formula
+                // var amountOt = ((((basicMetalAsia / monthly / 8) * totalOT) * 1.25 / 2) + ((allowanceMetalAsia / monthly / 8) * totalOT / 2));
+                // var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.32 : dailyRate / 8 * totalRestday * 1.3;
+                // var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.32 * 1.32 : dailyRate / 8 * totalRestdayOt * 0.13 * 13;
+                // var amountHoliday = params.type === "Full Month" ? (basic / 26) / 8 * totalHoliday * 1 : (basic / 13) / 8 * totalHoliday * 1;
+                // var amountHolidayOt = params.type === "Full Month" ? (basic /26) / 8 * totalHolidayOt * 2 * 1.3 : (basic / 13) / 8 * totalHolidayOt * 2 * 1.3;
+                // var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
+                // var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : (basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3;
+
+                var tmonthPay = ((basic + allowance + absensesTardiness) / 12);
 
                 //Deduction
                 var sss = !salary || params.type === "1st Half" ? 0 : salary.sss;
@@ -598,7 +630,7 @@ router.post("/payroll-list", async (request, response) => {
                 var totalEarnings = (basic + allowance + amountOt + tmonthPay + amountRestday + amountRestdayOt + amountHoliday + amountHolidayOt + amountSH + amountSHOt) - absensesTardiness;
 
 
-                var deductions = {                    
+                var deductions = {
                     "sss": sss.toFixed(2),
                     "phic": phic.toFixed(2),
                     "hdmf": hdmf.toFixed(2),
@@ -616,9 +648,13 @@ router.post("/payroll-list", async (request, response) => {
                     "restdayOT": amountRestdayOt.toFixed(2),
                     "holiday": amountHoliday.toFixed(2),
                     "holidayOT": amountHolidayOt.toFixed(2),
+                    "holidayRestday" : amountHolidayRestday.toFixed(2),
+                    "holidayRestdayOT" : amountHolidayRestdayOt.toFixed(2),
+                    "specialHolidayRestday" : amountSHRestday.toFixed(2),
+                    "specialHolidayRestdayOT" : amountSHRestdayOt.toFixed(2),
                     "sh": amountSH.toFixed(2),
                     "shOt": amountSHOt.toFixed(2),
-                    "tMonthPay": tmonthPay.toFixed(2),
+                    "tMonthPay": tmonthPay > 0 ? tmonthPay.toFixed(2) : (0).toFixed(2),
                 }
 
                 var employeeLogs = {
@@ -644,7 +680,7 @@ router.post("/payroll-list", async (request, response) => {
                     "deductions": [deductions],
                     "earnings": [earnings],
                     "totalHoursWork": totalHrsWork.toFixed(2),
-                    "totalEarnings": totalEarnings.toFixed(2),
+                    "totalEarnings": totalEarnings > 0 ? totalEarnings.toFixed(2) : (0).toFixed(2),
                     "totalDeduction": totalDeduction.toFixed(2),
 
                     "netOfTardiness": netOfTardiness.toFixed(2),
@@ -653,8 +689,8 @@ router.post("/payroll-list", async (request, response) => {
                     "totalUT": totalUT.toFixed(2),
                     "totalOT": totalOT.toFixed(2),
 
-                    "tMonthPayMetalAsia": tmonthPayMetalAsia.toFixed(2),
-                    "netPayMetalAsia": (totalEarnings - totalDeduction).toFixed(2),
+                    "tMonthPayMetalAsia": tmonthPayMetalAsia > 0 ? tmonthPayMetalAsia.toFixed(2) : (0).toFixed(2),
+                    "netPayMetalAsia": (totalEarnings - totalDeduction) > 0 ? (totalEarnings - totalDeduction).toFixed(2) : (0).toFixed(2),
                 }
 
                 data.push(employeeLogs);
@@ -667,4 +703,4 @@ router.post("/payroll-list", async (request, response) => {
     }
 });
 
-module.exports = router;    
+module.exports = router;
