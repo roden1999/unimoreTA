@@ -17,6 +17,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import Input from '@material-ui/core/Input';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -456,7 +457,20 @@ const RawLogs = () => {
                                         {x.employeeName}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        {x.timeInOut === "S" ? "Time In" : "Time Out"}
+                                        {x.timeInOut === "S" ?
+                                            <Chip
+                                                label={"Time In"}
+                                                color="primary"
+                                                variant="outlined"
+                                                // style={{ backgroundColor: '#1AEC02' }}
+                                            /> :
+                                            <Chip
+                                                label={"Time Out"}
+                                                color="secondary"
+                                                variant="outlined"
+                                                // style={{ backgroundColor: '#0953F2' }}
+                                            />
+                                        }
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         {moment(x.dateTime).format("hh:mm A")}
