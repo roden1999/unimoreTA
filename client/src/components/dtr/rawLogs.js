@@ -152,12 +152,16 @@ const RawLogs = () => {
     const [editModal, setEditModal] = useState(false);
     const [deletePopup, setDeletePopup] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState([]);
+    const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
+    const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
     const [totalLogs, setTotalLogs] = useState(0);
     const [page, setPage] = useState(0);
 
     useEffect(() => {
         var data = {
             selectedLogs: !selectedEmployee ? [] : selectedEmployee,
+            fromDate: fromDate,
+            toDate: toDate,
             page: page
         };
         var route = "timeLogs/raw-list";
@@ -184,7 +188,7 @@ const RawLogs = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, page, loader]);
+    }, [selectedEmployee, fromDate, toDate, page, loader]);
 
     const logList = logData
         ? logData.map((x) => ({
@@ -249,8 +253,13 @@ const RawLogs = () => {
         var route = "timeLogs/total-logs";
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
+        var data = {
+            selectedLogs: !selectedEmployee ? [] : selectedEmployee,
+            fromDate: fromDate,
+            toDate: toDate,
+        };
         axios
-            .get(url)
+            .post(url, data)
             .then(function (response) {
                 // handle success
                 var total = response.data !== "" ? response.data : 0;
@@ -263,7 +272,7 @@ const RawLogs = () => {
             .finally(function () {
                 // always executed
             });
-    }, [employeeOptions, selectedEmployee, loader]);
+    }, [employeeOptions, selectedEmployee, fromDate, toDate, loader]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -393,6 +402,37 @@ const RawLogs = () => {
                     styles={customSelectStyle}
                 />
             </div>
+
+            <TextField
+                id="date"
+                label="To Date"
+                type="date"
+                variant="outlined"
+                size="small"
+                defaultValue={moment().format("DD/MM/yyyy")}
+                value={toDate}
+                onChange={e => setToDate(e.target.value)}
+                className={classes.textField}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                style={{ float: 'right', marginRight: 10 }}
+            />
+            <TextField
+                id="date"
+                label="From Date"
+                type="date"
+                variant="outlined"
+                size="small"
+                defaultValue={moment().startOf('month').format("DD/MM/yyyy")}
+                value={fromDate}
+                onChange={e => setFromDate(e.target.value)}
+                className={classes.textField}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                style={{ float: 'right', marginRight: 10 }}
+            />
 
             <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '68vh', maxHeight: '68vh', overFlowY: 'auto' }}>
                 <TableContainer className={classes.tbcontainer}>

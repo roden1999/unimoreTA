@@ -726,7 +726,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="primary"
-                                                                        style={{ backgroundColor: '#FFA908 ' }}
+                                                                        style={{ backgroundColor: '#FFA908' }}
                                                                     />
                                                                 }
 

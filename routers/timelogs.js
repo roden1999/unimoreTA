@@ -65,16 +65,21 @@ router.post("/import", async (request, response) => {
 router.post("/raw-list", async (request, response) => {
     try {
         var page = request.body.page !== "" ? request.body.page : 0;
+        var fromDate = request.body.fromDate !== "" ? request.body.fromDate : moment("01/01/2020", "yyyy-MM-DD");
+        var toDate = request.body.toDate !== "" ? request.body.toDate : moment().format("yyyy-MM-DD");
         var perPage = 20;
+
         if (Object.keys(request.body.selectedLogs).length > 0) {
             var empNo = [];
             var data = request.body.selectedLogs;
+
             for (const i in data) {
                 // console.log(`_id: ${request.body[i].value}`);
                 empNo.push({ employeeNo: request.body.selectedLogs[i].value });
             }
             const logs = await timeLogsModel.find({
                 '$or': empNo,
+                dateTime: { $gte: new Date(fromDate).setHours(00, 00, 00), $lte: new Date(toDate).setHours(23, 59, 59) }
             }).sort({ dateTime: -1 });
 
             var data = [];
@@ -92,7 +97,10 @@ router.post("/raw-list", async (request, response) => {
             // response.status(200).json(data.splice((page - 1) * perPage, page * perPage));
             response.status(200).json(data);
         } else {
-            const logs = await timeLogsModel.find().skip((page) * perPage).limit(perPage).sort({ dateTime: -1 });
+            const logs = await timeLogsModel.find({
+                dateTime: { $gte: new Date(fromDate).setHours(00, 00, 00), $lte: new Date(toDate).setHours(23, 59, 59) }
+            }).skip((page) * perPage).limit(perPage).sort({ dateTime: -1 });
+
             var data = [];
             for (const i in logs) {
                 const emp = await employeeModel.findOne({ employeeNo: logs[i].employeeNo });
@@ -114,12 +122,32 @@ router.post("/raw-list", async (request, response) => {
 });
 
 // list total logs
-router.get("/total-logs", async (request, response) => {
+router.post("/total-logs", async (request, response) => {
     try {
-        // const data = await timeLogsModel.find().sort('employeeName');
-        const data = await timeLogsModel.find();
+        var fromDate = request.body.fromDate !== "" ? request.body.fromDate : moment("01/01/2020", "yyyy-MM-DD");
+        var toDate = request.body.toDate !== "" ? request.body.toDate : moment().format("yyyy-MM-DD");
 
-        response.status(200).json(data.length);
+        if (Object.keys(request.body.selectedLogs).length > 0) {
+            var empNo = [];
+            var data = request.body.selectedLogs;
+
+            for (const i in data) {
+                empNo.push({ employeeNo: request.body.selectedLogs[i].value });
+            }
+
+            const logs = await timeLogsModel.find({
+                '$or': empNo,
+                dateTime: { $gte: new Date(fromDate).setHours(00, 00, 00), $lte: new Date(toDate).setHours(23, 59, 59) }
+            });
+
+            response.status(200).json(logs.length);
+        } else {
+            const logs = await timeLogsModel.find({
+                dateTime: { $gte: new Date(fromDate).setHours(00, 00, 00), $lte: new Date(toDate).setHours(23, 59, 59) }
+            });
+
+            response.status(200).json(logs.length);
+        }
     } catch (error) {
         response.status(500).json({ error: error.message });
     }
