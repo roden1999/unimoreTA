@@ -75,7 +75,7 @@ router.post("/raw-list", async (request, response) => {
             }
             const logs = await timeLogsModel.find({
                 '$or': empNo,
-            }).skip((page) * perPage).limit(perPage).sort({ dateTime: -1 });
+            }).sort({ dateTime: -1 });
 
             var data = [];
             for (const i in logs) {
@@ -160,7 +160,7 @@ router.post("/detailed-list", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).skip((page) * perPage).limit(perPage).sort("firstName");
+            }).sort("firstName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -878,7 +878,7 @@ router.post("/dtr-correction", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).skip((page) * perPage).limit(perPage).sort("firstName");
+            }).sort("firstName");
 
             var data = [];
             for (const i in emp) {

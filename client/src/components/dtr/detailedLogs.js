@@ -152,7 +152,7 @@ const DetailedLogs = () => {
     const [logData, setLogData] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
     const [addModal, setAddModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [selectedEmployee, setSelectedEmployee] = useState([]);
     const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
     const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
     const [totalEmployee, setTotalEmployee] = useState(0);
@@ -816,17 +816,19 @@ const DetailedLogs = () => {
                 }
             </div>
 
-            <TablePagination
-                // rowsPerPageOptions={[10, 25, 100]}
-                labelRowsPerPage=''
-                rowsPerPageOptions={[]}
-                component="div"
-                count={totalEmployee}
-                rowsPerPage={5}
-                page={page}
-                onChangePage={handleChangePage}
-            // onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+            {Object.keys(selectedEmployee).length === 0 &&
+                <TablePagination
+                    // rowsPerPageOptions={[10, 25, 100]}
+                    labelRowsPerPage=''
+                    rowsPerPageOptions={[]}
+                    component="div"
+                    count={totalEmployee}
+                    rowsPerPage={5}
+                    page={page}
+                    onChangePage={handleChangePage}
+                // onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            }
 
             <DropzoneDialog
                 open={addModal}

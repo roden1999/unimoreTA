@@ -121,7 +121,7 @@ const SalaryAndDeduction = () => {
     const [addModal, setAddModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deletePopup, setDeletePopup] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [selectedEmployee, setSelectedEmployee] = useState([]);
     const [totalEmp, setTotalEmp] = useState(0);
     const [page, setPage] = useState(0);
 
@@ -454,17 +454,19 @@ const SalaryAndDeduction = () => {
                 </Grid>
             </div>
 
-            <TablePagination
-                // rowsPerPageOptions={[10, 25, 100]}
-                labelRowsPerPage=''
-                rowsPerPageOptions={[]}
-                component="div"
-                count={totalEmp}
-                rowsPerPage={20}
-                page={page}
-                onChangePage={handleChangePage}
-            // onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+            {Object.keys(selectedEmployee).length === 0 &&
+                <TablePagination
+                    // rowsPerPageOptions={[10, 25, 100]}
+                    labelRowsPerPage=''
+                    rowsPerPageOptions={[]}
+                    component="div"
+                    count={totalEmp}
+                    rowsPerPage={20}
+                    page={page}
+                    onChangePage={handleChangePage}
+                // onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            }
 
             <Modal
                 aria-labelledby="spring-modal-title"

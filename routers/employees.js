@@ -68,7 +68,7 @@ router.post("/list", async (request, response) => {
 			const employees = await employeeModel.find({
 				'$or': id,
 				IsDeleted: false
-			}).skip((page) * perPage).limit(perPage).sort('firstName');
+			}).sort('firstName');
 
 			var data = [];
 			for (const i in employees) {
@@ -132,7 +132,7 @@ router.get("/options", async (request, response) => {
 	try {
 		const employees = await employeeModel.find({ IsDeleted: false }).sort('firstName');
 		response.status(200).json(employees);
-	} catch (error) {
+	} catch (error) { 
 		response.status(500).json({ error: error.message });
 	}
 });

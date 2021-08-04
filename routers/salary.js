@@ -85,7 +85,7 @@ router.post("/list", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).skip((page) * perPage).limit(perPage).sort("firstName");
+            }).sort("firstName");
 
             var employees = [];
             for (const i in emp) {
