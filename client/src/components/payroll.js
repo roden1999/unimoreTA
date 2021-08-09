@@ -452,17 +452,17 @@ const Payroll = () => {
                     //Data
                     //Header
                     [
-                        { text: 'Day', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Date', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Schedule', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'In', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Out', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Hours Work', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Late', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'UT', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'OT', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Remarks', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' },
-                        { text: 'Reason', bold: true, fontSize: 9, alignment: "center", fillColor: '#0099ff' }
+                        { text: 'Day', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Date', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Schedule', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'In', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Out', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Hours Work', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Late', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'UT', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'OT', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Remarks', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Reason', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' }
                     ],
                 ]
             },
