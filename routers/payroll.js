@@ -323,7 +323,8 @@ router.post("/payroll-list", async (request, response) => {
                         late = 0;
                         ut = 0;
                         ot = 0;
-                        remarks = holiday[0].type
+                        remarks = holiday[0].type;
+                        reason = holiday[0].title;
                     }
 
                     totalHrsWork = totalHrsWork + hoursWork;
@@ -378,7 +379,7 @@ router.post("/payroll-list", async (request, response) => {
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
                 var tmonthPayMetalAsia = ((basic + allowance + absensesTardiness) / 12);
 
-                var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);;
+                var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);
                 var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
                 var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalRestdayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalRestdayOt);
                 var amountHoliday = params.type === "Full Month" ? (basic / 26) / 8 * totalHoliday * 1 : (basic / 13) / 8 * totalHoliday * 1;
@@ -781,7 +782,8 @@ router.post("/payroll-list", async (request, response) => {
                         late = 0;
                         ut = 0;
                         ot = 0;
-                        remarks = holiday[0].type
+                        remarks = holiday[0].type;
+                        reason = holiday[0].title;
                     }
 
                     totalHrsWork = totalHrsWork + hoursWork;
