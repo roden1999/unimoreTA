@@ -481,7 +481,8 @@ router.post("/detailed-list", async (request, response) => {
                         late = 0;
                         ut = 0;
                         ot = 0;
-                        remarks = holiday[0].type
+                        remarks = holiday[0].type;
+                        reason = holiday[0].title;
                     }
 
                     totalHrsWork = totalHrsWork + hoursWork;
@@ -833,6 +834,7 @@ router.post("/detailed-list", async (request, response) => {
                         ut = 0;
                         ot = 0;
                         remarks = holiday[0].type
+                        reason = holiday[0].title;
                     }
 
                     totalHrsWork = totalHrsWork + hoursWork;
