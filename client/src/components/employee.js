@@ -120,12 +120,14 @@ const Employee = () => {
   const [editModal, setEditModal] = useState(false);
   const [deletePopup, setDeletePopup] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState([]);
   const [totalEmp, setTotalEmp] = useState(0);
   const [page, setPage] = useState(0);
 
   useEffect(() => {
     var data = {
       selectedEmployee: !selectedEmployee ? [] : selectedEmployee,
+      selectedDepartment: !selectedDepartment ? [] : selectedDepartment,
       page: page
     };
     var route = "employees/list";
@@ -152,7 +154,7 @@ const Employee = () => {
       .finally(function () {
         // always executed
       });
-  }, [page, selectedEmployee, loader]);
+  }, [page, selectedEmployee, selectedDepartment, loader]);
 
   const employeeList = employeeData
     ? employeeData.map((x) => ({
@@ -170,12 +172,15 @@ const Employee = () => {
     : [];
 
   useEffect(() => {
-    var route = "employees/options";
+    var route = "employees/employee-options";
     var url = window.apihost + route;
     var token = sessionStorage.getItem("auth-token");
 
+    var data = {
+      selectedDepartment: !selectedDepartment ? [] : selectedDepartment
+    };
     axios
-      .get(url, {
+      .post(url, data, {
         headers: { "auth-token": token },
       })
       .then(function (response) {
@@ -195,7 +200,7 @@ const Employee = () => {
       .finally(function () {
         // always executed
       });
-  }, [loader]);
+  }, [loader, selectedDepartment]);
 
   const employeeOptionsList = employeeOptions
     ? employeeOptions.map((x) => ({
@@ -285,6 +290,19 @@ const Employee = () => {
     return list;
   }
 
+  function DepartmentSearchOption(item) {
+    var list = [];
+    if (item !== undefined || item !== null) {
+      item.map((x) => {
+        return list.push({
+          label: x.name,
+          value: x.id,
+        });
+      });
+    }
+    return list;
+  }
+
   function GenderOption() {
     var list = [
       { label: "Male", value: "Male" },
@@ -292,8 +310,6 @@ const Employee = () => {
     ];
     return list;
   }
-
-
 
   const handleAddEmployee = () => {
     var route = "employees/";
@@ -528,6 +544,30 @@ const Employee = () => {
           options={EmployeeOption(employeeOptionsList)}
           onChange={e => setSelectedEmployee(e)}
           placeholder='Search...'
+          isClearable
+          isMulti
+          theme={(theme) => ({
+            ...theme,
+            // borderRadius: 0,
+            colors: {
+              ...theme.colors,
+              text: 'black',
+              primary25: '#66c0f4',
+              primary: '#B9B9B9',
+            },
+          })}
+          styles={customSelectStyle}
+        />
+      </div>
+
+      <div style={{
+        float: 'right', width: '12%', zIndex: 100, marginRight: 10
+      }}>
+        <Select
+          defaultValue={selectedDepartment}
+          options={DepartmentSearchOption(departmentOptionsList)}
+          onChange={e => setSelectedDepartment(e)}
+          placeholder='Department'
           isClearable
           isMulti
           theme={(theme) => ({

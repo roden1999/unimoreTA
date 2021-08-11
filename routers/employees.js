@@ -57,16 +57,23 @@ router.put("/:id", async (request, response) => {
 router.post("/list", async (request, response) => {
 	try {
 		var page = request.body.page !== "" ? request.body.page : 0;
-        var perPage = 20;
+		var perPage = 20;
 		if (Object.keys(request.body.selectedEmployee).length > 0) {
 			var id = [];
+			var dep = [];
 			var data = request.body.selectedEmployee;
+			var paramDep = request.body.selectedDepartment;
 			for (const i in data) {
 				// console.log(`_id: ${request.body[i].value}`);
 				id.push({ _id: request.body.selectedEmployee[i].value });
 			}
+			for (const i in paramDep) {
+				// console.log(`_id: ${request.body[i].value}`);
+				dep.push({ department: request.body.selectedDepartment[i].value });
+			}
 			const employees = await employeeModel.find({
 				'$or': id,
+				'$and': dep,
 				IsDeleted: false
 			}).sort('firstName');
 
@@ -89,7 +96,23 @@ router.post("/list", async (request, response) => {
 			}
 			response.status(200).json(data);
 		} else {
-			const employees = await employeeModel.find({ IsDeleted: false }).skip((page) * perPage).limit(perPage).sort('firstName');
+			var id = [];
+			var paramDep = request.body.selectedDepartment;
+			for (const i in paramDep) {
+				id.push({ department: request.body.selectedDepartment[i].value });
+			}
+			var employees = [];
+			if (Object.keys(request.body.selectedDepartment).length > 0) {
+				employees = await employeeModel.find({
+					'$or': id,
+					IsDeleted: false
+				}).skip((page) * perPage).limit(perPage).sort('firstName');
+			} else {
+				employees = await employeeModel.find({
+					IsDeleted: false
+				}).skip((page) * perPage).limit(perPage).sort('firstName');
+			};
+
 			var data = [];
 			for (const i in employees) {
 				const dept = await departmentModel.findById(employees[i].department);
@@ -127,12 +150,37 @@ router.get("/total-employees", async (request, response) => {
 	}
 });
 
-//For search options
+//For search options get method
 router.get("/options", async (request, response) => {
 	try {
 		const employees = await employeeModel.find({ IsDeleted: false }).sort('firstName');
 		response.status(200).json(employees);
-	} catch (error) { 
+	} catch (error) {
+		response.status(500).json({ error: error.message });
+	}
+});
+
+//For search options
+router.post("/employee-options", async (request, response) => {
+	try {
+		var id = [];
+		var paramDep = request.body.selectedDepartment;
+		for (const i in paramDep) {
+			id.push({ department: request.body.selectedDepartment[i].value });
+		}
+		var employees = [];
+		if (Object.keys(request.body.selectedDepartment).length > 0) {
+			employees = await employeeModel.find({
+				'$or': id,
+				IsDeleted: false
+			}).sort('firstName');
+		} else {
+			employees = await employeeModel.find({
+				IsDeleted: false
+			}).sort('firstName');
+		};
+		response.status(200).json(employees);
+	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
 });
