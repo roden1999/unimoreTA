@@ -200,8 +200,15 @@ const DetailedLogs = () => {
             timeLogs: x.timeLogs,
             totalHoursWork: x.totalHoursWork,
             totalRestday: x.totalRestday,
+            totalRestdayOt: x.totalRestdayOt,
             totalHoliday: x.totalHoliday,
+            totalHolidayOt: x.totalHolidayOt,
             totalSpecialHoliday: x.totalSpecialHoliday,
+            totalSpecialHolidayOt: x.totalSpecialHolidayOt,
+            totalHolidayRestday: x.totalHolidayRestday,
+            totalHolidayRestdayOt: x.totalHolidayRestdayOt,
+            totalSpecialHolidayRestday: x.totalSpecialHolidayRestday,
+            totalSpecialHolidayRestdayOt: x.totalSpecialHolidayRestdayOt,
             totalLate: x.totalLate,
             totalUT: x.totalUT,
             totalOT: x.totalOT,
@@ -372,9 +379,18 @@ const DetailedLogs = () => {
     const exportToPDF = (e) => {
         const document = {
             content: [
-                { image: 'unimore', width: 160, height: 60 },
-                { text: e.employeeName, fontStyle: 15, bold: true, lineHeight: 1 },
-                { text: e.department, fontStyle: 15, bold: true, lineHeight: 1 },
+                { image: 'unimore', width: 180, height: 50 },
+                {
+                    columns: [
+                        [
+                            { text: e.employeeName, fontSize: 10, bold: true, lineHeight: 1 },
+                            { text: e.department, fontSize: 10, bold: true, lineHeight: 1, },
+                        ],
+                        [
+                            { text: "Date Covered: " + moment(fromDate).format("MMM DD") + " - " + moment(toDate).format("DD, yyyy"), fontSize: 10, bold: true, lineHeight: 1, },
+                        ]
+                    ]
+                },
             ],
             images: {
                 unimore: 'https://i.ibb.co/mTwt2jt/unimore-logo-back-black.png'
@@ -432,25 +448,49 @@ const DetailedLogs = () => {
             });
         });
 
-        var totalhrswrk = "Total Hours Work: " + e.totalHoursWork;
-        var totalRestdayHrsWrk = "Total Restday Hours Work: " + e.totalRestday;
-        var totalHoliday = "Total Holiday Hours Work: " + e.totalHoliday;
-        var totalSh = "Total Special Holiday Hours Work: " + e.totalSpecialHoliday;
-        var totalUT = "Total UT: " + e.totalUT;
-        var totalOT = "Total OT: " + e.totalOT;
-        var totalLate = "Total Late: " + e.totalLate;
-        var totalAbsent = "Total Absent: " + e.totalAbsent;
+        document.content.push({
+            margin: [0, 5],
+            columns: [
+                [
+                    { text: "Hours Work: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Late: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Undertime: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Overtime: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Restday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Restday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Regular Holiday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+                [
 
-        document.content.push([
-            { text: totalhrswrk, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalRestdayHrsWrk, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalHoliday, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalSh, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalUT, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalOT, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalLate, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalAbsent, fontSize: 9, bold: true, lineHeight: 1, },
-        ]);
+                    { text: e.totalHoursWork.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalLate.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalUT.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalOT.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalRestday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalRestdayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalHoliday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+                [
+                    { text: "Regular Holiday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Regular Holiday Restday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Regular Holiday Restday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday Restday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday Restday OT:", fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+                [
+                    { text: e.totalHolidayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHoliday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHolidayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalHolidayRestday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalHolidayRestdayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHolidayRestday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHolidayRestdayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+            ],
+            columnGap: 10
+        });
 
         pdfMake.tableLayouts = {
             exampleLayout: {
@@ -658,14 +698,6 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
-                                                                {y.remarks === "Rest Day OT" &&
-                                                                    <Chip
-                                                                        label={y.remarks}
-                                                                        color="default"
-                                                                        style={{ backgroundColor: '##00A2FF' }}
-                                                                    />
-                                                                }
-
                                                                 {y.remarks === "Regular Holiday" &&
                                                                     <Chip
                                                                         label={y.remarks}
@@ -690,23 +722,7 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
-                                                                {y.remarks === "Holiday OT" &&
-                                                                    <Chip
-                                                                        label={y.remarks}
-                                                                        color="default"
-                                                                        style={{ backgroundColor: '#20E700' }}
-                                                                    />
-                                                                }
-
                                                                 {y.remarks === "Working Special Holiday" &&
-                                                                    <Chip
-                                                                        label={y.remarks}
-                                                                        color="default"
-                                                                        style={{ backgroundColor: '#20E700' }}
-                                                                    />
-                                                                }
-
-                                                                {y.remarks === "SH OT" &&
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
@@ -782,21 +798,29 @@ const DetailedLogs = () => {
                                 </CardContent>
                                 <CardActions>
                                     <Grid container spacing={3}>
-                                        <Grid item xs={3}>
-                                            <Typography style={{ fontSize: 18 }}><b>Total Hours Work: {x.totalHoursWork}</b></Typography>
-                                            <Typography style={{ fontSize: 18 }}><b>Total Overtime: {x.totalOT}</b></Typography>
+                                        <Grid item xs={2.8}>
+                                            <Typography style={{ fontSize: 15 }}><b>Hours Work: {x.totalHoursWork}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Overtime: {x.totalOT}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Holiday Restday: {x.totalHolidayRestday}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Holiday Restday OT: {x.totalHolidayRestdayOt}</b></Typography>
+
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Typography style={{ fontSize: 18 }}><b>Total Restday Hours Works: {x.totalRestday}</b></Typography>
-                                            <Typography style={{ fontSize: 18 }}><b>Total Late: {x.totalLate}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Late: {x.totalLate}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Restday (hrs): {x.totalRestday}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Restday OT (hrs): {x.totalRestdayOt}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Special Holiday Restday (hrs): {x.totalSpecialHolidayRestday}</b></Typography>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Typography style={{ fontSize: 18 }}><b>Total Holiday Hours Works: {x.totalHoliday}</b></Typography>
-                                            <Typography style={{ fontSize: 18 }}><b>Total Undertime: {x.totalUT}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Undertime: {x.totalUT}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Regular Holiday (hrs): {x.totalHoliday}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Regular Holiday OT (hrs): {x.totalHolidayOt}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Special Holiday Restday OT (hrs): {x.totalSpecialHolidayRestdayOt}</b></Typography>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <Typography style={{ fontSize: 18 }}><b>Total SH Hours Works: {x.totalSpecialHoliday}</b></Typography>
-                                            <Typography style={{ fontSize: 18 }}><b>Total Absent: {x.totalAbsent}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Absent: {x.totalAbsent}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Special Holiday (hrs): {x.totalSpecialHoliday}</b></Typography>
+                                            <Typography style={{ fontSize: 15 }}><b>Special Holiday OT (hrs): {x.totalSpecialHolidayOt}</b></Typography>
                                         </Grid>
                                     </Grid>
                                 </CardActions>

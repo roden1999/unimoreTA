@@ -114,6 +114,7 @@ router.post("/payroll-list", async (request, response) => {
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -196,7 +197,7 @@ router.post("/payroll-list", async (request, response) => {
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = new Date(convertedDTO).getTime();
+                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
@@ -260,15 +261,10 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     if (remarks === "Working Rest Day" ||
-                        remarks === "Restday OT" ||
                         remarks === "Working Holiday" ||
-                        remarks === "Holiday OT" ||
                         remarks === "Working Special Holiday" ||
-                        remarks === "SH OT" ||
                         remarks === "Working Holiday Rest Day" ||
-                        remarks === "Holiday Rest Day OT" ||
-                        remarks === "Working Special Holiday Rest Day OT" ||
-                        remarks === "Special Holiday Rest Day OT" ||
+                        remarks === "Working Special Holiday Rest Day" ||
                         remarks === "Offset") {
 
                         if (timeIn && timeOut) {
@@ -279,11 +275,27 @@ router.post("/payroll-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = remarks !== "Offset" ? hw : hw;
+                            hoursWork = hw - breaktime;
+                            var totalHw = hoursWork > 8 ? 8 : hoursWork;
+                            var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
+                            totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
+                            totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
+
+                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+
+                            totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
+                            totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
+
+                            totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
+                            totalHolidayRestdayOt = remarks === "Working Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
+
+                            totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + totalHw : totalSpecialHolidayRestday;
+                            totalSpecialHolidayRestdayOt = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestdayOt + totalHwOt : totalSpecialHolidayRestdayOt;
+
+                            ot = totalHwOt;
                             ut = 0;
-
-
                             remarks = remarks;
                         }
                     }
@@ -328,18 +340,9 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     totalHrsWork = totalHrsWork + hoursWork;
-                    totalRestday = remarks === "Working Restday" ? totalRestday + hoursWork : totalRestday;
-                    totalRestdayOT = remarks === "Restday OT" ? totalRestdayOt + hoursWork : totalRestdayOt;
-                    totalHoliday = remarks === "Working Holiday" ? totalHoliday + hoursWork : totalHoliday;
-                    totalHolidayOt = remarks === "Holiday OT" ? totalHolidayOt + hoursWork : totalHolidayOt;
-                    totalSpecialHoliday = remarks === "Working Special Holiday" || remarks === "SH OT" ? totalSpecialHoliday + hoursWork : totalHoliday;
-                    totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + hoursWork : totalHolidayRestday;
-                    totalHolidayRestdayOt = remarks === "Holiday Rest Day OT" ? totalHolidayRestdayOt + hoursWork : totalHolidayRestdayOt;
-                    totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + hoursWork : totalSpecialHolidayRestday;
-                    totalSpecialHolidayRestdayOt = remarks === "Special Holiday Rest Day OT" ? totalSpecialHolidayRestdayOt + hoursWork : totalSpecialHolidayRestdayOt;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
-                    totalOT = totalOT + ot;
+                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
                     totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
                     var logs = {
@@ -452,14 +455,22 @@ router.post("/payroll-list", async (request, response) => {
                     "dailyRate": dailyRate.toFixed(2),
 
                     "timeLogs": timeLogs,
+                    
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
+                    "totalRestdayOt": totalRestdayOt.toFixed(2),
                     "totalHoliday": totalHoliday.toFixed(2),
+                    "totalHolidayOt": totalHolidayOt.toFixed(2),
                     "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                    "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                    "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                    "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                    "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                    "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
                     "totalLate": totalLate.toFixed(2),
                     "totalUT": totalUT.toFixed(2),
                     "totalOT": totalOT.toFixed(2),
-                    "totalAbsent": totalAbsent,
+                    "totalAbsent": totalAbsent.toFixed,
 
                     "deductions": [deductions],
                     "earnings": [earnings],
@@ -573,6 +584,7 @@ router.post("/payroll-list", async (request, response) => {
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -655,7 +667,7 @@ router.post("/payroll-list", async (request, response) => {
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = new Date(convertedDTO).getTime();
+                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
@@ -719,15 +731,10 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     if (remarks === "Working Rest Day" ||
-                        remarks === "Restday OT" ||
                         remarks === "Working Holiday" ||
-                        remarks === "Holiday OT" ||
                         remarks === "Working Special Holiday" ||
-                        remarks === "SH OT" ||
                         remarks === "Working Holiday Rest Day" ||
-                        remarks === "Holiday Rest Day OT" ||
-                        remarks === "Working Special Holiday Rest Day OT" ||
-                        remarks === "Special Holiday Rest Day OT" ||
+                        remarks === "Working Special Holiday Rest Day" ||
                         remarks === "Offset") {
 
                         if (timeIn && timeOut) {
@@ -738,11 +745,27 @@ router.post("/payroll-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = remarks !== "Offset" ? hw : hw;
+                            hoursWork = hw - breaktime;
+                            var totalHw = hoursWork > 8 ? 8 : hoursWork;
+                            var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
+                            totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
+                            totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
+
+                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+
+                            totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
+                            totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
+
+                            totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
+                            totalHolidayRestdayOt = remarks === "Working Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
+
+                            totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + totalHw : totalSpecialHolidayRestday;
+                            totalSpecialHolidayRestdayOt = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestdayOt + totalHwOt : totalSpecialHolidayRestdayOt;
+
+                            ot = totalHwOt;
                             ut = 0;
-
-
                             remarks = remarks;
                         }
                     }
@@ -787,18 +810,9 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     totalHrsWork = totalHrsWork + hoursWork;
-                    totalRestday = remarks === "Working Restday" ? totalRestday + hoursWork : totalRestday;
-                    totalRestdayOT = remarks === "Restday OT" ? totalRestdayOt + hoursWork : totalRestdayOt;
-                    totalHoliday = remarks === "Working Holiday" ? totalHoliday + hoursWork : totalHoliday;
-                    totalHolidayOt = remarks === "Holiday OT" ? totalHolidayOt + hoursWork : totalHolidayOt;
-                    totalSpecialHoliday = remarks === "Working Special Holiday" || remarks === "SH OT" ? totalSpecialHoliday + hoursWork : totalHoliday;
-                    totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + hoursWork : totalHolidayRestday;
-                    totalHolidayRestdayOt = remarks === "Holiday Rest Day OT" ? totalHolidayRestdayOt + hoursWork : totalHolidayRestdayOt;
-                    totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + hoursWork : totalSpecialHolidayRestday;
-                    totalSpecialHolidayRestdayOt = remarks === "Special Holiday Rest Day OT" ? totalSpecialHolidayRestdayOt + hoursWork : totalSpecialHolidayRestdayOt;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
-                    totalOT = totalOT + ot;
+                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
                     totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
                     var logs = {
@@ -911,10 +925,18 @@ router.post("/payroll-list", async (request, response) => {
                     "dailyRate": dailyRate.toFixed(2),
 
                     "timeLogs": timeLogs,
+                    
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
+                    "totalRestdayOt": totalRestdayOt.toFixed(2),
                     "totalHoliday": totalHoliday.toFixed(2),
+                    "totalHolidayOt": totalHolidayOt.toFixed(2),
                     "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                    "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                    "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                    "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                    "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                    "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
                     "totalLate": totalLate.toFixed(2),
                     "totalUT": totalUT.toFixed(2),
                     "totalOT": totalOT.toFixed(2),

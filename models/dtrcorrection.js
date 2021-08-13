@@ -19,6 +19,11 @@ const dtrCorrectionSchema = new mongoose.Schema({
     timeOut: {
         type: String,
     },
+    breakTime: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
 	remarks: {
 		type: String,
 	},

@@ -242,6 +242,7 @@ router.post("/detailed-list", async (request, response) => {
                     var nxtDayOT = [];
 
                     var reason = "";
+                    var breakTime = 0;
 
                     if (Object.keys(dtr).length > 0) {
                         const dateTimeIn = await timeLogsModel.find({
@@ -274,356 +275,7 @@ router.post("/detailed-list", async (request, response) => {
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
-                    } else {
-                        // var dt = dateTime;
-                        if (dep.dayNightShift === false) {
-                            var date = new Date();
-                            date.setDate(theDate.getDate() + 1);
-                            dt = moment(date, "MM-DD-yyyy");
-                        }
-
-                        const dateTimeIn = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dateTime).setHours(05, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) },
-                            timeInOut: "S"
-                        }).sort({ dateTime: 1 });
-
-                        const dateTimeOut = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
-
-                        nxtDayOT = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
-                            timeInOut: "S"
-                        }).sort({ dateTime: -1 });
-
-                        timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("h:mm A") : "";
-                        if (Object.keys(nxtDayOT).length === 0) {
-                            timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("h:mm A") : "";
-                        } else {
-                            timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
-                        }
-                    }
-
-                    var convertedDate = moment(dateTime, "MM/DD/yyyy").format("MM/DD/yyyy");
-
-                    // var convertedDI = moment(depIn, "h:mm").hours() + ":" + moment(depIn, "h:mm").minutes();
-                    // var convertedDO = moment(depOut, "h:mm").hours() + ":" + moment(depOut, "h:mm").minutes();
-
-                    // var ts = dep.dayNightShift === true ? "AM" : "PM";
-                    // var te = dep.dayNightShift === true ? "PM" : "AM";
-
-                    var todt = moment(dt).format("MM/DD/yyyy");
-                    var convertedTI = moment(convertedDate + " " + timeIn).format();
-                    var convertedTO = moment(todt + " " + timeOut).format();
-
-                    var convertedDTI = moment(convertedDate + " " + depIn).format();
-                    var convertedDTO = moment(todt + " " + depOut).format();
-
-                    var remarks = "";
-
-                    var late = 0;
-                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
-                        var date1 = new Date(convertedDTI).getTime();
-
-                        var date2 = new Date(convertedTI).getTime();
-
-                        var msec = date2 - date1;
-                        var mins = Math.floor(msec / 60000);
-
-                        late = mins / 60;
-                    }
-
-                    var ut = 0;
-                    if (new Date(convertedTO).getTime() < new Date(convertedDTO).getTime() && timeOut !== "" && day !== "Sunday" && Object.keys(nxtDayOT).length === 0) {
-                        var date1 = new Date(convertedTO).getTime();
-                        var date2 = new Date(convertedDTO).getTime();
-
-                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
-                        var mins = Math.floor(msec / 60000);
-
-                        ut = mins / 60;
-                        remarks = "Undertime";
-                    }
-
-                    var ot = 0;
-                    if (moment(timeOut, "h:mm").hours() > moment(depOut).hours() && Object.keys(nxtDayOT).length === 0)
-                        ot = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment(depOut, "h:mm").hours();
-
-                    var hoursWork = 0;
-                    if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
-
-                        var msec = date2 - date1;
-                        var mins = Math.floor(msec / 60000);
-                        // var hrs = Math.floor(mins / 60);
-
-                        // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        var hw = mins / 60;
-                        hoursWork = hw > 5 ? hw - 1 : hw;
-                    }
-
-                    if (timeIn && timeOut && day === "Sunday") {
-                        var date1 = new Date(convertedTI).getTime();
-                        var date2 = new Date(convertedTO).getTime();
-
-                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
-                        var mins = Math.floor(msec / 60000);
-
-                        hoursWork = mins / 60;
-                    }
-
-                    remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
-                    if (remarks === "Overtime" && day !== "Sunday") {
-                        if (timeIn && timeOut && Object.keys(nxtDayOT).length === 0) {
-                            var date1 = new Date(convertedTI).getTime();
-                            var date2 = new Date(convertedTO).getTime();
-                            var date3 = new Date(convertedDTO).getTime();
-
-                            var msec = date2 - date1;
-                            var mins = Math.floor(msec / 60000);
-                            // var hrs = Math.floor(mins / 60);
-
-                            var msecOT = date2 - date3;
-                            var otMins = Math.floor(msecOT / 60000);
-
-                            var hw = mins / 60;
-                            hoursWork = hw > 5 ? hw - 1 : hw;
-                            ot = otMins / 60;
-
-                            remarks = "Overtime";
-                        } else {
-                            // const dateOne = "6 Apr, 2015 8:18 AM";
-                            const dateTwo = moment(nxtDay).format("DD MMM, yyyy") + " " + moment(convertedTO).format("h:mm A");
-                            const date1 = new Date(convertedTI).getTime();
-                            const date2 = new Date(dateTwo);
-                            const date3 = new Date(convertedDTO).getTime();
-
-                            const hrswrk = Math.abs(date2 - date1);
-                            const nsecOt = Math.abs(date2 - date3);
-
-                            var hw = hrswrk / 36e5;
-                            hoursWork = hw > 5 ? hw - 1 : hw;
-                            ot = nsecOt / 36e5;
-
-                        }
-                    }
-
-                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && Object.keys(dtr).length === 0 && day !== "Sunday" || remarks !== "Overtime" && Object.keys(dtr).length === 0 && Object.keys(nxtDayOT).length > 0 && day !== "Sunday") {
-                        ot = 0;
-                        remarks = "OT For Approval";
-                    }
-
-                    if (remarks === "Working Rest Day" ||
-                        remarks === "Restday OT" ||
-                        remarks === "Working Holiday" ||
-                        remarks === "Holiday OT" ||
-                        remarks === "Working Special Holiday" ||
-                        remarks === "SH OT" ||
-                        remarks === "Working Holiday Rest Day" ||
-                        remarks === "Holiday Rest Day OT" ||
-                        remarks === "Working Special Holiday Rest Day" ||
-                        remarks === "Special Holiday Rest Day OT" ||
-                        remarks === "Offset") {
-
-                        if (timeIn && timeOut) {
-                            var date1 = new Date(convertedTI).getTime();
-                            var date2 = new Date(convertedTO).getTime();
-
-                            var msec = date2 > date1 ? date2 - date1 : date1 - date2;
-                            var mins = Math.floor(msec / 60000);
-
-                            var hw = mins / 60;
-                            hoursWork = remarks !== "Offset" ? hw : hw;
-
-                            ut = 0;
-
-                            remarks = remarks;
-                        }
-                    }
-
-                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
-
-                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
-                        remarks = "Late";
-                    }
-
-                    if (!timeIn && !timeOut) remarks = "Absent";
-
-                    if (!timeIn && timeOut && day !== "Sunday") {
-                        remarks = "Absent";
-                        // hoursWork = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment("1:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
-                    }
-
-                    if (timeIn && !timeOut && day !== "Sunday") {
-                        remarks = "Absent";
-                        // hoursWork = moment(timeIn, "h:mm").hours() + (moment(timeIn, "h:mm").minutes() / 60) - moment("12:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
-                    }
-
-                    if (day === "Sunday" && Object.keys(dtr).length === 0) {
-                        timeIn = "";
-                        timeOut = "";
-                        hoursWork = 0;
-                        late = 0;
-                        ut = 0;
-                        ot = 0;
-                        remarks = "Rest Day"
-                    }
-
-                    if (Object.keys(holiday).length > 0 && Object.keys(dtr).length === 0) {
-                        timeIn = "";
-                        timeOut = "";
-                        hoursWork = 8;
-                        late = 0;
-                        ut = 0;
-                        ot = 0;
-                        remarks = holiday[0].type;
-                        reason = holiday[0].title;
-                    }
-
-                    totalHrsWork = totalHrsWork + hoursWork;
-                    totalRestday = remarks === "Working Restday" || remarks === "Restday OT" ? totalRestday + hoursWork : totalRestday;
-                    totalHoliday = remarks === "Working Holiday" || remarks === "Holiday OT" ? totalHoliday + hoursWork : totalHoliday;
-                    totalSpecialHoliday = remarks === "Working Special Holiday" || remarks === "SH OT" ? totalSpecialHoliday + hoursWork : totalHoliday;
-                    totalLate = totalLate + late;
-                    totalUT = totalUT + ut;
-                    totalOT = totalOT + ot;
-                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
-
-                    var logs = {
-                        "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
-                        "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
-                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
-                        "dateTime": dateTime,
-                        "day": day,
-                        "hoursWork": hoursWork.toFixed(2),
-                        "late": late.toFixed(2),
-                        "UT": ut.toFixed(2),
-                        "OT": ot.toFixed(2),
-                        "remarks": remarks,
-                        "reason": reason
-                    }
-
-                    timeLogs.push(logs);
-
-                    theDate.setDate(theDate.getDate() + 1);
-                }
-
-                var employeeLogs = {
-                    "_id": emp[i]._id,
-                    "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
-                    "department": dep.department,
-                    "timeLogs": timeLogs,
-                    "totalHoursWork": totalHrsWork.toFixed(2),
-                    "totalRestday": totalRestday.toFixed(2),
-                    "totalHoliday": totalHoliday.toFixed(2),
-                    "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
-                    "totalLate": totalLate.toFixed(2),
-                    "totalUT": totalUT.toFixed(2),
-                    "totalOT": totalOT.toFixed(2),
-                    "totalAbsent": totalAbsent
-                }
-
-                data.push(employeeLogs);
-            }
-            response.status(200).json(data);
-        } else {
-            var params = request.body;
-            var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
-            var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
-
-            //(page -1)
-            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("firstName");
-            var data = [];
-            for (const i in emp) {
-                const dep = await departmentModel.findById(emp[i].department);
-                var timePerDay = JSON.parse(dep.timePerDay);
-                var depIn = '';
-                var depOut = '';
-
-                var totalHrsWork = 0;
-                var totalRestday = 0;
-                var totalRestdayOt = 0;
-                var totalHoliday = 0;
-                var totalHolidayOt = 0;
-                var totalSpecialHoliday = 0;
-                var totalSpecialHolidayOt = 0;
-                var totalHolidayRestday = 0;
-                var totalHolidayRestdayOt = 0;
-                var totalSpecialHolidayRestday = 0;
-                var totalSpecialHolidayRestdayOt = 0;
-                var totalLate = 0;
-                var totalUT = 0;
-                var totalOT = 0;
-                var totalAbsent = 0;
-
-                var timeLogs = [];
-                const theDate = new Date(fromDate);
-                while (theDate <= new Date(toDate)) {
-                    var dateTime = moment(theDate, "yyyy-MM-DD");
-                    var day = moment(theDate).format("dddd");
-
-                    const holiday = await holidaySchedule.find({
-                        date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    });
-
-                    for (const j in timePerDay) {
-                        if (day === timePerDay[j].day) {
-                            depIn = timePerDay[j].timeStart;
-                            depOut = timePerDay[j].timeEnd;
-                        }
-                    }
-
-                    const dtr = await dtrcModel.find({
-                        employeeNo: emp[i].employeeNo,
-                        date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    }).sort({ dateApproved: 1 });
-
-                    var timeIn = "";
-                    var timeOut = "";
-
-                    var dt = dateTime;
-                    var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
-                    var nxtDayOT = [];
-
-                    var reason = "";
-
-                    if (Object.keys(dtr).length > 0) {
-                        const dateTimeIn = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dateTime).setHours(05, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) },
-                            timeInOut: "S"
-                        }).sort({ dateTime: 1 });
-
-                        const dateTimeOut = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
-                        nxtDayOT = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
-                            timeInOut: "S"
-                        }).sort({ dateTime: -1 });
-
-                        if (dtr[0].remarks === "Overtime") {
-                            timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("h:mm A") : "";
-                            if (Object.keys(nxtDayOT).length === 0) {
-                                timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("h:mm A") : "";
-                            } else {
-                                timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
-                            }
-                        } else {
-                            timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
-                            timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
-                        }
-
-                        reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -770,15 +422,10 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     if (remarks === "Working Rest Day" ||
-                        remarks === "Restday OT" ||
                         remarks === "Working Holiday" ||
-                        remarks === "Holiday OT" ||
                         remarks === "Working Special Holiday" ||
-                        remarks === "SH OT" ||
                         remarks === "Working Holiday Rest Day" ||
-                        remarks === "Holiday Rest Day OT" ||
                         remarks === "Working Special Holiday Rest Day" ||
-                        remarks === "Special Holiday Rest Day OT" ||
                         remarks === "Offset") {
 
                         if (timeIn && timeOut) {
@@ -789,11 +436,27 @@ router.post("/detailed-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = remarks !== "Offset" ? hw : hw;
+                            hoursWork = hw - breaktime;
+                            var totalHw = hoursWork > 8 ? 8 : hoursWork;
+                            var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
+                            totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
+                            totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
+
+                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+
+                            totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
+                            totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
+
+                            totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
+                            totalHolidayRestdayOt = remarks === "Working Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
+
+                            totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + totalHw : totalSpecialHolidayRestday;
+                            totalSpecialHolidayRestdayOt = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestdayOt + totalHwOt : totalSpecialHolidayRestdayOt;
+
+                            ot = totalHwOt;
                             ut = 0;
-
-
                             remarks = remarks;
                         }
                     }
@@ -838,12 +501,9 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     totalHrsWork = totalHrsWork + hoursWork;
-                    totalRestday = remarks === "Working Restday" || remarks === "Restday OT" ? totalRestday + hoursWork : totalRestday;
-                    totalHoliday = remarks === "Working Holiday" || remarks === "Holiday OT" ? totalHoliday + hoursWork : totalHoliday;
-                    totalSpecialHoliday = remarks === "Working Special Holiday" || remarks === "SH OT" ? totalSpecialHoliday + hoursWork : totalHoliday;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
-                    totalOT = totalOT + ot;
+                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
                     totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
                     var logs = {
@@ -873,8 +533,384 @@ router.post("/detailed-list", async (request, response) => {
                     "timeLogs": timeLogs,
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
+                    "totalRestdayOt": totalRestdayOt.toFixed(2),
                     "totalHoliday": totalHoliday.toFixed(2),
+                    "totalHolidayOt": totalHolidayOt.toFixed(2),
                     "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                    "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                    "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                    "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                    "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                    "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
+                    "totalLate": totalLate.toFixed(2),
+                    "totalUT": totalUT.toFixed(2),
+                    "totalOT": totalOT.toFixed(2),
+                    "totalAbsent": totalAbsent
+                }
+
+                data.push(employeeLogs);
+            }
+            response.status(200).json(data);
+        } else {
+            var params = request.body;
+            var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
+            var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
+
+            //(page -1)
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("firstName");
+            var data = [];
+            for (const i in emp) {
+                const dep = await departmentModel.findById(emp[i].department);
+                var timePerDay = JSON.parse(dep.timePerDay);
+                var depIn = '';
+                var depOut = '';
+
+                var totalHrsWork = 0;
+                var totalRestday = 0;
+                var totalRestdayOt = 0;
+                var totalHoliday = 0;
+                var totalHolidayOt = 0;
+                var totalSpecialHoliday = 0;
+                var totalSpecialHolidayOt = 0;
+                var totalHolidayRestday = 0;
+                var totalHolidayRestdayOt = 0;
+                var totalSpecialHolidayRestday = 0;
+                var totalSpecialHolidayRestdayOt = 0;
+                var totalLate = 0;
+                var totalUT = 0;
+                var totalOT = 0;
+                var totalAbsent = 0;
+
+                var timeLogs = [];
+                const theDate = new Date(fromDate);
+                while (theDate <= new Date(toDate)) {
+                    var dateTime = moment(theDate, "yyyy-MM-DD");
+                    var day = moment(theDate).format("dddd");
+
+                    const holiday = await holidaySchedule.find({
+                        date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
+                    });
+
+                    for (const j in timePerDay) {
+                        if (day === timePerDay[j].day) {
+                            depIn = timePerDay[j].timeStart;
+                            depOut = timePerDay[j].timeEnd;
+                        }
+                    }
+
+                    const dtr = await dtrcModel.find({
+                        employeeNo: emp[i].employeeNo,
+                        date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
+                    }).sort({ dateApproved: 1 });
+
+                    var timeIn = "";
+                    var timeOut = "";
+
+                    var dt = dateTime;
+                    var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
+                    var nxtDayOT = [];
+
+                    var reason = "";
+                    var breakTime = 0;
+
+                    if (Object.keys(dtr).length > 0) {
+                        const dateTimeIn = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dateTime).setHours(05, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) },
+                            timeInOut: "S"
+                        }).sort({ dateTime: 1 });
+
+                        const dateTimeOut = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: -1 });
+                        nxtDayOT = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
+                            timeInOut: "S"
+                        }).sort({ dateTime: -1 });
+
+                        if (dtr[0].remarks === "Overtime") {
+                            timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("h:mm A") : "";
+                            if (Object.keys(nxtDayOT).length === 0) {
+                                timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("h:mm A") : "";
+                            } else {
+                                timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
+                            }
+                        } else {
+                            timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                            timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                        }
+
+                        reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
+                    } else {
+                        // var dt = dateTime;
+                        if (dep.dayNightShift === false) {
+                            var date = new Date();
+                            date.setDate(theDate.getDate() + 1);
+                            dt = moment(date, "MM-DD-yyyy");
+                        }
+
+                        const dateTimeIn = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dateTime).setHours(05, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) },
+                            timeInOut: "S"
+                        }).sort({ dateTime: 1 });
+
+                        const dateTimeOut = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: -1 });
+
+                        nxtDayOT = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
+                            timeInOut: "S"
+                        }).sort({ dateTime: -1 });
+
+                        timeIn = Object.keys(dateTimeIn).length !== 0 ? moment(dateTimeIn[0].dateTime).format("h:mm A") : "";
+                        if (Object.keys(nxtDayOT).length === 0) {
+                            timeOut = Object.keys(dateTimeOut).length !== 0 ? moment(dateTimeOut[0].dateTime).format("h:mm A") : "";
+                        } else {
+                            timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
+                        }
+                    }
+
+                    var convertedDate = moment(dateTime, "MM/DD/yyyy").format("MM/DD/yyyy");
+
+                    // var convertedDI = moment(depIn, "h:mm").hours() + ":" + moment(depIn, "h:mm").minutes();
+                    // var convertedDO = moment(depOut, "h:mm").hours() + ":" + moment(depOut, "h:mm").minutes();
+
+                    // var ts = dep.dayNightShift === true ? "AM" : "PM";
+                    // var te = dep.dayNightShift === true ? "PM" : "AM";
+
+                    var todt = moment(dt).format("MM/DD/yyyy");
+                    var convertedTI = moment(convertedDate + " " + timeIn).format();
+                    var convertedTO = moment(todt + " " + timeOut).format();
+
+                    var convertedDTI = moment(convertedDate + " " + depIn).format();
+                    var convertedDTO = moment(todt + " " + depOut).format();
+
+                    var remarks = "";
+
+                    var late = 0;
+                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
+                        var date1 = new Date(convertedDTI).getTime();
+
+                        var date2 = new Date(convertedTI).getTime();
+
+                        var msec = date2 - date1;
+                        var mins = Math.floor(msec / 60000);
+
+                        late = mins / 60;
+                    }
+
+                    var ut = 0;
+                    if (new Date(convertedTO).getTime() < new Date(convertedDTO).getTime() && timeOut !== "" && day !== "Sunday" && Object.keys(nxtDayOT).length === 0) {
+                        var date1 = new Date(convertedTO).getTime();
+                        var date2 = new Date(convertedDTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        ut = mins / 60;
+                        remarks = "Undertime";
+                    }
+
+                    var ot = 0;
+                    if (moment(timeOut, "h:mm").hours() > moment(depOut).hours() && Object.keys(nxtDayOT).length === 0)
+                        ot = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment(depOut, "h:mm").hours();
+
+                    var hoursWork = 0;
+                    if (timeIn && timeOut && day !== "Sunday") {
+                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+
+                        var msec = date2 - date1;
+                        var mins = Math.floor(msec / 60000);
+                        // var hrs = Math.floor(mins / 60);
+
+                        // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
+                        var hw = mins / 60;
+                        hoursWork = hw > 5 ? hw - 1 : hw;
+                    }
+
+                    if (timeIn && timeOut && day === "Sunday") {
+                        var date1 = new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        hoursWork = mins / 60;
+                    }
+
+                    remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
+                    if (remarks === "Overtime" && day !== "Sunday") {
+                        if (timeIn && timeOut && Object.keys(nxtDayOT).length === 0) {
+                            var date1 = new Date(convertedTI).getTime();
+                            var date2 = new Date(convertedTO).getTime();
+                            var date3 = new Date(convertedDTO).getTime();
+
+                            var msec = date2 - date1;
+                            var mins = Math.floor(msec / 60000);
+                            // var hrs = Math.floor(mins / 60);
+
+                            var msecOT = date2 - date3;
+                            var otMins = Math.floor(msecOT / 60000);
+
+                            var hw = mins / 60;
+                            hoursWork = hw > 5 ? hw - 1 : hw;
+                            ot = otMins / 60;
+
+                            remarks = "Overtime";
+                        } else {
+                            // const dateOne = "6 Apr, 2015 8:18 AM";
+                            const dateTwo = moment(nxtDay).format("DD MMM, yyyy") + " " + moment(convertedTO).format("h:mm A");
+                            const date1 = new Date(convertedTI).getTime();
+                            const date2 = new Date(dateTwo);
+                            const date3 = new Date(convertedDTO).getTime();
+
+                            const hrswrk = Math.abs(date2 - date1);
+                            const nsecOt = Math.abs(date2 - date3);
+
+                            var hw = hrswrk / 36e5;
+
+                            hoursWork = hw > 5 ? hw - 1 : hw;
+                            ot = nsecOt / 36e5;
+
+                        }
+                    }
+
+                    if (remarks !== "Overtime" && new Date(convertedTO).getTime() > new Date(convertedDTO).getTime() && Object.keys(dtr).length === 0 && day !== "Sunday" || remarks !== "Overtime" && Object.keys(nxtDayOT).length > 0 && Object.keys(dtr).length === 0 && day !== "Sunday") {
+                        ot = 0;
+                        remarks = "OT For Approval";
+                    }
+
+                    if (remarks === "Working Rest Day" ||
+                        remarks === "Working Holiday" ||
+                        remarks === "Working Special Holiday" ||
+                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Working Special Holiday Rest Day" ||
+                        remarks === "Offset") {
+
+                        if (timeIn && timeOut) {
+                            var date1 = new Date(convertedTI).getTime();
+                            var date2 = new Date(convertedTO).getTime();
+
+                            var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                            var mins = Math.floor(msec / 60000);
+
+                            var hw = mins / 60;
+                            hoursWork = hw - breaktime;
+                            var totalHw = hoursWork > 8 ? 8 : hoursWork;
+                            var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
+
+                            totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
+                            totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
+
+                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+
+                            totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
+                            totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
+
+                            totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
+                            totalHolidayRestdayOt = remarks === "Working Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
+
+                            totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + totalHw : totalSpecialHolidayRestday;
+                            totalSpecialHolidayRestdayOt = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestdayOt + totalHwOt : totalSpecialHolidayRestdayOt;
+
+                            ot = totalHwOt;
+                            ut = 0;
+                            remarks = remarks;
+                        }
+                    }
+
+                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+
+                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
+                        remarks = "Late";
+                    }
+
+                    if (!timeIn && !timeOut) remarks = "Absent";
+
+                    if (!timeIn && timeOut && day !== "Sunday") {
+                        remarks = "Absent";
+                        // hoursWork = moment(timeOut, "h:mm").hours() + (moment(timeOut, "h:mm").minutes() / 60) - moment("1:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
+                    }
+
+                    if (timeIn && !timeOut && day !== "Sunday") {
+                        remarks = "Absent";
+                        // hoursWork = moment(timeIn, "h:mm").hours() + (moment(timeIn, "h:mm").minutes() / 60) - moment("12:00", "h:mm").hours() + moment(timeIn, "h:mm").hours();
+                    }
+
+                    if (day === "Sunday" && Object.keys(dtr).length === 0) {
+                        timeIn = "";
+                        timeOut = "";
+                        hoursWork = 0;
+                        late = 0;
+                        ut = 0;
+                        ot = 0;
+                        remarks = "Rest Day"
+                    }
+
+                    if (Object.keys(holiday).length > 0 && Object.keys(dtr).length === 0) {
+                        timeIn = "";
+                        timeOut = "";
+                        hoursWork = 8;
+                        late = 0;
+                        ut = 0;
+                        ot = 0;
+                        remarks = holiday[0].type
+                        reason = holiday[0].title;
+                    }
+
+                    totalHrsWork = totalHrsWork + hoursWork;
+                    totalLate = totalLate + late;
+                    totalUT = totalUT + ut;
+                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+
+                    var logs = {
+                        "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                        "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                        "dateTime": dateTime,
+                        "day": day,
+                        "hoursWork": hoursWork.toFixed(2),
+                        "late": late.toFixed(2),
+                        "UT": ut.toFixed(2),
+                        "OT": ot.toFixed(2),
+                        "remarks": remarks,
+                        "reason": reason
+                    }
+
+                    timeLogs.push(logs);
+
+                    theDate.setDate(theDate.getDate() + 1);
+                }
+
+                var employeeLogs = {
+                    "_id": emp[i]._id,
+                    "employeeNo": emp[i].employeeNo,
+                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "department": dep.department,
+                    "timeLogs": timeLogs,
+                    "totalHoursWork": totalHrsWork.toFixed(2),
+                    "totalRestday": totalRestday.toFixed(2),
+                    "totalRestdayOt": totalRestdayOt.toFixed(2),
+                    "totalHoliday": totalHoliday.toFixed(2),
+                    "totalHolidayOt": totalHolidayOt.toFixed(2),
+                    "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                    "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                    "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                    "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                    "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                    "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
                     "totalLate": totalLate.toFixed(2),
                     "totalUT": totalUT.toFixed(2),
                     "totalOT": totalOT.toFixed(2),

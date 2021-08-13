@@ -76,6 +76,10 @@ const Fade = React.forwardRef(function Fade(props, ref) {
 });
 
 const customSelectStyle = {
+  container: base => ({
+    ...base,
+    flex: 1,    
+  }),
   control: base => ({
     ...base,
     height: 40,

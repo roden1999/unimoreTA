@@ -14,7 +14,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
+import Switch from '@material-ui/core/Switch';
 import MuiAlert from '@material-ui/lab/Alert';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -66,6 +66,40 @@ const useStyles = makeStyles((theme) => ({
         maxHeight: 375,
     },
 }));
+
+const AntSwitch = withStyles((theme) => ({
+    root: {
+        width: 32,
+        height: 20,
+        padding: 0,
+        display: 'flex',
+    },
+    switchBase: {
+        padding: 2,
+        color: theme.palette.grey[500],
+        '&$checked': {
+            transform: 'translateX(12px)',
+            color: theme.palette.common.white,
+            '& + $track': {
+                opacity: 1,
+                backgroundColor: theme.palette.primary.main,
+                borderColor: theme.palette.primary.main,
+            },
+        },
+    },
+    thumb: {
+        width: 16,
+        height: 16,
+        boxShadow: 'none',
+    },
+    track: {
+        border: `1px solid ${theme.palette.grey[500]}`,
+        borderRadius: 16 / 2,
+        opacity: 1,
+        backgroundColor: theme.palette.common.white,
+    },
+    checked: {},
+}))(Switch);
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -149,6 +183,7 @@ const DtrCorrection = () => {
     const [department, setDepartment] = useState("");
     const [timeIn, setTimeIn] = useState(moment().format("MM DD, yyyy 8:00"));
     const [timeOut, setTimeOut] = useState(moment().format("MM DD, yyyy 17:00"));
+    const [breakTime, setBreakTime] = useState(false);
     const [date, setDate] = useState(moment().format("MM/DD/yyyy"));
     const [remarks, setRemarks] = useState("");
     const [reason, setReason] = useState("");
@@ -284,6 +319,7 @@ const DtrCorrection = () => {
         setDate(moment().format("MM/DD/yyyy"));
         setTimeIn(moment().format("MM DD, yyyy 8:00"));
         setTimeOut(moment().format("MM DD, yyyy 17:00"));
+        setBreakTime(false);
         setRemarks("");
         setReason("");
     }
@@ -298,26 +334,22 @@ const DtrCorrection = () => {
         setDate(moment(params.date).format("MM/DD/yyyy"));
         setTimeIn(ti);
         setTimeOut(to);
+        setBreakTime(params.breakTime);
     }
 
     function RemarksOption(item) {
         var list = [
+            { label: "Manual Timelog", value: "Manual Timelog" },
             { label: "Overtime", value: "Overtime" },
-            { label: "Sick Leave w/ Pay", value: "SL w/ Pay" },
-            { label: "Sick Leave w/o Pay", value: "SL w/o Pay" },
-            { label: "Vacation Leave w/ Pay", value: "VL w/ Pay" },
-            { label: "Vacation Leave w/o Pay", value: "VL w/o Pay" },
+            { label: "Offset", value: "Offset" },
             { label: "Working Rest Day", value: "Working Rest Day" },
             { label: "Working Holiday", value: "Working Holiday" },
             { label: "Working Special Holiday", value: "Working Special Holiday" },
             { label: "Working Holiday Rest Day", value: "Working Holiday Rest Day" },
-            { label: "Working Special Holiday Rest Day OT", value: "Working Special Holiday Rest Day OT" },
-            { label: "Rest Day OT", value: "Rest Day OT" },
-            { label: "Holiday OT", value: "Holiday OT" },
-            { label: "Holiday Rest Day OT", value: "Holiday Rest Day OT" },
-            { label: "Special Holiday OT", value: "SH OT" },
-            { label: "Special Holiday Rest Day OT", value: "Special Holiday Rest Day OT" },
-            { label: "Offset", value: "Offset" },
+            { label: "Sick Leave w/ Pay", value: "SL w/ Pay" },
+            { label: "Sick Leave w/o Pay", value: "SL w/o Pay" },
+            { label: "Vacation Leave w/ Pay", value: "VL w/ Pay" },
+            { label: "Vacation Leave w/o Pay", value: "VL w/o Pay" },
         ];
 
         return list;
@@ -335,6 +367,7 @@ const DtrCorrection = () => {
             date: date,
             timeIn: moment(timeIn).format("h:mm A"),
             timeOut: moment(timeOut).format("h:mm A"),
+            breakTime: breakTime,
             remarks: !remarks ? "" : remarks.value,
             reason: reason
         }
@@ -356,6 +389,7 @@ const DtrCorrection = () => {
                 setDate(moment().format("MM/DD/yyyy"));
                 setTimeIn(moment().format("MM DD, yyyy 8:00"));
                 setTimeOut(moment().format("MM DD, yyyy 17:00"));
+                setBreakTime(false);
                 setRemarks("");
                 setReason("");
             })
@@ -553,7 +587,7 @@ const DtrCorrection = () => {
                         <br />
                         <form noValidate autoComplete="off">
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <div>
+                                <div style={{ marginBottom: 15 }}>
                                     <label style={{ fontSize: '17px' }}><b>Remarks</b></label>
                                     <Select
                                         defaultValue={remarks}
@@ -576,8 +610,6 @@ const DtrCorrection = () => {
                                     />
                                 </div>
 
-                                <br />
-
                                 {Object.keys(remarks).length > 0 &&
                                     remarks.value !== "Overtime" &&
                                     remarks.value !== "SL w/ Pay" &&
@@ -585,7 +617,7 @@ const DtrCorrection = () => {
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
 
-                                    <div>
+                                    <div style={{ marginBottom: 10 }}>
                                         <label style={{ fontSize: '17px' }}><strong>Time In</strong></label><br />
                                         <KeyboardTimePicker
                                             margin="normal"
@@ -601,8 +633,6 @@ const DtrCorrection = () => {
                                     </div>
                                 }
 
-                                <br />
-
                                 {Object.keys(remarks).length > 0 &&
                                     remarks.value !== "Overtime" &&
                                     remarks.value !== "SL w/ Pay" &&
@@ -610,7 +640,7 @@ const DtrCorrection = () => {
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
 
-                                    <div>
+                                    <div style={{ marginBottom: 10 }}>
                                         <label style={{ fontSize: '17px' }}><strong>Time Out</strong></label><br />
                                         <KeyboardTimePicker
                                             margin="normal"
@@ -626,7 +656,21 @@ const DtrCorrection = () => {
                                     </div>
                                 }
 
-                                <br />
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+                                    <Typography component="div" style={{ marginBottom: 10 }}>
+                                        <Grid component="label" container alignItems="center" spacing={1}>
+                                            <Grid item><label style={{ fontSize: '17px' }}><strong>Break Time: </strong>No</label></Grid>
+                                            <Grid item>
+                                                <AntSwitch checked={breakTime} onChange={() => setBreakTime(!breakTime)} name="checkedC" />
+                                            </Grid>
+                                            <Grid item><label style={{ fontSize: '17px' }}>Yes</label></Grid>
+                                        </Grid>
+                                    </Typography>
+                                }
 
                                 <div>
                                     <label style={{ fontSize: '17px' }}><strong>Reason</strong></label><br />

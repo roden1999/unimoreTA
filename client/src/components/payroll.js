@@ -201,10 +201,18 @@ const Payroll = () => {
             department: x.department,
 
             timeLogs: x.timeLogs,
+
             totalHoursWork: x.totalHoursWork,
             totalRestday: x.totalRestday,
+            totalRestdayOt: x.totalRestdayOt,
             totalHoliday: x.totalHoliday,
+            totalHolidayOt: x.totalHolidayOt,
             totalSpecialHoliday: x.totalSpecialHoliday,
+            totalSpecialHolidayOt: x.totalSpecialHolidayOt,
+            totalHolidayRestday: x.totalHolidayRestday,
+            totalHolidayRestdayOt: x.totalHolidayRestdayOt,
+            totalSpecialHolidayRestday: x.totalSpecialHolidayRestday,
+            totalSpecialHolidayRestdayOt: x.totalSpecialHolidayRestdayOt,
             totalLate: x.totalLate,
             totalUT: x.totalUT,
             totalOT: x.totalOT,
@@ -322,38 +330,87 @@ const Payroll = () => {
                     margin: [0, 5],
                     columns: [
                         [
-                            { text: "Earnings", bold: true, fontSize: 9, alignment: 'center', },
-                            { text: 'Basic: ' + earnings[0].basic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Absenses/Tardiness: ' + earnings[0].absensesTardiness.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Allowance: ' + earnings[0].allowance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Overtime: ' + earnings[0].overtime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Restday: ' + earnings[0].restday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Restday OT: ' + earnings[0].restdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday: ' + earnings[0].holiday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday OT: ' + earnings[0].holidayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday: ' + earnings[0].sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday OT: ' + earnings[0].shOt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday Rest Day: ' + earnings[0].holidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday Rest Day OT: ' + earnings[0].holidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday Rest Day: ' + earnings[0].specialHolidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday Rest Day OT: ' + earnings[0].specialHolidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: '13th Month: ' + earnings[0].tMonthPay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: "Total Earnings: " + e.totalEarnings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, alignment: 'left', margin: [0, 5] },
+                            { text: "Earnings", bold: true, fontSize: 9, alignment: 'center', margin: [0, 5] },
+                            {
+                                columns: [
+                                    [
+                                        { text: 'Basic: ', fontSize: 8, },
+                                        { text: 'Absenses/Tardiness: ', fontSize: 8, },
+                                        { text: 'Allowance: ', fontSize: 8, },
+                                        { text: 'Overtime: ', fontSize: 8, },
+                                        { text: 'Restday: ', fontSize: 8, },
+                                        { text: 'Restday OT: ', fontSize: 8, },
+                                        { text: 'Regular Holiday: ', fontSize: 8, },
+                                        { text: 'Regular Holiday OT: ', fontSize: 8, },
+                                        { text: 'Special Holiday: ', fontSize: 8, },
+                                        { text: 'Special Holiday OT: ', fontSize: 8, },
+                                        { text: 'Regular Holiday Rest Day: ', fontSize: 8, },
+                                        { text: 'Regular Holiday Rest Day OT: ', fontSize: 8, },
+                                        { text: 'Special Holiday Rest Day: ', fontSize: 8, },
+                                        { text: 'Special Holiday Rest Day OT: ', fontSize: 8, },
+                                        { text: '13th Month: ', fontSize: 8, },
+                                        { text: "Total Earnings: ", bold: true, fontSize: 9, alignment: 'left', margin: [0, 5] },
+                                    ],
+                                    [
+                                        { text: earnings[0].basic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].absensesTardiness.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].allowance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].overtime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].restday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].restdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holiday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holidayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].shOt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].specialHolidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].specialHolidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].tMonthPay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: e.totalEarnings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, alignment: 'left', margin: [0, 5] },
+                                    ]
+                                ]
+                            },
                         ],
                         [
-                            { text: "Deductions", bold: true, fontSize: 9, alignment: 'center' },
-                            { text: "SSS: " + deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: "PHIC: " + deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: "HDMF: " + deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-
+                            { text: "Deductions", bold: true, fontSize: 9, alignment: 'center', margin: [0, 5] },
+                            {
+                                columns: [
+                                    [
+                                        { text: "SSS: ", fontSize: 8, },
+                                        { text: "PHIC: ", fontSize: 8, },
+                                        { text: "HDMF: ", fontSize: 8, },
+                                    ],
+                                    [
+                                        { text: deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                    ]
+                                ]
+                            },
                             { text: "Other Deductions", bold: true, fontSize: 9, alignment: 'center', margin: [0, 5] },
-                            { text: 'SSS Loan: ' + deductions[0].sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'PAG-IBIG Loan: ' + deductions[0].pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Care Health Plus: ' + deductions[0].careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                            {
+                                columns: [
+                                    [
+                                        { text: 'SSS Loan: ', fontSize: 8, },
+                                        { text: 'PAG-IBIG Loan: ', fontSize: 8, },
+                                        { text: 'Care Health Plus: ', fontSize: 8, },
 
-                            { text: "Total Deductions: " + e.totalDeduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 9, margin: [0, 5] },
+                                        { text: "Total Deductions: ", bold: true, fontSize: 9, margin: [0, 5] },
 
-                            { text: "Net Pay: " + e.netPayMetalAsia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, margin: [0, 5] },
+                                        { text: "Net Pay: ", bold: true, fontSize: 9, margin: [0, 5] },
+                                    ],
+                                    [
+                                        { text: deductions[0].sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+
+                                        { text: e.totalDeduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, margin: [0, 5] },
+
+                                        { text: e.netPayMetalAsia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, margin: [0, 5] },
+                                    ]
+                                ]
+                            },
 
                             { text: "I Acknowledge to have been received the amount stated here within no further claim for services rendered.", bold: false, fontSize: 9, margin: [0, 5] },
 
@@ -382,38 +439,87 @@ const Payroll = () => {
                     margin: [0, 5],
                     columns: [
                         [
-                            { text: "Earnings", bold: true, fontSize: 9, alignment: 'center', },
-                            { text: 'Basic: ' + earnings[0].basic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Absenses/Tardiness: ' + earnings[0].absensesTardiness.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Allowance: ' + earnings[0].allowance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Overtime: ' + earnings[0].overtime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Restday: ' + earnings[0].restday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Restday OT: ' + earnings[0].restdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday: ' + earnings[0].holiday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday OT: ' + earnings[0].holidayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday: ' + earnings[0].sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday OT: ' + earnings[0].shOt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday Rest Day: ' + earnings[0].holidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Regular Holiday Rest Day OT: ' + earnings[0].holidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday Rest Day: ' + earnings[0].specialHolidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Special Holiday Rest Day OT: ' + earnings[0].specialHolidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: '13th Month: ' + earnings[0].tMonthPay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: "Total Earnings: " + e.totalEarnings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, alignment: 'left', margin: [0, 5] },
+                            { text: "Earnings", bold: true, fontSize: 9, alignment: 'center', margin: [0, 5] },
+                            {
+                                columns: [
+                                    [
+                                        { text: 'Basic: ', fontSize: 8, },
+                                        { text: 'Absenses/Tardiness: ', fontSize: 8, },
+                                        { text: 'Allowance: ', fontSize: 8, },
+                                        { text: 'Overtime: ', fontSize: 8, },
+                                        { text: 'Restday: ', fontSize: 8, },
+                                        { text: 'Restday OT: ', fontSize: 8, },
+                                        { text: 'Regular Holiday: ', fontSize: 8, },
+                                        { text: 'Regular Holiday OT: ', fontSize: 8, },
+                                        { text: 'Special Holiday: ', fontSize: 8, },
+                                        { text: 'Special Holiday OT: ', fontSize: 8, },
+                                        { text: 'Regular Holiday Rest Day: ', fontSize: 8, },
+                                        { text: 'Regular Holiday Rest Day OT: ', fontSize: 8, },
+                                        { text: 'Special Holiday Rest Day: ', fontSize: 8, },
+                                        { text: 'Special Holiday Rest Day OT: ', fontSize: 8, },
+                                        { text: '13th Month: ', fontSize: 8, },
+                                        { text: "Total Earnings: ", bold: true, fontSize: 9, alignment: 'left', margin: [0, 5] },
+                                    ],
+                                    [
+                                        { text: earnings[0].basic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].absensesTardiness.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].allowance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].overtime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].restday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].restdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holiday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holidayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].shOt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].holidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].specialHolidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].specialHolidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: earnings[0].tMonthPay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: e.totalEarnings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, alignment: 'left', margin: [0, 5] },
+                                    ]
+                                ]
+                            },
                         ],
                         [
-                            { text: "Deductions", bold: true, fontSize: 9, alignment: 'center' },
-                            { text: "SSS: " + deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: "PHIC: " + deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: "HDMF: " + deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-
+                            { text: "Deductions", bold: true, fontSize: 9, alignment: 'center', margin: [0, 5] },
+                            {
+                                columns: [
+                                    [
+                                        { text: "SSS: ", fontSize: 8, },
+                                        { text: "PHIC: ", fontSize: 8, },
+                                        { text: "HDMF: ", fontSize: 8, },
+                                    ],
+                                    [
+                                        { text: deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                    ]
+                                ]
+                            },
                             { text: "Other Deductions", bold: true, fontSize: 9, alignment: 'center', margin: [0, 5] },
-                            { text: 'SSS Loan: ' + deductions[0].sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'PAG-IBIG Loan: ' + deductions[0].pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                            { text: 'Care Health Plus: ' + deductions[0].careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                            {
+                                columns: [
+                                    [
+                                        { text: 'SSS Loan: ', fontSize: 8, },
+                                        { text: 'PAG-IBIG Loan: ', fontSize: 8, },
+                                        { text: 'Care Health Plus: ', fontSize: 8, },
 
-                            { text: "Total Deductions: " + e.totalDeduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 9, margin: [0, 5] },
+                                        { text: "Total Deductions: ", bold: true, fontSize: 9, margin: [0, 5] },
 
-                            { text: "Net Pay: " + e.netPayMetalAsia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, margin: [0, 5] },
+                                        { text: "Net Pay: ", bold: true, fontSize: 9, margin: [0, 5] },
+                                    ],
+                                    [
+                                        { text: deductions[0].sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+
+                                        { text: e.totalDeduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, margin: [0, 5] },
+
+                                        { text: e.netPayMetalAsia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), bold: true, fontSize: 9, margin: [0, 5] },
+                                    ]
+                                ]
+                            },
 
                             { text: "I Acknowledge to have been received the amount stated here within no further claim for services rendered.", bold: false, fontSize: 9, margin: [0, 5] },
 
@@ -495,25 +601,50 @@ const Payroll = () => {
             });
         });
 
-        var totalhrswrk = "Total Hours Work: " + e.totalHoursWork;
-        var totalRestdayHrsWrk = "Total Restday Hours Work: " + e.totalRestday;
-        var totalHoliday = "Total Holiday Hours Work: " + e.totalHoliday;
-        var totalSh = "Total Special Holiday Hours Work: " + e.totalSpecialHoliday;
-        var totalUT = "Total UT: " + e.totalUT;
-        var totalOT = "Total OT: " + e.totalOT;
-        var totalLate = "Total Late: " + e.totalLate;
-        var totalAbsent = "Total Absent: " + e.totalAbsent;
+        document.content.push({
+            margin: [0, 5],
+            widths: [10, 10, 'auto', 'auto'],
+            columns: [
+                [
+                    { text: "Hours Work: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Late: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Undertime: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Overtime: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Restday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Restday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Regular Holiday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+                [
 
-        document.content.push([
-            { text: totalhrswrk, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalRestdayHrsWrk, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalHoliday, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalSh, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalUT, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalOT, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalLate, fontSize: 9, bold: true, lineHeight: 1, },
-            { text: totalAbsent, fontSize: 9, bold: true, lineHeight: 1, },
-        ]);
+                    { text: e.totalHoursWork.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalLate.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalUT.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalOT.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalRestday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalRestdayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalHoliday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+                [
+                    { text: "Regular Holiday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Regular Holiday Restday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Regular Holiday Restday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday Restday: ", fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: "Special Holiday Restday OT:", fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+                [
+                    { text: e.totalHolidayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHoliday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHolidayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalHolidayRestday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalHolidayRestdayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHolidayRestday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                    { text: e.totalSpecialHolidayRestdayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
+                ],
+            ],
+            columnGap: 10
+        });
 
         pdfMake.tableLayouts = {
             exampleLayout: {
@@ -677,23 +808,45 @@ const Payroll = () => {
                                                         style={{ display: 'flex', justifyContent: 'flex-center', backgroundColor: '#1BFF00' }}
                                                     />
 
-                                                    <Typography style={{ fontSize: 18 }}><b>Basic: {i.basic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Absenses/Tardiness: {i.absensesTardiness.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Allowance: {i.allowance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Overtime: {i.overtime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Rest Day: {i.restday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Rest Day OT: {i.restdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Regular Holiday: {i.holiday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Regular Holiday OT: {i.holidayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Special Holiday: {i.sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Special Holiday OT: {i.shOt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Regular Holiday Rest Day: {i.holidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Regular Holiday Rest Day OT: {i.holidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Special Holiday Rest Day: {i.specialHolidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Special Holiday Rest Day OT: {i.specialHolidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>13th Month: {i.tMonthPay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                    <Grid container spacing={3}>
+                                                        <Grid item xs={6}>
+                                                            <Typography style={{ fontSize: 16 }}><b>Basic: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Absenses/Tardiness: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Allowance: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Overtime: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Rest Day: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Rest Day OT: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Regular Holiday: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Regular Holiday OT: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Special Holiday: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Special Holiday OT: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Regular Holiday Rest Day: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Regular Holiday Rest Day OT: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Special Holiday Rest Day: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Special Holiday Rest Day OT: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>13th Month: </b></Typography>
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.basic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.absensesTardiness.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.allowance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.overtime.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.restday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.restdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.holiday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.holidayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.sh.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.shOt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.holidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.holidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.specialHolidayRestday.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.specialHolidayRestdayOT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{i.tMonthPay.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                        </Grid>
+                                                    </Grid>
+
                                                     <br />
-                                                    <Typography style={{ fontSize: 19 }}><b>Total Earnings: {x.totalEarnings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                    <Typography style={{ fontSize: 18 }}><b>Total Earnings: {x.totalEarnings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
                                                 </Grid>
                                             )}
                                             {x.deductions.map(j =>
@@ -704,17 +857,37 @@ const Payroll = () => {
                                                         style={{ display: 'flex', justifyContent: 'flex-center', backgroundColor: '#E60C0C' }}
                                                     />
 
-                                                    <Typography style={{ fontSize: 18 }}><b>SSS: {j.sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>PHIC: {j.phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>HDMF: {j.hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                    <Grid container spacing={3}>
+                                                        <Grid item xs={4}>
+                                                            <Typography style={{ fontSize: 16 }}><b>SSS: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>PHIC: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>HDMF: </b></Typography>
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                        </Grid>
+                                                    </Grid>
+
                                                     <br />
-                                                    <Typography style={{ fontSize: 21, textAlign: 'center' }}><b>Other Deductions</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>SSS Loan: {j.sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>PAG-IBIG Loan: {j.pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
-                                                    <Typography style={{ fontSize: 18 }}><b>Care Health Plus: {j.careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+
+                                                    <Typography style={{ fontSize: 21, textAlign: 'left' }}><b>Other Deductions</b></Typography>
+                                                    <Grid container spacing={3}>
+                                                        <Grid item xs={4}>
+                                                            <Typography style={{ fontSize: 16 }}><b>SSS Loan: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>PAG-IBIG Loan: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Care Health Plus: </b></Typography>
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                        </Grid>
+                                                    </Grid>
 
                                                     <br /><br />
-                                                    <Typography style={{ fontSize: 19 }}><b>Total Deductions: {x.totalDeduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                    <Typography style={{ fontSize: 18 }}><b>Total Deductions: {x.totalDeduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
                                                 </Grid>
                                             )}
                                         </Grid>
@@ -723,7 +896,7 @@ const Payroll = () => {
 
                                 <CardActions>
                                     <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-                                        <Typography style={{ fontSize: 23, }}><b>Net Pay: {x.netPayMetalAsia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                        <Typography style={{ fontSize: 20, }}><b>Net Pay: {x.netPayMetalAsia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
                                     </div>
                                 </CardActions>
                             </Card>
