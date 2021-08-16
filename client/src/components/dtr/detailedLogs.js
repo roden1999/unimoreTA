@@ -422,6 +422,13 @@ const DetailedLogs = () => {
         });
 
         e.timeLogs.forEach(y => {
+            var color="";
+            if (y.remarks === "Regular Holiday" || y.remarks === "Special Holiday") color = "#7BFF66";
+
+            if (y.remarks === "Working Holiday" || y.remarks === "Working Special Holiday") color = "#20E700";
+            
+            if (y.remarks === "Working Regular Holiday Rest Day" || y.remarks === "Working Special Holiday Rest Day") color = "#2CFF72";
+            
             document.content.push({
                 // layout: 'lightHorizontalLines',
                 table: {
@@ -430,17 +437,17 @@ const DetailedLogs = () => {
                     body: [
                         //Data
                         [
-                            { text: y.day.toString(), fontSize: 7, alignment: "center", color: y.day === "Sunday" ? "red" : "black" },
-                            { text: moment(y.dateTime).format("MM/DD/yyyy").toString(), fontSize: 7, alignment: "center" },
-                            { text: y.timeStartEnd.toString(), fontSize: 7, alignment: "center" },
-                            { text: y.timeIn !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 7, alignment: "center" },
-                            { text: y.timeOut !== "Invalid date" ? y.timeOut.toString() : "", fontSize: 7, alignment: "center" },
-                            { text: y.hoursWork.toString(), fontSize: 7, alignment: "right" },
-                            { text: y.late.toString(), fontSize: 7, alignment: "right" },
-                            { text: y.UT.toString(), fontSize: 7, alignment: "right" },
-                            { text: y.OT.toString(), fontSize: 7, alignment: "right" },
-                            { text: y.remarks !== "OT For Approval" ? y.remarks.toString() : "", fontSize: 7, alignment: "center" },
-                            { text: y.reason.toString(), fontSize: 7, alignment: "left" }
+                            { text: y.day.toString(), fontSize: 7, alignment: "center", color: y.day === "Sunday" ? "red" : "black", fillColor: color },
+                            { text: moment(y.dateTime).format("MM/DD/yyyy").toString(), fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.timeStartEnd.toString(), fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.timeIn !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.timeOut !== "Invalid date" ? y.timeOut.toString() : "", fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.hoursWork.toString(), fontSize: 7, alignment: "right", fillColor: color },
+                            { text: y.late.toString(), fontSize: 7, alignment: "right", fillColor: color },
+                            { text: y.UT.toString(), fontSize: 7, alignment: "right", fillColor: color },
+                            { text: y.OT.toString(), fontSize: 7, alignment: "right", fillColor: color },
+                            { text: y.remarks !== "OT For Approval" ? y.remarks.toString() : "", fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.reason.toString(), fontSize: 7, alignment: "left", fillColor: color }
                         ],
                     ],
                     lineHeight: 2
@@ -694,7 +701,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor: '##00A2FF' }}
+                                                                        style={{ backgroundColor: '#00A2FF' }}
                                                                     />
                                                                 }
 
@@ -727,6 +734,22 @@ const DetailedLogs = () => {
                                                                         label={y.remarks}
                                                                         color="default"
                                                                         style={{ backgroundColor: '#20E700' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Working Special Holiday Rest Day" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor: '#2CFF72' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Working Regular Holiday Rest Day" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor: '#2CFF72' }}
                                                                     />
                                                                 }
 

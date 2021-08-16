@@ -141,7 +141,7 @@ const customSelectStyle = {
     option: (provided, state) => ({
         ...provided,
         color: state.isSelected ? 'white' : 'black',
-        padding: 20,
+        padding: 20,        
         zIndex: 1000
     }),
     singleValue: base => ({
@@ -346,6 +346,8 @@ const DtrCorrection = () => {
             { label: "Working Holiday", value: "Working Holiday" },
             { label: "Working Special Holiday", value: "Working Special Holiday" },
             { label: "Working Holiday Rest Day", value: "Working Holiday Rest Day" },
+            { label: "Working Regular Holiday Rest Day", value: "Working Regular Holiday Rest Day" },
+            { label: "Working Special Holiday Rest Day", value: "Working Special Holiday Rest Day" },
             { label: "Sick Leave w/ Pay", value: "SL w/ Pay" },
             { label: "Sick Leave w/o Pay", value: "SL w/o Pay" },
             { label: "Vacation Leave w/ Pay", value: "VL w/ Pay" },
