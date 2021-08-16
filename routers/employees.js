@@ -24,6 +24,7 @@ router.post("/", async (request, response) => {
 		firstName: request.body.firstName,
 		middleName: request.body.middleName,
 		lastName: request.body.lastName,
+		suffix: request.body.suffix,
 		department: request.body.department,
 		contactNo: request.body.contactNo,
 		gender: request.body.gender,
@@ -75,7 +76,7 @@ router.post("/list", async (request, response) => {
 				'$or': id,
 				'$and': dep,
 				IsDeleted: false
-			}).sort('firstName');
+			}).sort('lastName');
 
 			var data = [];
 			for (const i in employees) {
@@ -86,6 +87,7 @@ router.post("/list", async (request, response) => {
 					"firstName": employees[i].firstName,
 					"middleName": employees[i].middleName,
 					"lastName": employees[i].lastName,
+					"suffix": employees[i].suffix,
 					"deptId": dept._id,
 					"department": dept.department,
 					"contactNo": employees[i].contactNo,
@@ -106,11 +108,11 @@ router.post("/list", async (request, response) => {
 				employees = await employeeModel.find({
 					'$or': id,
 					IsDeleted: false
-				}).skip((page) * perPage).limit(perPage).sort('firstName');
+				}).skip((page) * perPage).limit(perPage).sort('lastName');
 			} else {
 				employees = await employeeModel.find({
 					IsDeleted: false
-				}).skip((page) * perPage).limit(perPage).sort('firstName');
+				}).skip((page) * perPage).limit(perPage).sort('lastName');
 			};
 
 			var data = [];
@@ -122,6 +124,7 @@ router.post("/list", async (request, response) => {
 					"firstName": employees[i].firstName,
 					"middleName": employees[i].middleName,
 					"lastName": employees[i].lastName,
+					"suffix": employees[i].suffix,
 					"deptId": dept._id,
 					"department": dept.department,
 					"contactNo": employees[i].contactNo,
@@ -153,7 +156,7 @@ router.get("/total-employees", async (request, response) => {
 //For search options get method
 router.get("/options", async (request, response) => {
 	try {
-		const employees = await employeeModel.find({ IsDeleted: false }).sort('firstName');
+		const employees = await employeeModel.find({ IsDeleted: false }).sort('lastName');
 		response.status(200).json(employees);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
@@ -173,11 +176,11 @@ router.post("/employee-options", async (request, response) => {
 			employees = await employeeModel.find({
 				'$or': id,
 				IsDeleted: false
-			}).sort('firstName');
+			}).sort('lastName');
 		} else {
 			employees = await employeeModel.find({
 				IsDeleted: false
-			}).sort('firstName');
+			}).sort('lastName');
 		};
 		response.status(200).json(employees);
 	} catch (error) {

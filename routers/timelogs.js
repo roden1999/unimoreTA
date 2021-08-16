@@ -88,7 +88,7 @@ router.post("/raw-list", async (request, response) => {
                 var dataLog = {
                     "_id": logs[i]._id,
                     "employeeNo": logs[i].employeeNo,
-                    "employeeName": emp.firstName + " " + emp.middleName + " " + emp.lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "timeInOut": logs[i].timeInOut,
                     "dateTime": logs[i].dateTime
                 }
@@ -188,7 +188,7 @@ router.post("/detailed-list", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).sort("firstName");
+            }).sort("lastName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -528,7 +528,7 @@ router.post("/detailed-list", async (request, response) => {
                 var employeeLogs = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "timeLogs": timeLogs,
                     "totalHoursWork": totalHrsWork.toFixed(2),
@@ -557,7 +557,7 @@ router.post("/detailed-list", async (request, response) => {
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
             //(page -1)
-            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("firstName");
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("lastName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -897,7 +897,7 @@ router.post("/detailed-list", async (request, response) => {
                 var employeeLogs = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "timeLogs": timeLogs,
                     "totalHoursWork": totalHrsWork.toFixed(2),
@@ -944,7 +944,7 @@ router.post("/dtr-correction", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).sort("firstName");
+            }).sort("lastName");
 
             var data = [];
             for (const i in emp) {
@@ -1011,7 +1011,7 @@ router.post("/dtr-correction", async (request, response) => {
                     var logs = {
                         "empId": emp[i]._id,
                         "empNo": emp[i].employeeNo,
-                        "empName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                        "empName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                         "department": emp[i].department,
                         "day": day,
                         "date": dateTime,
@@ -1029,7 +1029,7 @@ router.post("/dtr-correction", async (request, response) => {
                 var employeeLogs = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "timeLogs": timeLogs,
                 }
@@ -1043,7 +1043,7 @@ router.post("/dtr-correction", async (request, response) => {
             var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
-            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("firstName");
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("lastName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -1109,7 +1109,7 @@ router.post("/dtr-correction", async (request, response) => {
                     var logs = {
                         "empId": emp[i]._id,
                         "empNo": emp[i].employeeNo,
-                        "empName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                        "empName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                         "department": emp[i].department,
                         "day": day,
                         "date": dateTime,
@@ -1127,7 +1127,7 @@ router.post("/dtr-correction", async (request, response) => {
                 var employeeLogs = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "timeLogs": timeLogs,
                 }

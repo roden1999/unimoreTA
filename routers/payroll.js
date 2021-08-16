@@ -28,7 +28,7 @@ router.post("/payroll-list", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).sort("firstName");
+            }).sort("lastName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -447,7 +447,7 @@ router.post("/payroll-list", async (request, response) => {
                 var employeeLogs = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "salary": totalMonthly.toFixed(2),
                     "basicMetalAsia": basicMetalAsia.toFixed(2),
@@ -498,7 +498,7 @@ router.post("/payroll-list", async (request, response) => {
             var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
-            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("firstName");
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("lastName");
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);
@@ -917,7 +917,7 @@ router.post("/payroll-list", async (request, response) => {
                 var employeeLogs = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "salary": totalMonthly.toFixed(2),
                     "basicMetalAsia": basicMetalAsia.toFixed(2),

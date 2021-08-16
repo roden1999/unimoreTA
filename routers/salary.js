@@ -85,7 +85,7 @@ router.post("/list", async (request, response) => {
             }
             const emp = await employeeModel.find({
                 '$or': id,
-            }).sort("firstName");
+            }).sort("lastName");
 
             var employees = [];
             for (const i in emp) {
@@ -108,7 +108,7 @@ router.post("/list", async (request, response) => {
                 var employeeData = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": !dept.department ? "" : dept.department,
                     // "salaryAndDeductions": [salaryAndDeduction]
                     "salaryId": !salary ? "No Salary" : salary._id,
@@ -125,7 +125,7 @@ router.post("/list", async (request, response) => {
             }
             response.status(200).json(employees);
         } else {
-            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort('firstName');
+            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort('lastName');
 
             var employees = [];
             for (const i in emp) {
@@ -148,7 +148,7 @@ router.post("/list", async (request, response) => {
                 var employeeData = {
                     "_id": emp[i]._id,
                     "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].firstName + " " + emp[i].middleName + " " + emp[i].lastName,
+                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dept.department,
                     // "salaryAndDeductions": [salaryAndDeduction]
                     "salaryId": !salary ? "No Salary" : salary._id,
@@ -173,7 +173,7 @@ router.post("/list", async (request, response) => {
 //For search options
 router.get("/options", async (request, response) => {
     try {
-        const employees = await employeeModel.find().sort('firstName');
+        const employees = await employeeModel.find().sort('lastName');
         response.status(200).json(employees);
     } catch (error) {
         response.status(500).json({ error: error.message });

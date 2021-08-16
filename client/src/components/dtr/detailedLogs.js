@@ -777,6 +777,14 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
+                                                                {y.remarks === "Manual Log" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor: '#233A46' }}
+                                                                    />
+                                                                }
+
                                                                 {y.remarks === "SL w/ Pay" &&
                                                                     <Chip
                                                                         label={y.remarks}

@@ -88,6 +88,7 @@ const employeeValidation = (data) => {
 		lastName: Joi.string().required().messages({
 			"string.empty": `Last Name. is required`,
 		}),
+		suffix: Joi.string().allow(''),
 		department: Joi.string().required().messages({
 			"string.empty": `Department. is required`,
 		}),

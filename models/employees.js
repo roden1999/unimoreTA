@@ -16,6 +16,9 @@ const employeesSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+	suffix: {
+        type: String,
+    },
     department: {
         type: String,
     },

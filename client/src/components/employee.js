@@ -116,6 +116,7 @@ const Employee = () => {
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [suffix, setSuffix] = useState("");
   const [department, setDepartment] = useState("");
   const [contactNo, setContactNo] = useState("");
   const [gender, setGender] = useState("");
@@ -167,6 +168,7 @@ const Employee = () => {
       firstName: x.firstName,
       middleName: x.middleName,
       lastName: x.lastName,
+      suffix: x.suffix,
       deptId: x.deptId,
       department: x.department,
       contactNo: x.contactNo,
@@ -209,7 +211,7 @@ const Employee = () => {
   const employeeOptionsList = employeeOptions
     ? employeeOptions.map((x) => ({
       id: x._id,
-      name: x.firstName + " " + x.middleName + " " + x.lastName + " - (" + x.employeeNo + ")",
+      name: x.lastName + " " + x.firstName + " " + x.middleName + " " + x.suffix + " - (" + x.employeeNo + ")",
     }))
     : [];
 
@@ -325,6 +327,7 @@ const Employee = () => {
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
+      suffix: suffix,
       department: department ? department.value : "",
       contactNo: contactNo,
       gender: gender ? gender.value : "",
@@ -351,6 +354,7 @@ const Employee = () => {
         setFirstName("");
         setMiddleName("");
         setLastName("");
+        setSuffix("");
         setDepartment("");
         setGender("");
         setContactNo("");
@@ -375,6 +379,7 @@ const Employee = () => {
     setFirstName("");
     setMiddleName("");
     setLastName("");
+    setSuffix("");
     setDepartment("");
     setGender("");
     setContactNo("");
@@ -392,6 +397,7 @@ const Employee = () => {
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
+      suffix: suffix,
       department: department ? department.value : "",
       contactNo: contactNo,
       gender: gender ? gender.value : "",
@@ -418,6 +424,7 @@ const Employee = () => {
         setFirstName("");
         setMiddleName("");
         setLastName("");
+        setSuffix("");
         setDepartment("");
         setGender("");
         setContactNo("");
@@ -445,6 +452,7 @@ const Employee = () => {
     setFirstName(params.firstName);
     setMiddleName(params.middleName);
     setLastName(params.lastName);
+    setSuffix(params.suffix);
     setDepartment(dep);
     setGender(gndr);
     setContactNo(params.contactNo);
@@ -459,6 +467,7 @@ const Employee = () => {
     setFirstName("");
     setMiddleName("");
     setLastName("");
+    setSuffix("");
     setDepartment("");
     setGender("");
     setContactNo("");
@@ -519,6 +528,7 @@ const Employee = () => {
     setFirstName("");
     setMiddleName("");
     setLastName("");
+    setSuffix("");
     setDepartment("");
     setContactNo("");
     setAddress("");
@@ -596,7 +606,7 @@ const Employee = () => {
                 <CardActionArea>
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                      {x.firstName + " " + x.middleName + " " + x.lastName}
+                      {x.lastName + " " + x.firstName + " " + x.middleName + " " + x.suffix}
                     </Typography>
                     <Typography gutterBottom variant="p" component="h3">
                       Employee No: {x.employeeNo}
@@ -672,7 +682,7 @@ const Employee = () => {
               <br />
 
               <div>
-                <label style={{ fontSize: '17px' }}><strong>Middle Name</strong></label><br />
+                <label style={{ fontSize: '17px' }}><strong>Middle Name / Middle Initial</strong></label><br />
                 <TextField variant='outlined' size='small' fullWidth placeholder="Middle Name" value={middleName} onChange={e => setMiddleName(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
               </div>
 
@@ -681,6 +691,13 @@ const Employee = () => {
               <div>
                 <label style={{ fontSize: '17px' }}><strong>Last Name</strong></label><br />
                 <TextField variant='outlined' size='small' fullWidth placeholder="Last Name" value={lastName} onChange={e => setLastName(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+              </div>
+
+              <br />
+
+              <div>
+                <label style={{ fontSize: '17px' }}><strong>Suffix</strong></label><br />
+                <TextField variant='outlined' size='small' fullWidth placeholder="Suffix" value={suffix} onChange={e => setSuffix(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
               </div>
 
               <br />
@@ -817,6 +834,13 @@ const Employee = () => {
               <div>
                 <label style={{ fontSize: '17px' }}><strong>Last Name</strong></label><br />
                 <TextField variant='outlined' size='small' fullWidth placeholder="Last Name" value={lastName} onChange={e => setLastName(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+              </div>
+
+              <br />
+
+              <div>
+                <label style={{ fontSize: '17px' }}><strong>Suffix</strong></label><br />
+                <TextField variant='outlined' size='small' fullWidth placeholder="Suffix" value={suffix} onChange={e => setSuffix(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
               </div>
 
               <br />
