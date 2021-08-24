@@ -232,7 +232,7 @@ const RawLogs = () => {
     const employeeOptionsList = employeeOptions
         ? employeeOptions.map((x) => ({
             id: x._id,
-            name: x.firstName + " " + x.middleName + " " + x.lastName + " - (" + x.employeeNo + ")",
+            name: x.lastName + " " + x.lastName + " " + x.middleName + " " + x.suffix + " - (" + x.employeeNo + ")",
             employeeNo: x.employeeNo
         }))
         : [];
