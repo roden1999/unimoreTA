@@ -975,13 +975,31 @@ router.post("/dtr-correction", async (request, response) => {
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
             var id = [];
-            var params = request.body.selectedDtrcLogs;
-            for (const i in params) {
-                id.push({ employeeNo: params[i].value });
+            var dep = [];
+            var data = request.body.selectedDtrcLogs;
+            var paramDep = request.body.selectedDepartment;
+            for (const i in data) {
+                id.push({ employeeNo: data[i].value });
             }
-            const emp = await employeeModel.find({
-                '$or': id,
-            }).sort("lastName");
+            for (const i in paramDep) {
+                // console.log(`_id: ${request.body[i].value}`);
+                dep.push({ department: request.body.selectedDepartment[i].value });
+            }
+            var emp = [];
+            if (Object.keys(dep).length > 0) {
+                emp = await employeeModel.find({
+                    '$or': id,
+                    '$and': [
+                        { '$or': dep }
+                    ],
+                    IsDeleted: false
+                }).sort('lastName');
+            } else {
+                emp = await employeeModel.find({
+                    '$or': id,
+                    IsDeleted: false
+                }).sort('lastName');
+            }
 
             var data = [];
             for (const i in emp) {
@@ -1080,7 +1098,24 @@ router.post("/dtr-correction", async (request, response) => {
             var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
-            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("lastName");
+            var id = [];
+            var paramDep = request.body.selectedDepartment;
+            for (const i in paramDep) {
+                id.push({ department: request.body.selectedDepartment[i].value });
+            }
+
+            var emp = [];
+            if (Object.keys(request.body.selectedDepartment).length > 0) {
+                emp = await employeeModel.find({
+                    '$or': id,
+                    IsDeleted: false
+                }).skip((page) * perPage).limit(perPage).sort('lastName');
+            } else {
+                emp = await employeeModel.find({
+                    IsDeleted: false
+                }).skip((page) * perPage).limit(perPage).sort('lastName');
+            };
+
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);

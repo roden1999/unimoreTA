@@ -141,7 +141,7 @@ const customSelectStyle = {
     option: (provided, state) => ({
         ...provided,
         color: state.isSelected ? 'white' : 'black',
-        padding: 20,        
+        padding: 20,
         zIndex: 1000
     }),
     singleValue: base => ({
@@ -188,8 +188,10 @@ const DtrCorrection = () => {
     const [remarks, setRemarks] = useState("");
     const [reason, setReason] = useState("");
     const [employeeOptions, setEmployeeOptions] = useState(null);
+    const [departmentOptions, setDepartmentOptions] = useState(null);
     const [addModal, setAddModal] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState([]);
     const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
     const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
     const [totalEmployee, setTotalEmployee] = useState(0);
@@ -198,6 +200,7 @@ const DtrCorrection = () => {
     useEffect(() => {
         var data = {
             selectedDtrcLogs: !selectedEmployee ? [] : selectedEmployee,
+            selectedDepartment: !selectedDepartment ? [] : selectedDepartment,
             fromDate: fromDate,
             toDate: toDate,
             page: page
@@ -226,7 +229,7 @@ const DtrCorrection = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, page, loader, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, page, loader, toDate, fromDate]);
 
     const logList = logData
         ? logData.map((x) => ({
@@ -239,12 +242,15 @@ const DtrCorrection = () => {
         : [];
 
     useEffect(() => {
-        var route = "employees/options";
+        var route = "employees/employee-options";
         var url = window.apihost + route;
         var token = sessionStorage.getItem("auth-token");
 
+        var data = {
+            selectedDepartment: !selectedDepartment ? [] : selectedDepartment
+        };
         axios
-            .get(url, {
+            .post(url, data, {
                 headers: { "auth-token": token },
             })
             .then(function (response) {
@@ -264,12 +270,12 @@ const DtrCorrection = () => {
             .finally(function () {
                 // always executed
             });
-    }, [loader]);
+    }, [loader, selectedDepartment]);
 
     const employeeOptionsList = employeeOptions
         ? employeeOptions.map((x) => ({
             id: x._id,
-            name: x.firstName + " " + x.middleName + " " + x.lastName + " - (" + x.employeeNo + ")",
+            name: x.lastName + " " + x.firstName + " " + x.middleName + " " + x.suffix + " - (" + x.employeeNo + ")",
             employeeNo: x.employeeNo
         }))
         : [];
@@ -306,6 +312,55 @@ const DtrCorrection = () => {
                 // always executed
             });
     }, [employeeOptions, selectedEmployee, loader]);
+
+    useEffect(() => {
+        var route = "department/options";
+        var url = window.apihost + route;
+        var token = sessionStorage.getItem("auth-token");
+
+        axios
+            .get(url, {
+                headers: { "auth-token": token },
+            })
+            .then(function (response) {
+                // handle success
+                if (Array.isArray(response.data)) {
+                    setDepartmentOptions(response.data);
+                } else {
+                    var obj = [];
+                    obj.push(response.data);
+                    setDepartmentOptions(obj);
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                // always executed
+            });
+    }, [loader]);
+
+    const departmentOptionsList = departmentOptions
+        ? departmentOptions.map((x) => ({
+            id: x._id,
+            name: x.department,
+        }))
+        : [];
+
+    function DepartmentSearchOption(item) {
+        var list = [];
+        if (item !== undefined || item !== null) {
+            item.map((x) => {
+                return list.push({
+                    label: x.name,
+                    value: x.id,
+                });
+            });
+        }
+        return list;
+    }
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -428,6 +483,30 @@ const DtrCorrection = () => {
                     options={EmployeeOption(employeeOptionsList)}
                     onChange={e => setSelectedEmployee(e)}
                     placeholder='Search...'
+                    isClearable
+                    isMulti
+                    theme={(theme) => ({
+                        ...theme,
+                        // borderRadius: 0,
+                        colors: {
+                            ...theme.colors,
+                            text: 'black',
+                            primary25: '#66c0f4',
+                            primary: '#B9B9B9',
+                        },
+                    })}
+                    styles={customSelectStyle}
+                />
+            </div>
+
+            <div style={{
+                float: 'right', width: '12%', zIndex: 100, marginRight: 10
+            }}>
+                <Select
+                    defaultValue={selectedDepartment}
+                    options={DepartmentSearchOption(departmentOptionsList)}
+                    onChange={e => setSelectedDepartment(e)}
+                    placeholder='Department'
                     isClearable
                     isMulti
                     theme={(theme) => ({
