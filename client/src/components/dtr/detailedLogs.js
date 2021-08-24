@@ -151,8 +151,10 @@ const DetailedLogs = () => {
     const [loader, setLoader] = useState(false);
     const [logData, setLogData] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
+    const [departmentOptions, setDepartmentOptions] = useState(null);
     const [addModal, setAddModal] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState([]);
     const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
     const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
     const [totalEmployee, setTotalEmployee] = useState(0);
@@ -161,6 +163,7 @@ const DetailedLogs = () => {
     useEffect(() => {
         var data = {
             selectedDetailedLogs: !selectedEmployee ? [] : selectedEmployee,
+            selectedDepartment: !selectedDepartment ? [] : selectedDepartment,
             fromDate: fromDate,
             toDate: toDate,
             page: page
@@ -189,7 +192,7 @@ const DetailedLogs = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, page, loader, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, page, loader, toDate, fromDate]);
 
     const logList = logData
         ? logData.map((x) => ({
@@ -217,12 +220,15 @@ const DetailedLogs = () => {
         : [];
 
     useEffect(() => {
-        var route = "employees/options";
+        var route = "employees/employee-options";
         var url = window.apihost + route;
         var token = sessionStorage.getItem("auth-token");
 
+        var data = {
+            selectedDepartment: !selectedDepartment ? [] : selectedDepartment
+        };
         axios
-            .get(url, {
+            .post(url, data, {
                 headers: { "auth-token": token },
             })
             .then(function (response) {
@@ -242,12 +248,12 @@ const DetailedLogs = () => {
             .finally(function () {
                 // always executed
             });
-    }, [loader]);
+    }, [loader, selectedDepartment]);
 
     const employeeOptionsList = employeeOptions
         ? employeeOptions.map((x) => ({
             id: x._id,
-            name: x.firstName + " " + x.middleName + " " + x.lastName + " - (" + x.employeeNo + ")",
+            name: x.lastName + " " + x.firstName + " " + x.middleName + " " + x.suffix + " - (" + x.employeeNo + ")",
             employeeNo: x.employeeNo
         }))
         : [];
@@ -284,6 +290,67 @@ const DetailedLogs = () => {
                 // always executed
             });
     }, [employeeOptions, selectedEmployee, loader]);
+
+    useEffect(() => {
+        var route = "department/options";
+        var url = window.apihost + route;
+        var token = sessionStorage.getItem("auth-token");
+
+        axios
+            .get(url, {
+                headers: { "auth-token": token },
+            })
+            .then(function (response) {
+                // handle success
+                if (Array.isArray(response.data)) {
+                    setDepartmentOptions(response.data);
+                } else {
+                    var obj = [];
+                    obj.push(response.data);
+                    setDepartmentOptions(obj);
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                // always executed
+            });
+    }, [loader]);
+
+    const departmentOptionsList = departmentOptions
+        ? departmentOptions.map((x) => ({
+            id: x._id,
+            name: x.department,
+        }))
+        : [];
+
+    function DepartmentOption(item) {
+        var list = [];
+        if (item !== undefined || item !== null) {
+            item.map((x) => {
+                return list.push({
+                    label: x.name,
+                    value: x.id,
+                });
+            });
+        }
+        return list;
+    }
+
+    function DepartmentSearchOption(item) {
+        var list = [];
+        if (item !== undefined || item !== null) {
+            item.map((x) => {
+                return list.push({
+                    label: x.name,
+                    value: x.id,
+                });
+            });
+        }
+        return list;
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -422,13 +489,13 @@ const DetailedLogs = () => {
         });
 
         e.timeLogs.forEach(y => {
-            var color="";
+            var color = "";
             if (y.remarks === "Regular Holiday" || y.remarks === "Special Holiday") color = "#7BFF66";
 
             if (y.remarks === "Working Holiday" || y.remarks === "Working Special Holiday") color = "#20E700";
-            
+
             if (y.remarks === "Working Regular Holiday Rest Day" || y.remarks === "Working Special Holiday Rest Day") color = "#2CFF72";
-            
+
             document.content.push({
                 // layout: 'lightHorizontalLines',
                 table: {
@@ -546,6 +613,30 @@ const DetailedLogs = () => {
                     options={EmployeeOption(employeeOptionsList)}
                     onChange={e => setSelectedEmployee(e)}
                     placeholder='Search...'
+                    isClearable
+                    isMulti
+                    theme={(theme) => ({
+                        ...theme,
+                        // borderRadius: 0,
+                        colors: {
+                            ...theme.colors,
+                            text: 'black',
+                            primary25: '#66c0f4',
+                            primary: '#B9B9B9',
+                        },
+                    })}
+                    styles={customSelectStyle}
+                />
+            </div>
+
+            <div style={{
+                float: 'right', width: '12%', zIndex: 100, marginRight: 10
+            }}>
+                <Select
+                    defaultValue={selectedDepartment}
+                    options={DepartmentSearchOption(departmentOptionsList)}
+                    onChange={e => setSelectedDepartment(e)}
+                    placeholder='Department'
                     isClearable
                     isMulti
                     theme={(theme) => ({
