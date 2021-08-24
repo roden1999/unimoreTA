@@ -111,6 +111,7 @@ const SalaryAndDeduction = () => {
     const [id, setId] = useState(-1);
     const [employeeNo, setEmployeeNo] = useState("");
     const [employeeName, setEmployeeName] = useState("");
+    const [department, setDepartment] = useState("");
     const [salary, setSalary] = useState("");
     const [sss, setSSS] = useState("");
     const [phic, setPhic] = useState("");
@@ -122,12 +123,14 @@ const SalaryAndDeduction = () => {
     const [editModal, setEditModal] = useState(false);
     const [deletePopup, setDeletePopup] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState([]);
     const [totalEmp, setTotalEmp] = useState(0);
     const [page, setPage] = useState(0);
 
     useEffect(() => {
         var data = {
             selectedEmployee: !selectedEmployee ? [] : selectedEmployee,
+            selectedDepartment: !selectedDepartment ? [] : selectedDepartment,
             page: page
         };
         var route = "salary/list";
@@ -154,7 +157,7 @@ const SalaryAndDeduction = () => {
             .finally(function () {
                 // always executed
             });
-    }, [page, selectedEmployee, loader]);
+    }, [page, selectedEmployee, selectedDepartment, loader]);
 
     const employeeList = employeeData
         ? employeeData.map((x) => ({
@@ -175,12 +178,15 @@ const SalaryAndDeduction = () => {
         : [];
 
     useEffect(() => {
-        var route = "employees/options";
+        var route = "employees/employee-options";
         var url = window.apihost + route;
         var token = sessionStorage.getItem("auth-token");
 
+        var data = {
+            selectedDepartment: !selectedDepartment ? [] : selectedDepartment
+        };
         axios
-            .get(url, {
+            .post(url, data, {
                 headers: { "auth-token": token },
             })
             .then(function (response) {
@@ -200,7 +206,7 @@ const SalaryAndDeduction = () => {
             .finally(function () {
                 // always executed
             });
-    }, [loader]);
+    }, [loader, selectedDepartment]);
 
     const employeeOptionsList = employeeOptions
         ? employeeOptions.map((x) => ({
@@ -210,6 +216,67 @@ const SalaryAndDeduction = () => {
         : [];
 
     function EmployeeOption(item) {
+        var list = [];
+        if (item !== undefined || item !== null) {
+            item.map((x) => {
+                return list.push({
+                    label: x.name,
+                    value: x.id,
+                });
+            });
+        }
+        return list;
+    }
+
+    useEffect(() => {
+        var route = "department/options";
+        var url = window.apihost + route;
+        var token = sessionStorage.getItem("auth-token");
+
+        axios
+            .get(url, {
+                headers: { "auth-token": token },
+            })
+            .then(function (response) {
+                // handle success
+                if (Array.isArray(response.data)) {
+                    setDepartmentOptions(response.data);
+                } else {
+                    var obj = [];
+                    obj.push(response.data);
+                    setDepartmentOptions(obj);
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                // always executed
+            });
+    }, [loader]);
+
+    const departmentOptionsList = departmentOptions
+        ? departmentOptions.map((x) => ({
+            id: x._id,
+            name: x.department,
+        }))
+        : [];
+
+    function DepartmentOption(item) {
+        var list = [];
+        if (item !== undefined || item !== null) {
+            item.map((x) => {
+                return list.push({
+                    label: x.name,
+                    value: x.id,
+                });
+            });
+        }
+        return list;
+    }
+
+    function DepartmentSearchOption(item) {
         var list = [];
         if (item !== undefined || item !== null) {
             item.map((x) => {
@@ -410,6 +477,30 @@ const SalaryAndDeduction = () => {
                 />
             </div>
 
+            <div style={{
+                float: 'right', width: '12%', zIndex: 100, marginRight: 10
+            }}>
+                <Select
+                    defaultValue={selectedDepartment}
+                    options={DepartmentSearchOption(departmentOptionsList)}
+                    onChange={e => setSelectedDepartment(e)}
+                    placeholder='Department'
+                    isClearable
+                    isMulti
+                    theme={(theme) => ({
+                        ...theme,
+                        // borderRadius: 0,
+                        colors: {
+                            ...theme.colors,
+                            text: 'black',
+                            primary25: '#66c0f4',
+                            primary: '#B9B9B9',
+                        },
+                    })}
+                    styles={customSelectStyle}
+                />
+            </div>
+
             <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '75vh', maxHeight: '75vh', overflowY: 'scroll' }}>
                 <Grid container spacing={3}>
                     {employeeList.length > 0 && employeeList.map(x =>
@@ -417,11 +508,11 @@ const SalaryAndDeduction = () => {
                             <Card>
                                 <CardActionArea>
                                     <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            {x.employeeName + " - (" + x.employeeNo + ")"}
+                                        <Typography gutterBottom>
+                                            <strong>{x.employeeName + " - (" + x.employeeNo + ")"}</strong>
                                         </Typography>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            Salary: ₱{x.salary}
+                                        <Typography gutterBottom>
+                                            <strong>Salary: ₱{x.salary}</strong>
                                         </Typography>
                                         <Grid container spacing={3}>
                                             <Grid item xs>

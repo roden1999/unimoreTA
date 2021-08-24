@@ -79,13 +79,30 @@ router.post("/list", async (request, response) => {
         var perPage = 20;
         if (Object.keys(request.body.selectedEmployee).length > 0) {
             var id = [];
+            var dep = [];
             var data = request.body.selectedEmployee;
+            var paramDep = request.body.selectedDepartment;
             for (const i in data) {
                 id.push({ _id: data[i].value });
             }
-            const emp = await employeeModel.find({
-                '$or': id,
-            }).sort("lastName");
+            for (const i in paramDep) {
+				// console.log(`_id: ${request.body[i].value}`);
+				dep.push({ department: request.body.selectedDepartment[i].value });
+			}
+
+            var emp = [];
+			if (Object.keys(dep).length > 0) {
+				emp = await employeeModel.find({
+					'$or': id,
+					'$and': dep,
+					IsDeleted: false
+				}).sort('lastName');
+			} else {
+				emp = await employeeModel.find({
+					'$or': id,
+					IsDeleted: false
+				}).sort('lastName');
+			}
 
             var employees = [];
             for (const i in emp) {
@@ -125,7 +142,24 @@ router.post("/list", async (request, response) => {
             }
             response.status(200).json(employees);
         } else {
-            const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort('lastName');
+            var id = [];
+			var paramDep = request.body.selectedDepartment;
+			for (const i in paramDep) {
+				id.push({ department: request.body.selectedDepartment[i].value });
+			}
+			var emp = [];
+			if (Object.keys(request.body.selectedDepartment).length > 0) {
+				emp = await employeeModel.find({
+					'$or': id,
+					IsDeleted: false
+				}).skip((page) * perPage).limit(perPage).sort('lastName');
+			} else {
+				emp = await employeeModel.find({
+					IsDeleted: false
+				}).skip((page) * perPage).limit(perPage).sort('lastName');
+			};
+
+            // const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort('lastName');
 
             var employees = [];
             for (const i in emp) {
@@ -134,16 +168,6 @@ router.post("/list", async (request, response) => {
                 });
 
                 const dept = await departmentModel.findById(emp[i].department);
-
-                /* var salaryAndDeduction = {
-                    "salary": !salary ? 0 : salary.salary,
-                    "sss": !salary ? 0 : salary.sss,
-                    "phic": !salary ? 0 : salary.phic,
-                    "hdmf": !salary ? 0 : salary.hdmf,
-                    "sssLoan": !salary ? 0 : salary.sssLoan,
-                    "pagibigLoan": !salary ? 0 : salary.pagibigLoan,
-                    "careHealthPlus": !salary ? 0 : salary.careHealthPlus
-                } */
 
                 var employeeData = {
                     "_id": emp[i]._id,
