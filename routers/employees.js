@@ -77,7 +77,9 @@ router.post("/list", async (request, response) => {
 			if (Object.keys(dep).length > 0) {
 				employees = await employeeModel.find({
 					'$or': id,
-					'$and': dep,
+					'$and': [
+						{ '$or': dep}
+					],
 					IsDeleted: false
 				}).sort('lastName');
 			} else {

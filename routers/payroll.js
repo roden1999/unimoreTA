@@ -29,22 +29,24 @@ router.post("/payroll-list", async (request, response) => {
                 id.push({ _id: data[i].value });
             }
             for (const i in paramDep) {
-				// console.log(`_id: ${request.body[i].value}`);
-				dep.push({ department: request.body.selectedDepartment[i].value });
-			}
+                // console.log(`_id: ${request.body[i].value}`);
+                dep.push({ department: request.body.selectedDepartment[i].value });
+            }
             var emp = [];
-			if (Object.keys(dep).length > 0) {
-				emp = await employeeModel.find({
-					'$or': id,
-					'$and': dep,
-					IsDeleted: false
-				}).sort('lastName');
-			} else {
-				emp = await employeeModel.find({
-					'$or': id,
-					IsDeleted: false
-				}).sort('lastName');
-			}
+            if (Object.keys(dep).length > 0) {
+                emp = await employeeModel.find({
+                    '$or': id,
+                    '$and': [
+                        { '$or': dep }
+                    ],
+                    IsDeleted: false
+                }).sort('lastName');
+            } else {
+                emp = await employeeModel.find({
+                    '$or': id,
+                    IsDeleted: false
+                }).sort('lastName');
+            }
 
             var data = [];
             for (const i in emp) {
@@ -472,7 +474,7 @@ router.post("/payroll-list", async (request, response) => {
                     "dailyRate": dailyRate.toFixed(2),
 
                     "timeLogs": timeLogs,
-                    
+
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
                     "totalRestdayOt": totalRestdayOt.toFixed(2),
@@ -516,22 +518,22 @@ router.post("/payroll-list", async (request, response) => {
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
             var id = [];
-			var paramDep = request.body.selectedDepartment;
-			for (const i in paramDep) {
-				id.push({ department: request.body.selectedDepartment[i].value });
-			}
+            var paramDep = request.body.selectedDepartment;
+            for (const i in paramDep) {
+                id.push({ department: request.body.selectedDepartment[i].value });
+            }
 
             var emp = [];
-			if (Object.keys(request.body.selectedDepartment).length > 0) {
-				emp = await employeeModel.find({
-					'$or': id,
-					IsDeleted: false
-				}).skip((page) * perPage).limit(perPage).sort('lastName');
-			} else {
-				emp = await employeeModel.find({
-					IsDeleted: false
-				}).skip((page) * perPage).limit(perPage).sort('lastName');
-			};
+            if (Object.keys(request.body.selectedDepartment).length > 0) {
+                emp = await employeeModel.find({
+                    '$or': id,
+                    IsDeleted: false
+                }).skip((page) * perPage).limit(perPage).sort('lastName');
+            } else {
+                emp = await employeeModel.find({
+                    IsDeleted: false
+                }).skip((page) * perPage).limit(perPage).sort('lastName');
+            };
 
             // const emp = await employeeModel.find().skip((page) * perPage).limit(perPage).sort("lastName");
 
@@ -961,7 +963,7 @@ router.post("/payroll-list", async (request, response) => {
                     "dailyRate": dailyRate.toFixed(2),
 
                     "timeLogs": timeLogs,
-                    
+
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
                     "totalRestdayOt": totalRestdayOt.toFixed(2),
