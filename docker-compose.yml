@@ -11,6 +11,8 @@ services:
       - mern-app
     depends_on: 
       - mongo
+    environment:
+      TZ: "Asia/Manila"
   mongo: 
     container_name: mongo-payroll
     restart: always
@@ -21,6 +23,8 @@ services:
       - mern-app
     volumes:
       - mongo-payroll-data:/data/db
+    environment:
+      TZ: "Asia/Manila"
 networks: 
   mern-app: 
     driver: bridge
