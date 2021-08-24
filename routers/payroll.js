@@ -32,10 +32,20 @@ router.post("/payroll-list", async (request, response) => {
 				// console.log(`_id: ${request.body[i].value}`);
 				dep.push({ department: request.body.selectedDepartment[i].value });
 			}
-            const emp = await employeeModel.find({
-                '$or': id,
-                '$and': dep,
-            }).sort("lastName");
+            var emp = [];
+			if (Object.keys(dep).length > 0) {
+				emp = await employeeModel.find({
+					'$or': id,
+					'$and': dep,
+					IsDeleted: false
+				}).sort('lastName');
+			} else {
+				emp = await employeeModel.find({
+					'$or': id,
+					IsDeleted: false
+				}).sort('lastName');
+			}
+
             var data = [];
             for (const i in emp) {
                 const dep = await departmentModel.findById(emp[i].department);

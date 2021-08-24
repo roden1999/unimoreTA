@@ -72,11 +72,20 @@ router.post("/list", async (request, response) => {
 				// console.log(`_id: ${request.body[i].value}`);
 				dep.push({ department: request.body.selectedDepartment[i].value });
 			}
-			const employees = await employeeModel.find({
-				'$or': id,
-				'$and': dep,
-				IsDeleted: false
-			}).sort('lastName');
+
+			var employees = [];
+			if (Object.keys(dep).length > 0) {
+				employees = await employeeModel.find({
+					'$or': id,
+					'$and': dep,
+					IsDeleted: false
+				}).sort('lastName');
+			} else {
+				employees = await employeeModel.find({
+					'$or': id,
+					IsDeleted: false
+				}).sort('lastName');
+			}
 
 			var data = [];
 			for (const i in employees) {
