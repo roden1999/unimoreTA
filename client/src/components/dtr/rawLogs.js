@@ -136,6 +136,9 @@ const StyledTableRow = withStyles((theme) => ({
 
 const RawLogs = () => {
     const classes = useStyles();
+    var rawSemp = JSON.parse(sessionStorage.getItem("rawSemp"));
+    var rawSfromDate = sessionStorage.getItem("rawSfromDate");
+    var rawStoDate = sessionStorage.getItem("rawStoDate");
     const [loader, setLoader] = useState(false);
     const [logData, setLogData] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
@@ -152,9 +155,9 @@ const RawLogs = () => {
     const [addModal, setAddModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deletePopup, setDeletePopup] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState([]);
-    const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
-    const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
+    const [selectedEmployee, setSelectedEmployee] = useState(rawSemp.emp);
+    const [fromDate, setFromDate] = useState(rawSfromDate);
+    const [toDate, setToDate] = useState(rawStoDate);
     const [totalLogs, setTotalLogs] = useState(0);
     const [page, setPage] = useState(0);
 
@@ -232,7 +235,7 @@ const RawLogs = () => {
     const employeeOptionsList = employeeOptions
         ? employeeOptions.map((x) => ({
             id: x._id,
-            name: x.lastName + " " + x.lastName + " " + x.middleName + " " + x.suffix + " - (" + x.employeeNo + ")",
+            name: x.lastName + " " + x.firstName + " " + x.middleName + " " + x.suffix + " - (" + x.employeeNo + ")",
             employeeNo: x.employeeNo
         }))
         : [];
@@ -366,6 +369,22 @@ const RawLogs = () => {
         setAddModal(false);
     }
 
+    const onSelectedEmployee = (e) => {
+        setSelectedEmployee(e);
+        var emp = { "emp": e }
+        sessionStorage.setItem("rawSemp", JSON.stringify(emp));
+    };
+
+    const onToDate = (e) => {
+        setToDate(e);
+        sessionStorage.setItem("rawStoDate", e.toString());
+    };
+
+    const onFromDate = (e) => {
+        setFromDate(e);
+        sessionStorage.setItem("rawSfromDate", e.toString());
+    }
+
     return (
         <div className={classes.root}>
             <Portal>
@@ -386,7 +405,7 @@ const RawLogs = () => {
                 <Select
                     defaultValue={selectedEmployee}
                     options={EmployeeOption(employeeOptionsList)}
-                    onChange={e => setSelectedEmployee(e)}
+                    onChange={e => onSelectedEmployee(e)}
                     placeholder='Search...'
                     isClearable
                     isMulti
@@ -412,7 +431,7 @@ const RawLogs = () => {
                 size="small"
                 defaultValue={moment().format("DD/MM/yyyy")}
                 value={toDate}
-                onChange={e => setToDate(e.target.value)}
+                onChange={e => onToDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
@@ -427,7 +446,7 @@ const RawLogs = () => {
                 size="small"
                 defaultValue={moment().startOf('month').format("DD/MM/yyyy")}
                 value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
+                onChange={e => onFromDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,

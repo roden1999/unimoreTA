@@ -148,15 +148,19 @@ const StyledTableRow = withStyles((theme) => ({
 
 const DetailedLogs = () => {
     const classes = useStyles();
+    var dlSemp = JSON.parse(sessionStorage.getItem("dlSemp"));
+    var dlSdept = JSON.parse(sessionStorage.getItem("dlSdept"));
+    var dlSfromDate = sessionStorage.getItem("dlSfromDate");
+    var dlStoDate = sessionStorage.getItem("dlStoDate");
     const [loader, setLoader] = useState(false);
     const [logData, setLogData] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
     const [addModal, setAddModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState([]);
-    const [selectedDepartment, setSelectedDepartment] = useState([]);
-    const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
-    const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
+    const [selectedEmployee, setSelectedEmployee] = useState(dlSemp.emp);
+    const [selectedDepartment, setSelectedDepartment] = useState(dlSdept.dept);
+    const [fromDate, setFromDate] = useState(dlSfromDate);
+    const [toDate, setToDate] = useState(dlStoDate);
     const [totalEmployee, setTotalEmployee] = useState(0);
     const [page, setPage] = useState(0);
 
@@ -325,19 +329,6 @@ const DetailedLogs = () => {
             name: x.department,
         }))
         : [];
-
-    function DepartmentOption(item) {
-        var list = [];
-        if (item !== undefined || item !== null) {
-            item.map((x) => {
-                return list.push({
-                    label: x.name,
-                    value: x.id,
-                });
-            });
-        }
-        return list;
-    }
 
     function DepartmentSearchOption(item) {
         var list = [];
@@ -593,6 +584,28 @@ const DetailedLogs = () => {
         pdfMake.createPdf(document).print({}, window.frames['printPdf']);
     }
 
+    const onSelectedEmployee = (e) => {
+        setSelectedEmployee(e);
+        var emp = { "emp": e }
+        sessionStorage.setItem("dlSemp", JSON.stringify(emp));
+    };
+
+    const onSelectedDepartment = (e) => {
+        setSelectedDepartment(e);
+        var dept = { "dept": e }
+        sessionStorage.setItem("dlSdept", JSON.stringify(dept));
+    }
+
+    const onToDate = (e) => {
+        setToDate(e);
+        sessionStorage.setItem("dlStoDate", e.toString());
+    };
+
+    const onFromDate = (e) => {
+        setFromDate(e);
+        sessionStorage.setItem("dlSfromDate", e.toString());
+    }
+
     return (
         <div className={classes.root}>
 
@@ -611,7 +624,7 @@ const DetailedLogs = () => {
                 <Select
                     defaultValue={selectedEmployee}
                     options={EmployeeOption(employeeOptionsList)}
-                    onChange={e => setSelectedEmployee(e)}
+                    onChange={e => onSelectedEmployee(e)}
                     placeholder='Search...'
                     isClearable
                     isMulti
@@ -635,7 +648,7 @@ const DetailedLogs = () => {
                 <Select
                     defaultValue={selectedDepartment}
                     options={DepartmentSearchOption(departmentOptionsList)}
-                    onChange={e => setSelectedDepartment(e)}
+                    onChange={e => onSelectedDepartment(e)}
                     placeholder='Department'
                     isClearable
                     isMulti
@@ -661,7 +674,7 @@ const DetailedLogs = () => {
                 size="small"
                 defaultValue={moment().format("DD/MM/yyyy")}
                 value={toDate}
-                onChange={e => setToDate(e.target.value)}
+                onChange={e => onToDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
@@ -676,7 +689,7 @@ const DetailedLogs = () => {
                 size="small"
                 defaultValue={moment().startOf('month').format("DD/MM/yyyy")}
                 value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
+                onChange={e => onFromDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
@@ -715,9 +728,9 @@ const DetailedLogs = () => {
                                                     <TableRow>
                                                         <StyledTableCell>Day</StyledTableCell>
                                                         <StyledTableCell>Date</StyledTableCell>
+                                                        <StyledTableCell>Time Start / End</StyledTableCell>
                                                         <StyledTableCell>Time In</StyledTableCell>
                                                         <StyledTableCell>Time Out</StyledTableCell>
-                                                        <StyledTableCell>Time Start / End</StyledTableCell>
                                                         <StyledTableCell>Hours Work</StyledTableCell>
                                                         <StyledTableCell>Late</StyledTableCell>
                                                         <StyledTableCell>UT</StyledTableCell>
@@ -736,13 +749,13 @@ const DetailedLogs = () => {
                                                                 {moment(y.dateTime).format("MMM DD, yyyy")}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
+                                                                {y.timeStartEnd}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell>
                                                                 {y.timeIn !== "Invalid date" ? y.timeIn : ""}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
                                                                 {y.timeOut !== "Invalid date" ? y.timeOut : ""}
-                                                            </StyledTableCell>
-                                                            <StyledTableCell>
-                                                                {y.timeStartEnd}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
                                                                 {y.hoursWork}

@@ -176,6 +176,10 @@ const StyledTableRow = withStyles((theme) => ({
 
 const DtrCorrection = () => {
     const classes = useStyles();
+    var dtrSemp = JSON.parse(sessionStorage.getItem("dtrSemp"));
+    var dtrSdept = JSON.parse(sessionStorage.getItem("dtrSdept"));
+    var dtrSfromDate = sessionStorage.getItem("dtrSfromDate");
+    var dtrStoDate = sessionStorage.getItem("dtrStoDate");
     const [loader, setLoader] = useState(false);
     const [logData, setLogData] = useState(null);
     const [employeeNo, setEmployeeNo] = useState("")
@@ -190,10 +194,10 @@ const DtrCorrection = () => {
     const [employeeOptions, setEmployeeOptions] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
     const [addModal, setAddModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState([]);
-    const [selectedDepartment, setSelectedDepartment] = useState([]);
-    const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
-    const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
+    const [selectedEmployee, setSelectedEmployee] = useState(dtrSemp.emp);
+    const [selectedDepartment, setSelectedDepartment] = useState(dtrSdept.dept);
+    const [fromDate, setFromDate] = useState(dtrSfromDate);
+    const [toDate, setToDate] = useState(dtrStoDate);
     const [totalEmployee, setTotalEmployee] = useState(0);
     const [page, setPage] = useState(0);
 
@@ -462,6 +466,28 @@ const DtrCorrection = () => {
             });
     }
 
+    const onSelectedEmployee = (e) => {
+        setSelectedEmployee(e);
+        var emp = { "emp": e }
+        sessionStorage.setItem("dtrSemp", JSON.stringify(emp));
+    };
+
+    const onSelectedDepartment = (e) => {
+        setSelectedDepartment(e);
+        var dept = { "dept": e }
+        sessionStorage.setItem("dtrSdept", JSON.stringify(dept));
+    }
+
+    const onToDate = (e) => {
+        setToDate(e);
+        sessionStorage.setItem("dtrStoDate", e.toString());
+    };
+
+    const onFromDate = (e) => {
+        setFromDate(e);
+        sessionStorage.setItem("dtrSfromDate", e.toString());
+    }
+
     return (
         <div className={classes.root}>
             <Portal>
@@ -481,7 +507,7 @@ const DtrCorrection = () => {
                 <Select
                     defaultValue={selectedEmployee}
                     options={EmployeeOption(employeeOptionsList)}
-                    onChange={e => setSelectedEmployee(e)}
+                    onChange={e => onSelectedEmployee(e)}
                     placeholder='Search...'
                     isClearable
                     isMulti
@@ -505,7 +531,7 @@ const DtrCorrection = () => {
                 <Select
                     defaultValue={selectedDepartment}
                     options={DepartmentSearchOption(departmentOptionsList)}
-                    onChange={e => setSelectedDepartment(e)}
+                    onChange={e => onSelectedDepartment(e)}
                     placeholder='Department'
                     isClearable
                     isMulti
@@ -531,7 +557,7 @@ const DtrCorrection = () => {
                 size="small"
                 defaultValue={moment().format("DD/MM/yyyy")}
                 value={toDate}
-                onChange={e => setToDate(e.target.value)}
+                onChange={e => onToDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
@@ -546,7 +572,7 @@ const DtrCorrection = () => {
                 size="small"
                 defaultValue={moment().startOf('month').format("DD/MM/yyyy")}
                 value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
+                onChange={e => onFromDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,

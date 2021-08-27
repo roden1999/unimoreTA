@@ -18,6 +18,7 @@ import { TextField } from '@material-ui/core';
 
 import UserContext from './context/userContext';
 const axios = require('axios');
+const moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
     typography: {
@@ -55,6 +56,26 @@ const Login = (props) => {
                 sessionStorage.setItem("auth-token", response.data.token);
                 sessionStorage.setItem("userData", JSON.stringify(response.data));
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
+
+                //Detailed Logs
+                var emp = { "emp": [] };
+                var dept = { "dept": [] };
+                sessionStorage.setItem("dlSemp", JSON.stringify(emp));
+                sessionStorage.setItem("dlSdept", JSON.stringify(dept));
+                sessionStorage.setItem("dlSfromDate", moment().startOf('month').format('MM/DD/yyyy').toString());
+                sessionStorage.setItem("dlStoDate", moment().format('MM/DD/yyyy').toString());
+
+                //Dtr Logs
+                sessionStorage.setItem("dtrSemp", JSON.stringify(emp));
+                sessionStorage.setItem("dtrSdept", JSON.stringify(dept));
+                sessionStorage.setItem("dtrSfromDate", moment().startOf('month').format('MM/DD/yyyy').toString());
+                sessionStorage.setItem("dtrStoDate", moment().format('MM/DD/yyyy').toString());
+
+                //Raw Logs
+                sessionStorage.setItem("rawSemp", JSON.stringify(emp));
+                sessionStorage.setItem("rawSfromDate", moment().startOf('month').format('MM/DD/yyyy').toString());
+                sessionStorage.setItem("rawStoDate", moment().format('MM/DD/yyyy').toString());
+
                 setUserData(response.data);
                 setSignInLoader(false);
             })
