@@ -20,7 +20,7 @@ services:
     restart: always
     image: mongo
     ports: 
-      - '27018:27017'
+      - '27027:27017'
     networks: 
       - appnet
     volumes:
