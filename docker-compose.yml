@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services: 
   app: 
     container_name: unimore-trading-time-and-attendance-payroll
@@ -8,25 +8,27 @@ services:
       - '8081:5001'
     # links: 
     networks: 
-      - mern-app
+      - appnet
+    links: 
+      - mongodb
     depends_on: 
-      - mongo
+      - mongodb
     environment:
       TZ: "Asia/Manila"
-  mongo: 
-    container_name: mongo-payroll
+  mongodb: 
+    container_name: mongodb
     restart: always
     image: mongo
     ports: 
-      - '27027:27017'
+      - '27018:27017'
     networks: 
-      - mern-app
+      - appnet
     volumes:
-      - mongo-payroll-data:/data/db
+      - db-data:/data/db
     environment:
       TZ: "Asia/Manila"
 networks: 
-  mern-app: 
+  appnet: 
     driver: bridge
 volumes: 
-  mongo-payroll-data:
+  db-data:
