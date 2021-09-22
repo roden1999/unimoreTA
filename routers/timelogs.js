@@ -88,7 +88,7 @@ router.post("/raw-list", async (request, response) => {
                 var dataLog = {
                     "_id": logs[i]._id,
                     "employeeNo": logs[i].employeeNo,
-                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
+                    "employeeName": !emp ? "" : emp.lastName + ", " + emp.firstName + " " + emp.middleName + " " + emp.suffix,
                     "timeInOut": logs[i].timeInOut,
                     "dateTime": logs[i].dateTime
                 }
@@ -107,7 +107,7 @@ router.post("/raw-list", async (request, response) => {
                 var dataLog = {
                     "_id": logs[i]._id,
                     "employeeNo": logs[i].employeeNo,
-                    "employeeName": !emp ? "" : emp.firstName + " " + emp.middleName + " " + emp.lastName,
+                    "employeeName": !emp ? "" : emp.lastName + " " + emp.firstName + " " + emp.middleName,
                     "timeInOut": logs[i].timeInOut,
                     "dateTime": logs[i].dateTime
                 }
