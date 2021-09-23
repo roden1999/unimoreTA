@@ -75,6 +75,62 @@ const Fade = React.forwardRef(function Fade(props, ref) {
   );
 });
 
+const customMultiSelectStyle = {
+  clearIndicator: (ci) => ({
+      ...ci
+      // backgroundColor: '#383f48',
+  }),
+  dropdownIndicator: (ci) => ({
+      ...ci
+      // backgroundColor: "#383f48"
+  }),
+  indicatorsContainer: (ci) => ({
+      ...ci,
+      color: "red",
+      // backgroundColor: "#383f48",
+      position: "sticky",
+      top: 0,
+      height: "40px",
+      zIndex: "100"
+  }),
+  control: (base) => ({
+      ...base,
+      height: 40,
+      minHeight: 40,
+      overflowX: "hidden",
+      overflowY: "auto",
+      borderRadiusTopRight: 0,
+      borderRadiusBottomRight: 0,
+      width: "100%"
+      // backgroundColor: '#383f48',
+  }),
+  option: (provided, state) => ({
+      ...provided,
+      color: state.isSelected ? 'white' : 'black',
+      padding: 20,
+      zIndex: 1000
+  }),
+  singleValue: base => ({
+      ...base,
+      // color: "#fff"
+  }),
+  multiValue: (styles, { data }) => {
+      return {
+          ...styles,
+          backgroundColor: "#1E8EFF",
+      };
+  },
+  multiValueLabel: (styles, { data }) => ({
+      ...styles,
+      color: "#00000",
+  }),
+  input: base => ({
+      ...base,
+      // color: "#fff"
+  }),
+  menu: (provided) => ({ ...provided, zIndex: 9999 }),
+};
+
 const customSelectStyle = {
   container: base => ({
     ...base,
@@ -570,12 +626,12 @@ const Employee = () => {
               primary: '#B9B9B9',
             },
           })}
-          styles={customSelectStyle}
+          styles={customMultiSelectStyle}
         />
       </div>
 
       <div style={{
-        float: 'right', width: '12%', zIndex: 100, marginRight: 10
+        float: 'right', width: '15%', zIndex: 100, marginRight: 10
       }}>
         <Select
           defaultValue={selectedDepartment}
@@ -594,7 +650,7 @@ const Employee = () => {
               primary: '#B9B9B9',
             },
           })}
-          styles={customSelectStyle}
+          styles={customMultiSelectStyle}
         />
       </div>
 
