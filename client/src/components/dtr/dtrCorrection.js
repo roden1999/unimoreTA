@@ -255,7 +255,15 @@ const DtrCorrection = () => {
     const [fromDate, setFromDate] = useState(dtrSfromDate);
     const [toDate, setToDate] = useState(dtrStoDate);
     const [totalEmployee, setTotalEmployee] = useState(0);
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
     const [page, setPage] = useState(0);
+
+    useEffect(() => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        setRole(user.role);
+        setName(user.Name);
+    }, []);
 
     useEffect(() => {
         var data = {
@@ -688,7 +696,15 @@ const DtrCorrection = () => {
                                                                 {y.reason}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
-                                                                <Button variant="contained" color="primary" disableElevation onClick={() => handleOpenModal(y)}>Manage Record</Button>
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    disableElevation
+                                                                    disabled={role === "Administrator" || role === "HR" ? false : true}
+                                                                    onClick={() => handleOpenModal(y)}
+                                                                >
+                                                                    Manage Record
+                                                                </Button>
                                                             </StyledTableCell>
                                                         </StyledTableRow>
                                                     </TableBody>

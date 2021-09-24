@@ -77,56 +77,56 @@ const Fade = React.forwardRef(function Fade(props, ref) {
 
 const customMultiSelectStyle = {
   clearIndicator: (ci) => ({
-      ...ci
-      // backgroundColor: '#383f48',
+    ...ci
+    // backgroundColor: '#383f48',
   }),
   dropdownIndicator: (ci) => ({
-      ...ci
-      // backgroundColor: "#383f48"
+    ...ci
+    // backgroundColor: "#383f48"
   }),
   indicatorsContainer: (ci) => ({
-      ...ci,
-      color: "red",
-      // backgroundColor: "#383f48",
-      position: "sticky",
-      top: 0,
-      height: "40px",
-      zIndex: "100"
+    ...ci,
+    color: "red",
+    // backgroundColor: "#383f48",
+    position: "sticky",
+    top: 0,
+    height: "40px",
+    zIndex: "100"
   }),
   control: (base) => ({
-      ...base,
-      height: 40,
-      minHeight: 40,
-      overflowX: "hidden",
-      overflowY: "auto",
-      borderRadiusTopRight: 0,
-      borderRadiusBottomRight: 0,
-      width: "100%"
-      // backgroundColor: '#383f48',
+    ...base,
+    height: 40,
+    minHeight: 40,
+    overflowX: "hidden",
+    overflowY: "auto",
+    borderRadiusTopRight: 0,
+    borderRadiusBottomRight: 0,
+    width: "100%"
+    // backgroundColor: '#383f48',
   }),
   option: (provided, state) => ({
-      ...provided,
-      color: state.isSelected ? 'white' : 'black',
-      padding: 20,
-      zIndex: 1000
+    ...provided,
+    color: state.isSelected ? 'white' : 'black',
+    padding: 20,
+    zIndex: 1000
   }),
   singleValue: base => ({
-      ...base,
-      // color: "#fff"
+    ...base,
+    // color: "#fff"
   }),
   multiValue: (styles, { data }) => {
-      return {
-          ...styles,
-          backgroundColor: "#1E8EFF",
-      };
+    return {
+      ...styles,
+      backgroundColor: "#1E8EFF",
+    };
   },
   multiValueLabel: (styles, { data }) => ({
-      ...styles,
-      color: "#00000",
+    ...styles,
+    color: "#00000",
   }),
   input: base => ({
-      ...base,
-      // color: "#fff"
+    ...base,
+    // color: "#fff"
   }),
   menu: (provided) => ({ ...provided, zIndex: 9999 }),
 };
@@ -134,7 +134,7 @@ const customMultiSelectStyle = {
 const customSelectStyle = {
   container: base => ({
     ...base,
-    flex: 1,    
+    flex: 1,
   }),
   control: base => ({
     ...base,
@@ -183,7 +183,15 @@ const Employee = () => {
   const [selectedEmployee, setSelectedEmployee] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState([]);
   const [totalEmp, setTotalEmp] = useState(0);
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
   const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    setRole(user.role);
+    setName(user.Name);
+  }, []);
 
   useEffect(() => {
     var data = {
@@ -679,7 +687,12 @@ const Employee = () => {
                   <Button size="small" color="primary" onClick={() => handleOpenEditModal(x)}>
                     Edit
                   </Button>
-                  <Button size="small" color="primary" onClick={() => handleOpenDeletePopup(x.id)}>
+                  <Button
+                    size="small"
+                    color="primary"
+                    disabled={role === "Administrator" || role === "HR" ? false : true}
+                    onClick={() => handleOpenDeletePopup(x.id)}
+                  >
                     Delete
                   </Button>
                 </CardActions>

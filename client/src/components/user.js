@@ -263,7 +263,8 @@ const Users = () => {
         var item = [
             { role: "Administrator", key: "Administrator" },
             { role: "HR", key: "HR" },
-            { role: "HR Staff", key: "HR Staff" }
+            { role: "HR Staff", key: "HR Staff" },
+            { role: "Device Manager", key: "Device Manager" }
         ]
         if (item !== undefined || item !== null) {
             item.map((x) => {

@@ -277,7 +277,15 @@ const Department = () => {
     const [deletePopup, setDeletePopup] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState(null);
     const [totalEmp, setTotalEmp] = useState(0);
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
     const [page, setPage] = useState(1);
+
+    useEffect(() => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        setRole(user.role);
+        setName(user.Name);
+    }, []);
 
     useEffect(() => {
         var data = {
@@ -652,6 +660,7 @@ const Department = () => {
                 variant="contained"
                 color="default"
                 startIcon={<Add />}
+                disabled={role === "Administrator" || role === "HR" || role === "HR Staff" ? false : true}
                 onClick={() => setAddModal(true)}>Add Department</Button>
 
             <div style={{
@@ -726,10 +735,20 @@ const Department = () => {
                                     </CardContent>
                                 </CardActionArea>
                                 <CardActions>
-                                    <Button size="small" color="primary" onClick={() => handleOpenEditModal(x)}>
+                                    <Button
+                                        size="small"
+                                        color="primary"
+                                        disabled={role === "Administrator" || role === "HR" || role === "HR Staff" ? false : true}
+                                        onClick={() => handleOpenEditModal(x)}
+                                    >
                                         Edit
                                     </Button>
-                                    <Button size="small" color="primary" onClick={() => handleOpenDeletePopup(x.id)}>
+                                    <Button
+                                        size="small"
+                                        color="primary"
+                                        disabled={role === "Administrator" || role === "HR" ? false : true}
+                                        onClick={() => handleOpenDeletePopup(x.id)}
+                                    >
                                         Delete
                                     </Button>
                                 </CardActions>
@@ -825,7 +844,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Tuesday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -854,7 +873,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Wednesday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -883,7 +902,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Thursday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -912,7 +931,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Friday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -941,7 +960,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Saturday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -1085,7 +1104,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Tuesday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -1114,7 +1133,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Wednesday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -1143,7 +1162,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Thursday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -1172,7 +1191,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Friday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"
@@ -1201,7 +1220,7 @@ const Department = () => {
                                             <StyledTableRow>
                                                 <StyledTableCell component="th" scope="row">
                                                     Saturday
-                                            </StyledTableCell>
+                                                </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <KeyboardTimePicker
                                                         margin="normal"

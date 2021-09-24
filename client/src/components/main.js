@@ -161,29 +161,34 @@ function Main(props) {
 
             <Divider />
 
-            <List>
+            {role === "Administrator" || role === "HR" ?
                 <List>
-                    <ListItem button onClick={() => handlePage("Payroll")}>
-                        <ListItemIcon>{<LocalAtm />}</ListItemIcon>
-                        <ListItemText primary={"Payroll"} />
-                    </ListItem>
-                    <ListItem button onClick={() => handlePage("Salary & Deductions")}>
-                        <ListItemIcon>{<MoneyOff />}</ListItemIcon>
-                        <ListItemText primary={"Salary & Deductions"} />
-                    </ListItem>
-                </List>
-            </List>
+                    <List>
+                        <ListItem button onClick={() => handlePage("Payroll")}>
+                            <ListItemIcon>{<LocalAtm />}</ListItemIcon>
+                            <ListItemText primary={"Payroll"} />
+                        </ListItem>
+                        <ListItem button onClick={() => handlePage("Salary & Deductions")}>
+                            <ListItemIcon>{<MoneyOff />}</ListItemIcon>
+                            <ListItemText primary={"Salary & Deductions"} />
+                        </ListItem>
+                    </List>
+                </List> :
+                <></>
+            }
 
             <Divider />
 
-            <List>
+            {role === "Administrator" &&
                 <List>
-                    <ListItem button onClick={() => handlePage("Users")}>
-                        <ListItemIcon>{<PeopleAltSharp />}</ListItemIcon>
-                        <ListItemText primary={"Users"} />
-                    </ListItem>
+                    <List>
+                        <ListItem button onClick={() => handlePage("Users")}>
+                            <ListItemIcon>{<PeopleAltSharp />}</ListItemIcon>
+                            <ListItemText primary={"Users"} />
+                        </ListItem>
+                    </List>
                 </List>
-            </List>
+            }
         </div>
     );
 
@@ -286,15 +291,15 @@ function Main(props) {
                     <HolidaySchedule />
                 }
 
-                {pageName === "Salary & Deductions" &&
-                    <SalaryAndDeduction />
+                {pageName === "Salary & Deductions" && role === "Administrator" || pageName === "Salary & Deductions" && role === "HR" ?
+                    <SalaryAndDeduction /> : <></>
                 }
 
-                {pageName === "Payroll" &&
-                    <Payroll />
+                {pageName === "Payroll" && role === "Administrator" || pageName === "Payroll" && role === "HR" ?
+                    <Payroll /> : <></>
                 }
 
-                {pageName === "Users" &&
+                {pageName === "Users" && role === "Administrator" &&
                     <User />
                 }
 

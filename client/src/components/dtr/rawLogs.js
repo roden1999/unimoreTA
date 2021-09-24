@@ -189,7 +189,15 @@ const RawLogs = () => {
     const [fromDate, setFromDate] = useState(rawSfromDate);
     const [toDate, setToDate] = useState(rawStoDate);
     const [totalLogs, setTotalLogs] = useState(0);
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
     const [page, setPage] = useState(0);
+
+    useEffect(() => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        setRole(user.role);
+        setName(user.Name);
+    }, []);
 
     useEffect(() => {
         var data = {
@@ -427,7 +435,10 @@ const RawLogs = () => {
                 variant="contained"
                 color="default"
                 startIcon={<Add />}
-                onClick={() => setAddModal(true)}>Import Logs</Button>
+                disabled={role === "Administrator" || role === "Device Manager" ? false : true}
+                onClick={() => setAddModal(true)}>
+                Import Logs
+            </Button>
 
             <div style={{
                 float: 'right', width: '30%', zIndex: 100,

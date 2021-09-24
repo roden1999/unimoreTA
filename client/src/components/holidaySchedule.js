@@ -92,7 +92,15 @@ const HolidaySchedule = () => {
     const [addModal, setAddModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deletePopup, setDeletePopup] = useState(false);
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("");
     const [loader, setLoader] = useState(false);
+
+    useEffect(() => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        setRole(user.role);
+        setName(user.Name);
+    }, []);
 
     useEffect(() => {
         var route = "holiday-schedule/list";
@@ -227,7 +235,15 @@ const HolidaySchedule = () => {
         return (
             <div style={{ marginBottom: 10 }}>
                 <ButtonGroup variant="contained" aria-label="contained primary button group">
-                    <Button variant="contained" size='large' disableElevation onClick={() => setAddModal(true)} startIcon={<Add />}>Add Schedule</Button>
+                    <Button
+                        variant="contained"
+                        size='large'
+                        disableElevation
+                        disabled={role === "Administrator" || role === "HR" || role === "HR Staff" ? false : true}
+                        onClick={() => setAddModal(true)} startIcon={<Add />}
+                    >
+                        Add Schedule
+                    </Button>
                 </ButtonGroup>
 
                 <ButtonGroup variant="contained" aria-label="contained primary button group" style={{ marginLeft: '25%' }}>
@@ -249,6 +265,7 @@ const HolidaySchedule = () => {
                     aria-label="close"
                     component="span"
                     style={{ float: "right", zIndex: 99 }}
+                    disabled={role === "Administrator" || role === "HR" || role === "HR Staff" ? false : true}
                     onClick={() => handleOpenDeleteModal(event.event.id)}
                 >
                     <Close />
@@ -259,6 +276,7 @@ const HolidaySchedule = () => {
                     aria-label="close"
                     component="span"
                     style={{ float: "right", zIndex: 99 }}
+                    disabled={role === "Administrator" || role === "HR" || role === "HR Staff" ? false : true}
                     onClick={() => handleEditModal(event.event)}
                 >
                     <Edit />
