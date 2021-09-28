@@ -522,36 +522,38 @@ const Department = () => {
         var data = JSON.parse(params.timePerDay);
         for (const i in data) {
             if (data[i].day === "Monday") {
-                var ti = moment(data[i].timeStart, "HH:mm").format("HH:mm");
-                var to = moment(data[i].timeEnd, "HH:mm").format("HH:mm");
+                var ti = moment(data[i].timeStart, "HH:mm a").format("HH:mm");
+                var to = moment(data[i].timeEnd, "HH:mm a").format("HH:mm");
                 setMondayTI(moment().format(`MM DD, yyyy ${ti}`));
                 setMondayTO(moment().format(`MM DD, yyyy ${to}`));
             };
             if (data[i].day === "Tuesday") {
-                var ti = moment(data[i].timeStart, "HH:mm").format("HH:mm");
-                var to = moment(data[i].timeEnd, "HH:mm").format("HH:mm");
+                var ti = moment(data[i].timeStart, "HH:mm a").format("HH:mm");
+                var to = moment(data[i].timeEnd, "HH:mm a").format("HH:mm");
                 setTuesdayTI(moment().format(`MM DD, yyyy ${ti}`));
                 setTuesdayTO(moment().format(`MM DD, yyyy ${to}`));
             };
             if (data[i].day === "Wednesday") {
-                var ti = moment(data[i].timeStart, "HH:mm").format("HH:mm");
-                var to = moment(data[i].timeEnd, "HH:mm").format("HH:mm");
+                var ti = moment(data[i].timeStart, "HH:mm a").format("HH:mm");
+                var to = moment(data[i].timeEnd, "HH:mm a").format("HH:mm");
                 setWednesdayTI(moment().format(`MM DD, yyyy ${ti}`));
                 setWednesdayTO(moment().format(`MM DD, yyyy ${to}`));
             };
             if (data[i].day === "Thursday") {
-                var ti = moment(data[i].timeStart, "HH:mm").format("HH:mm");
-                var to = moment(data[i].timeEnd, "HH:mm").format("HH:mm");
+                var ti = moment(data[i].timeStart, "HH:mm a").format("HH:mm");
+                var to = moment(data[i].timeEnd, "HH:mm a").format("HH:mm");
                 setThursdayTI(moment().format(`MM DD, yyyy ${ti}`));
                 setThursdayTO(moment().format(`MM DD, yyyy ${to}`));
             };
             if (data[i].day === "Friday") {
-                var ti = moment(data[i].timeStart, "HH:mm").format("HH:mm");
-                var to = moment(data[i].timeEnd, "HH:mm").format("HH:mm");
+                var ti = moment(data[i].timeStart, "HH:mm a").format("HH:mm");
+                var to = moment(data[i].timeEnd, "HH:mm a").format("HH:mm");
                 setFridayTI(moment().format(`MM DD, yyyy ${ti}`));
                 setFridayTO(moment().format(`MM DD, yyyy ${to}`));
             };
             if (data[i].day === "Saturday") {
+                var ti = moment(data[i].timeStart, "HH:mm a").format("HH:mm");
+                var to = moment(data[i].timeEnd, "HH:mm a").format("HH:mm");
                 setSaturdayTI(moment().format(`MM DD, yyyy ${ti}`));
                 setSaturdayTO(moment().format(`MM DD, yyyy ${to}`));
             };
