@@ -568,19 +568,19 @@ const SalaryAndDeduction = () => {
                                             <strong>{x.employeeName + " - (" + x.employeeNo + ")"}</strong>
                                         </Typography>
                                         <Typography gutterBottom>
-                                            <strong>Salary: ₱{x.salary}</strong>
+                                            <strong>Salary: ₱{x.salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>
                                         </Typography>
                                         <Grid container spacing={3}>
                                             <Grid item xs>
-                                                <Typography>SSS: {x.sss}</Typography>
-                                                <Typography>PHIC: {x.phic}</Typography>
-                                                <Typography>HDMF: {x.hdmf}</Typography>
+                                                <Typography>SSS: {x.sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
+                                                <Typography>PHIC: {x.phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
+                                                <Typography>HDMF: {x.hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                             </Grid>
 
                                             <Grid item xs>
-                                                <Typography>SSS Loan: {x.sssLoan}</Typography>
-                                                <Typography>Pag-Ibig Loan: {x.pagibigLoan}</Typography>
-                                                <Typography>Care Health Plus: {x.careHealthPlus}</Typography>
+                                                <Typography>SSS Loan: {x.sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
+                                                <Typography>Pag-Ibig Loan: {x.pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
+                                                <Typography>Care Health Plus: {x.careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                             </Grid>
                                         </Grid>
                                     </CardContent>
