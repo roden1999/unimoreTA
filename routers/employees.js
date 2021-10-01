@@ -78,7 +78,7 @@ router.post("/list", async (request, response) => {
 				employees = await employeeModel.find({
 					'$or': id,
 					'$and': [
-						{ '$or': dep}
+						{ '$or': dep }
 					],
 					IsDeleted: false
 				}).sort('lastName');
@@ -153,10 +153,23 @@ router.post("/list", async (request, response) => {
 });
 
 // list total employee
-router.get("/total-employees", async (request, response) => {
+router.post("/total-employees", async (request, response) => {
 	try {
-		// const data = await timeLogsModel.find().sort('employeeName');
-		const data = await employeeModel.find({ IsDeleted: false });
+		var id = [];
+		var paramDep = request.body.selectedDepartment;
+		for (const i in paramDep) {
+			id.push({ department: request.body.selectedDepartment[i].value });
+		}
+		var data = [];
+
+		if (Object.keys(request.body.selectedDepartment).length > 0) {
+			data = await employeeModel.find({
+				'$or': id,
+				IsDeleted: false
+			});
+		} else {
+			data = await employeeModel.find({ IsDeleted: false });
+		};
 
 		response.status(200).json(data.length);
 	} catch (error) {

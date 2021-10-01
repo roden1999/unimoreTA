@@ -411,8 +411,13 @@ const Payroll = () => {
         var route = "employees/total-employees";
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
+
+        var data = {
+            selectedDepartment: !selectedDepartment ? [] : selectedDepartment
+        };
+
         axios
-            .get(url)
+            .post(url, data)
             .then(function (response) {
                 // handle success
                 var total = response.data !== "" ? response.data : 0;
