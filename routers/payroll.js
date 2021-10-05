@@ -399,7 +399,7 @@ router.post("/payroll-list", async (request, response) => {
 
                 var absensesTardiness = (basic + allowance) / monthly * totalAbsent;
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
-                var tmonthPayMetalAsia = ((basic + allowance + absensesTardiness) / 12);
+                var tmonthPayMetalAsia = ((basic + allowance - absensesTardiness) / 12);
 
                 var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);
                 var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
@@ -422,7 +422,7 @@ router.post("/payroll-list", async (request, response) => {
                 // var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
                 // var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : (basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3;
 
-                var tmonthPay = ((basic + allowance + absensesTardiness) / 12);
+                var tmonthPay = ((basic + allowance - absensesTardiness) / 12);
 
                 //Deduction
                 var sss = !salary || params.type === "1st Half" ? 0 : salary.sss;
@@ -888,7 +888,7 @@ router.post("/payroll-list", async (request, response) => {
 
                 var absensesTardiness = (basic + allowance) / monthly * totalAbsent;
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
-                var tmonthPayMetalAsia = ((basic + allowance + absensesTardiness) / 12);
+                var tmonthPayMetalAsia = ((basic + allowance - absensesTardiness) / 12);
 
                 var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);;
                 var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
