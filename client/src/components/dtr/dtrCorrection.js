@@ -557,6 +557,11 @@ const DtrCorrection = () => {
         sessionStorage.setItem("dtrSfromDate", e.toString());
     }
 
+    const handleFilterDepartment = (e) => {
+        setSelectedDepartment(e);
+        setPage(0);
+    }
+
     return (
         <div className={classes.root}>
             <Portal>
@@ -600,7 +605,7 @@ const DtrCorrection = () => {
                 <Select
                     defaultValue={selectedDepartment}
                     options={DepartmentSearchOption(departmentOptionsList)}
-                    onChange={e => onSelectedDepartment(e)}
+                    onChange={e => handleFilterDepartment(e)}
                     placeholder='Department'
                     isClearable
                     isMulti

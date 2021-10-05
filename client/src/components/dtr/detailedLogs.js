@@ -667,6 +667,11 @@ const DetailedLogs = () => {
         sessionStorage.setItem("dlSfromDate", e.toString());
     }
 
+    const handleFilterDepartment = (e) => {
+        setSelectedDepartment(e);
+        setPage(0);
+    }
+
     return (
         <div className={classes.root}>
 
@@ -709,7 +714,7 @@ const DetailedLogs = () => {
                 <Select
                     defaultValue={selectedDepartment}
                     options={DepartmentSearchOption(departmentOptionsList)}
-                    onChange={e => onSelectedDepartment(e)}
+                    onChange={e => handleFilterDepartment(e)}
                     placeholder='Department'
                     isClearable
                     isMulti

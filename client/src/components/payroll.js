@@ -818,6 +818,11 @@ const Payroll = () => {
         return list;
     }
 
+    const handleFilterDepartment = (e) => {
+        setSelectedDepartment(e);
+        setPage(0);
+    }
+
     return (
         <div className={classes.root}>
 
@@ -860,7 +865,7 @@ const Payroll = () => {
                 <Select
                     defaultValue={selectedDepartment}
                     options={DepartmentSearchOption(departmentOptionsList)}
-                    onChange={e => setSelectedDepartment(e)}
+                    onChange={e => handleFilterDepartment(e)}
                     placeholder='Department'
                     isClearable
                     isMulti

@@ -607,6 +607,11 @@ const Employee = () => {
     setPage(newPage);
   };
 
+  const handleFilterDepartment = (e) => {
+    setSelectedDepartment(e);
+    setPage(0);
+  }
+
   return (
     <div className={classes.root}>
 
@@ -649,7 +654,7 @@ const Employee = () => {
         <Select
           defaultValue={selectedDepartment}
           options={DepartmentSearchOption(departmentOptionsList)}
-          onChange={e => setSelectedDepartment(e)}
+          onChange={e => handleFilterDepartment(e)}
           placeholder='Department'
           isClearable
           isMulti
@@ -717,7 +722,7 @@ const Employee = () => {
           rowsPerPage={20}
           page={page}
           onChangePage={handleChangePage}
-        // onChangeRowsPerPage={handleChangeRowsPerPage}
+          // onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       }
 
