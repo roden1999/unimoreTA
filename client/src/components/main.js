@@ -227,7 +227,11 @@ function Main(props) {
                         >
                             <AccountCircle />
                         </Badge>
-                        <Typography noWrap style={{ marginLeft: 7 }}>{name}</Typography>
+                        <div>
+                            <ListItemText style={{ marginLeft: 7 }} primary={name}
+                                secondary={<label style={{ fontSize: 12, color: '#BEBFC1' }}>{role}</label>}
+                            />
+                        </div>
                     </IconButton>
                     <Menu
                         id="simple-menu"
