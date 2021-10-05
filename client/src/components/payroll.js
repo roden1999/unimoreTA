@@ -707,6 +707,8 @@ const Payroll = () => {
             var color = "";
             if (y.remarks === "Regular Holiday" || y.remarks === "Special Holiday") color = "#7BFF66";
 
+            if (y.remarks === "Absent") color = "#FF0C0C";
+
             if (y.remarks === "Working Holiday" || y.remarks === "Working Special Holiday") color = "#20E700";
 
             if (y.remarks === "Working Regular Holiday Rest Day" || y.remarks === "Working Special Holiday Rest Day") color = "#2CFF72";
