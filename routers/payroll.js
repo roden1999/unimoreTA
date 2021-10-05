@@ -911,7 +911,7 @@ router.post("/payroll-list", async (request, response) => {
                 // var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
                 // var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : (basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3;
 
-                var tmonthPay = ((basic + allowance + absensesTardiness) / 12);
+                var tmonthPay = ((basic + allowance - absensesTardiness) / 12);
 
                 //Deduction
                 var sss = !salary || params.type === "1st Half" ? 0 : salary.sss;
