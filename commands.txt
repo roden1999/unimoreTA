@@ -1,0 +1,6 @@
+Command for Backup | source: https://stackoverflow.com/a/43499431/10118038
+    .forEach(function(x){printjsononeline(x)});
+
+Command for Update
+    .update({}, {$set: { sample: ""}}, false, true);
+
