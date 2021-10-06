@@ -4,3 +4,13 @@ Command for Backup | source: https://stackoverflow.com/a/43499431/10118038
 Command for Update
     .update({}, {$set: { sample: ""}}, false, true);
 
+
+Docker Commands
+    Command for deploying the app on docker:
+        docker-compose up -d
+
+    Command for building app:
+        docker-compose build
+
+    Command for rebuilding/redoploy:
+        docker-compose up --force-recreate --build -d
