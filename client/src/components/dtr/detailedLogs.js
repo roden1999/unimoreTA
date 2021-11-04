@@ -796,6 +796,8 @@ const DetailedLogs = () => {
                                                         <StyledTableCell>Date</StyledTableCell>
                                                         <StyledTableCell>Time Start / End</StyledTableCell>
                                                         <StyledTableCell>Time In</StyledTableCell>
+                                                        <StyledTableCell>Break Out</StyledTableCell>
+                                                        <StyledTableCell>Break In</StyledTableCell>
                                                         <StyledTableCell>Time Out</StyledTableCell>
                                                         <StyledTableCell>Hours Work</StyledTableCell>
                                                         <StyledTableCell>Late</StyledTableCell>
@@ -819,6 +821,12 @@ const DetailedLogs = () => {
                                                             </StyledTableCell>
                                                             <StyledTableCell>
                                                                 {y.timeIn !== "Invalid date" ? y.timeIn : ""}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell>
+                                                                {y.breakOut !== "Invalid date" ? y.breakOut : ""}
+                                                            </StyledTableCell>
+                                                            <StyledTableCell>
+                                                                {y.breakIn !== "Invalid date" ? y.breakIn : ""}
                                                             </StyledTableCell>
                                                             <StyledTableCell>
                                                                 {y.timeOut !== "Invalid date" ? y.timeOut : ""}

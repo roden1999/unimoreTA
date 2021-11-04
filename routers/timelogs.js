@@ -257,6 +257,8 @@ router.post("/detailed-list", async (request, response) => {
 
                     var timeIn = "";
                     var timeOut = "";
+                    var breakOut = "";
+                    var breakIn = "";
 
                     var dt = dateTime;
                     var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
@@ -277,6 +279,19 @@ router.post("/detailed-list", async (request, response) => {
                             dateTime: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
+
+                        const breakTimeOut = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(1, 15, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: 1 });
+                        
+                        const breakTimeIn = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(1, 15, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: -1 });
+
                         nxtDayOT = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
                             dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
@@ -290,9 +305,13 @@ router.post("/detailed-list", async (request, response) => {
                             } else {
                                 timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
                             }
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         } else {
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                             timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
@@ -314,6 +333,18 @@ router.post("/detailed-list", async (request, response) => {
                         const dateTimeOut = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
                             dateTime: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: -1 });
+
+                        const breakTimeOut = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(1, 15, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: -1 });
+                        
+                        const breakTimeIn = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(1, 15, 59) },
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
@@ -529,6 +560,8 @@ router.post("/detailed-list", async (request, response) => {
 
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                        "breakIn": moment(breakIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
                         "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
@@ -642,6 +675,8 @@ router.post("/detailed-list", async (request, response) => {
 
                     var timeIn = "";
                     var timeOut = "";
+                    var breakOut = "";
+                    var breakIn = "";
 
                     var dt = dateTime;
                     var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
@@ -656,6 +691,18 @@ router.post("/detailed-list", async (request, response) => {
                             dateTime: { $gte: new Date(dateTime).setHours(05, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) },
                             timeInOut: "S"
                         }).sort({ dateTime: 1 });
+
+                        const breakTimeOut = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(1, 15, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: 1 });
+                        
+                        const breakTimeIn = await timeLogsModel.find({
+                            employeeNo: emp[i].employeeNo,
+                            dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(1, 15, 59) },
+                            timeInOut: "E"
+                        }).sort({ dateTime: -1 });
 
                         const dateTimeOut = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
@@ -675,9 +722,13 @@ router.post("/detailed-list", async (request, response) => {
                             } else {
                                 timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
                             }
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         } else {
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                             timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
@@ -914,6 +965,8 @@ router.post("/detailed-list", async (request, response) => {
 
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                        "breakIn": moment(breakIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
                         "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
