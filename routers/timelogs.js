@@ -280,17 +280,33 @@ router.post("/detailed-list", async (request, response) => {
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
-                        const breakTimeOut = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
 
-                        const breakTimeIn = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
 
                         nxtDayOT = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
@@ -336,17 +352,33 @@ router.post("/detailed-list", async (request, response) => {
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
-                        const breakTimeOut = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
 
-                        const breakTimeIn = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
 
                         nxtDayOT = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
@@ -694,17 +726,33 @@ router.post("/detailed-list", async (request, response) => {
                             timeInOut: "S"
                         }).sort({ dateTime: 1 });
 
-                        const breakTimeOut = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: 1 });
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
 
-                        const breakTimeIn = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
 
                         const dateTimeOut = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
@@ -755,17 +803,33 @@ router.post("/detailed-list", async (request, response) => {
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
-                        const breakTimeOut = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: 1 });
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
 
-                        const breakTimeIn = await timeLogsModel.find({
-                            employeeNo: emp[i].employeeNo,
-                            dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
-                            timeInOut: "E"
-                        }).sort({ dateTime: -1 });
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
 
                         nxtDayOT = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
