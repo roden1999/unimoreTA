@@ -519,7 +519,7 @@ const DetailedLogs = () => {
             // layout: 'lightHorizontalLines',
             table: {
                 headerRows: 1,
-                widths: [37, 50, 65, 30, 30, 30, 25, 22, 22, 55, 70],
+                widths: [37, 50, 60, 30, 30, 30, 30, 34, 20, 20, 20, 37, 40],
                 body: [
                     //Data
                     //Header
@@ -528,6 +528,8 @@ const DetailedLogs = () => {
                         { text: 'Date', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
                         { text: 'Schedule', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
                         { text: 'In', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Break Out', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Break In', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
                         { text: 'Out', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
                         { text: 'Hours Work', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
                         { text: 'Late', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
@@ -552,7 +554,7 @@ const DetailedLogs = () => {
                 // layout: 'lightHorizontalLines',
                 table: {
                     headerRows: 1,
-                    widths: [37, 50, 65, 30, 30, 30, 25, 22, 22, 55, 70],
+                    widths: [37, 50, 60, 30, 30, 30, 30, 34, 20, 20, 20, 37, 40],
                     body: [
                         //Data
                         [
@@ -560,6 +562,8 @@ const DetailedLogs = () => {
                             { text: moment(y.dateTime).format("MM/DD/yyyy").toString(), fontSize: 7, alignment: "center", fillColor: color },
                             { text: y.timeStartEnd.toString(), fontSize: 7, alignment: "center", fillColor: color },
                             { text: y.timeIn !== "Invalid date" ? y.timeIn.toString() : "", fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.breakOut !== "Invalid date" ? y.breakOut.toString() : "", fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.breakIn !== "Invalid date" ? y.breakIn.toString() : "", fontSize: 7, alignment: "center", fillColor: color },
                             { text: y.timeOut !== "Invalid date" ? y.timeOut.toString() : "", fontSize: 7, alignment: "center", fillColor: color },
                             { text: y.hoursWork.toString(), fontSize: 7, alignment: "right", fillColor: color },
                             { text: y.late.toString(), fontSize: 7, alignment: "right", fillColor: color },
