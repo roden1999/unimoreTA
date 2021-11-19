@@ -41,7 +41,9 @@ router.post("/", async (request, response) => {
                 hdmf: request.body.hdmf,
                 sssLoan: request.body.sssLoan,
                 pagibigLoan: request.body.pagibigLoan,
-                careHealthPlus: request.body.careHealthPlus
+                careHealthPlus: request.body.careHealthPlus,
+                cashAdvance: request.body.cashhAdvance,
+                safetyShoes: request.body.safetyShoes
             });
             const salary = await newSalary.save();
             response.status(200).json({ salary: "Salary successfully saved." });
@@ -137,7 +139,9 @@ router.post("/list", async (request, response) => {
                     "hdmf": !salary ? 0 : salary.hdmf,
                     "sssLoan": !salary ? 0 : salary.sssLoan,
                     "pagibigLoan": !salary ? 0 : salary.pagibigLoan,
-                    "careHealthPlus": !salary ? 0 : salary.careHealthPlus
+                    "careHealthPlus": !salary ? 0 : salary.careHealthPlus,
+                    "cashAdvance": !salary ? 0 : salary.cashAdvance,
+                    "safetyShoes": !salary ? 0 : salary.safetyShoes
                 }
 
                 employees.push(employeeData);
@@ -184,7 +188,9 @@ router.post("/list", async (request, response) => {
                     "hdmf": !salary ? 0 : salary.hdmf,
                     "sssLoan": !salary ? 0 : salary.sssLoan,
                     "pagibigLoan": !salary ? 0 : salary.pagibigLoan,
-                    "careHealthPlus": !salary ? 0 : salary.careHealthPlus
+                    "careHealthPlus": !salary ? 0 : salary.careHealthPlus,
+                    "cashAdvance": !salary ? 0 : salary.cashAdvance,
+                    "safetyShoes": !salary ? 0 : salary.safetyShoes
                 }
 
                 employees.push(employeeData);

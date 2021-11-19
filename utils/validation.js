@@ -126,6 +126,12 @@ const salaryValidation = (data) => {
 		careHealthPlus: Joi.number().required().messages({
 			"any.required": "Care Health Plus must have value."
 		}),
+		cashAdvance: Joi.number().required().messages({
+			"any.required": "Care Health Plus must have value."
+		}),
+		safetyShoes: Joi.number().required().messages({
+			"any.required": "Care Health Plus must have value."
+		}),
 	});
 	return schema.validate(data, { abortEarly: false });
 };

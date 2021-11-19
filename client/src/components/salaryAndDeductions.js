@@ -175,6 +175,8 @@ const SalaryAndDeduction = () => {
     const [sssLoan, setSssLoan] = useState("");
     const [pagibigLoan, setPagibigLoan] = useState("");
     const [careHealthPlus, setCareHealthPlus] = useState("");
+    const [cashAdvance, setCashAdvance] = useState("");
+    const [safetyShoes, setSafetyShoes] = useState("");
     const [addModal, setAddModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [deletePopup, setDeletePopup] = useState(false);
@@ -230,6 +232,8 @@ const SalaryAndDeduction = () => {
             sssLoan: x.sssLoan,
             pagibigLoan: x.pagibigLoan,
             careHealthPlus: x.careHealthPlus,
+            cashAdvance: x.cashAdvance,
+            safetyShoes: x.safetyShoes,
         }))
         : [];
 
@@ -384,7 +388,9 @@ const SalaryAndDeduction = () => {
             hdmf: hdmf,
             sssLoan: sssLoan,
             pagibigLoan: pagibigLoan,
-            careHealthPlus: careHealthPlus
+            careHealthPlus: careHealthPlus,
+            cashAdvance: cashAdvance,
+            safetyShoes: safetyShoes
         }
 
         setLoader(true);
@@ -411,6 +417,8 @@ const SalaryAndDeduction = () => {
                 setSssLoan("");
                 setPagibigLoan("");
                 setCareHealthPlus("");
+                setCashAdvance("");
+                setSafetyShoes("");
             })
             .catch(function (error) {
                 // handle error
@@ -437,6 +445,8 @@ const SalaryAndDeduction = () => {
         setSssLoan(params.sssLoan);
         setPagibigLoan(params.pagibigLoan);
         setCareHealthPlus(params.careHealthPlus);
+        setCashAdvance(params.cashAdvance);
+        setSafetyShoes(params.safetyShoes);
     }
 
     const handleCloseEditModal = () => {
@@ -451,6 +461,8 @@ const SalaryAndDeduction = () => {
         setSssLoan("");
         setPagibigLoan("");
         setCareHealthPlus("");
+        setCashAdvance("");
+        setSafetyShoes("");
     }
 
     const handleDeleteItem = () => {
@@ -585,12 +597,14 @@ const SalaryAndDeduction = () => {
                                                 <Typography>SSS: {x.sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                                 <Typography>PHIC: {x.phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                                 <Typography>HDMF: {x.hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
+                                                <Typography>Cash Advance: {x.cashAdvance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                             </Grid>
 
                                             <Grid item xs>
                                                 <Typography>SSS Loan: {x.sssLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                                 <Typography>Pag-Ibig Loan: {x.pagibigLoan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                                 <Typography>Care Health Plus: {x.careHealthPlus.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
+                                                <Typography>Safety Shoes: {x.safetyShoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</Typography>
                                             </Grid>
                                         </Grid>
                                     </CardContent>
@@ -692,6 +706,18 @@ const SalaryAndDeduction = () => {
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>Care Health Plus</strong></label><br />
                                         <TextField variant='outlined' size='small' fullWidth placeholder="Care Health Plus" type="number" value={careHealthPlus} onChange={e => setCareHealthPlus(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+                                    </div>
+
+                                    <br />
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>Cash Advance</strong></label><br />
+                                        <TextField variant='outlined' size='small' fullWidth placeholder="Cash Adcance" type="number" value={cashAdvance} onChange={e => setCashAdvance(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+                                    </div>
+
+                                    <br />
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>Safety Shoes</strong></label><br />
+                                        <TextField variant='outlined' size='small' fullWidth placeholder="Care Health Plus" type="number" value={safetyShoes} onChange={e => setSafetyShoes(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
                                     </div>
 
                                     <br />

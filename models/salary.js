@@ -30,6 +30,12 @@ const salarySchema = new mongoose.Schema({
     },
     careHealthPlus: {
         type: Number,
+    },
+    cashAdvance: {
+        type: Number,
+    },
+    safetyShoes: {
+        type: Number,
     }
 });
 module.exports = mongoose.model("salary", salarySchema);
