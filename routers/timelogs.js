@@ -217,6 +217,7 @@ router.post("/detailed-list", async (request, response) => {
                 var depIn = '';
                 var depOut = '';
 
+                var totalDays = 0;
                 var totalHrsWork = 0;
                 var totalRestday = 0;
                 var totalRestdayOt = 0;
@@ -586,6 +587,7 @@ router.post("/detailed-list", async (request, response) => {
                         reason = holiday[0].title;
                     }
 
+                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                     totalHrsWork = totalHrsWork + hoursWork;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
@@ -619,6 +621,7 @@ router.post("/detailed-list", async (request, response) => {
                     "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "timeLogs": timeLogs,
+                    "totalDays": totalDays.toFixed(0),
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
                     "totalRestdayOt": totalRestdayOt.toFixed(2),
@@ -669,6 +672,7 @@ router.post("/detailed-list", async (request, response) => {
                 var depIn = '';
                 var depOut = '';
 
+                var totalDays = 0;
                 var totalHrsWork = 0;
                 var totalRestday = 0;
                 var totalRestdayOt = 0;
@@ -1037,6 +1041,7 @@ router.post("/detailed-list", async (request, response) => {
                         reason = holiday[0].title;
                     }
 
+                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                     totalHrsWork = totalHrsWork + hoursWork;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
@@ -1070,6 +1075,7 @@ router.post("/detailed-list", async (request, response) => {
                     "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
                     "department": dep.department,
                     "timeLogs": timeLogs,
+                    "totalDays": totalDays.toFixed(0),
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
                     "totalRestdayOt": totalRestdayOt.toFixed(2),

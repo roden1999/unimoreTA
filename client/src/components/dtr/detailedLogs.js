@@ -261,6 +261,7 @@ const DetailedLogs = () => {
             employeeName: x.employeeName,
             department: x.department,
             timeLogs: x.timeLogs,
+            totalDays: x.totalDays,
             totalHoursWork: x.totalHoursWork,
             totalRestday: x.totalRestday,
             totalRestdayOt: x.totalRestdayOt,
@@ -1012,6 +1013,7 @@ const DetailedLogs = () => {
                                 <CardActions>
                                     <Grid container spacing={3}>
                                         <Grid item xs={2.8}>
+                                            <Typography style={{ fontSize: 15 }}><b>Total Days: {x.totalDays}</b></Typography>
                                             <Typography style={{ fontSize: 15 }}><b>Hours Work: {x.totalHoursWork}</b></Typography>
                                             <Typography style={{ fontSize: 15 }}><b>Overtime: {x.totalOT}</b></Typography>
                                             <Typography style={{ fontSize: 15 }}><b>Holiday Restday: {x.totalHolidayRestday}</b></Typography>
