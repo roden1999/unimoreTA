@@ -243,6 +243,8 @@ const DtrCorrection = () => {
     const [department, setDepartment] = useState("");
     const [timeIn, setTimeIn] = useState(moment().format("MM DD, yyyy 8:00"));
     const [timeOut, setTimeOut] = useState(moment().format("MM DD, yyyy 17:00"));
+    const [otHours, setOtHours] = useState("");
+    const [breakTimeHrs, setBreakTimeHrs] = useState("");
     const [breakTime, setBreakTime] = useState(false);
     const [date, setDate] = useState(moment().format("MM/DD/yyyy"));
     const [remarks, setRemarks] = useState("");
@@ -447,6 +449,8 @@ const DtrCorrection = () => {
         setDate(moment().format("MM/DD/yyyy"));
         setTimeIn(moment().format("MM DD, yyyy 8:00"));
         setTimeOut(moment().format("MM DD, yyyy 17:00"));
+        setOtHours("");
+        setBreakTimeHrs("");
         setBreakTime(false);
         setRemarks("");
         setReason("");
@@ -498,6 +502,8 @@ const DtrCorrection = () => {
             timeIn: moment(timeIn).format("h:mm A"),
             timeOut: moment(timeOut).format("h:mm A"),
             breakTime: breakTime,
+            otHours: otHours,
+            breakTimeHrs: breakTimeHrs,
             remarks: !remarks ? "" : remarks.value,
             reason: reason
         }
@@ -520,6 +526,8 @@ const DtrCorrection = () => {
                 setTimeIn(moment().format("MM DD, yyyy 8:00"));
                 setTimeOut(moment().format("MM DD, yyyy 17:00"));
                 setBreakTime(false);
+                setOtHours("");
+                setBreakTimeHrs("");
                 setRemarks("");
                 setReason("");
             })
@@ -845,21 +853,54 @@ const DtrCorrection = () => {
                                     </div>
                                 }
 
+                                <br />
+
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value === "Overtime" &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>OT Hours</strong></label><br />
+                                        <TextField variant="outlined" size="small" type="number" fullWidth placeholder="ot hours" value={otHours} onChange={e => setOtHours(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+                                        <br />
+                                        <br />
+                                    </div>
+                                }
+
+
                                 {Object.keys(remarks).length > 0 &&
                                     remarks.value !== "SL w/ Pay" &&
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
-                                    <Typography component="div" style={{ marginBottom: 10 }}>
-                                        <Grid component="label" container alignItems="center" spacing={1}>
-                                            <Grid item><label style={{ fontSize: '17px' }}><strong>Break Time: </strong>No</label></Grid>
-                                            <Grid item>
-                                                <AntSwitch checked={breakTime} onChange={() => setBreakTime(!breakTime)} name="checkedC" />
+                                    <div>
+                                        <Typography component="div" style={{ marginBottom: 10 }}>
+                                            <Grid component="label" container alignItems="center" spacing={1}>
+                                                <Grid item><label style={{ fontSize: '17px' }}><strong>Break Time: </strong>No</label></Grid>
+                                                <Grid item>
+                                                    <AntSwitch checked={breakTime} onChange={() => setBreakTime(!breakTime)} name="checkedC" />
+                                                </Grid>
+                                                <Grid item><label style={{ fontSize: '17px' }}>Yes</label></Grid>
                                             </Grid>
-                                            <Grid item><label style={{ fontSize: '17px' }}>Yes</label></Grid>
-                                        </Grid>
-                                    </Typography>
+                                        </Typography>
+                                    </div>
                                 }
+
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+                                    breakTime === true &&
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>Breaktime Hours</strong></label><br />
+                                        <TextField variant="outlined" size="small" type="number" fullWidth placeholder="breaktime hours" value={breakTimeHrs} onChange={e => setBreakTimeHrs(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+                                    </div>
+                                }
+
+                                <br />
 
                                 <div>
                                     <label style={{ fontSize: '17px' }}><strong>Reason</strong></label><br />

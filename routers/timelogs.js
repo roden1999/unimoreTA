@@ -1396,6 +1396,8 @@ router.post("/approved-dtr-correction", async (request, response) => {
                 date: date,
                 timeIn: timeIn,
                 timeOut: timeOut,
+                otHours: data.otHours,
+                breakTimeHrs: data.breakTimeHrs,
                 employeeName: data.employeeName,
                 remarks: data.remarks,
                 reason: data.reason,
