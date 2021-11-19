@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
     },
     tbcontainer: {
-        maxHeight: 375,
+        maxHeight: 360,
     },
 }));
 
@@ -768,7 +768,7 @@ const DetailedLogs = () => {
                 style={{ float: 'right', marginRight: 10 }}
             />
 
-            <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '65vh', maxHeight: '65vh', overflowY: 'scroll' }}>
+            <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '68vh', maxHeight: '68vh', overflowY: 'scroll' }}>
                 <Grid container spacing={3}>
                     {logList.length !== 0 && loader !== true && logList.map(x =>
                         <Grid item xs={12}>
