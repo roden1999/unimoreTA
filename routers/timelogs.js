@@ -445,7 +445,7 @@ router.post("/detailed-list", async (request, response) => {
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date2 = depOut <= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
@@ -463,7 +463,7 @@ router.post("/detailed-list", async (request, response) => {
                         var msec = date2 > date1 ? date2 - date1 : date1 - date2;
                         var mins = Math.floor(msec / 60000);
 
-                        hoursWork = mins / 60;
+                        // hoursWork = mins / 60;
                     }
 
                     remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
@@ -899,7 +899,7 @@ router.post("/detailed-list", async (request, response) => {
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date2 = depOut <= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
