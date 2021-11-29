@@ -583,6 +583,7 @@ const DetailedLogs = () => {
             margin: [0, 5],
             columns: [
                 [
+                    { text: "Total Days: ", fontSize: 9, bold: true, lineHeight: 1, },
                     { text: "Hours Work: ", fontSize: 9, bold: true, lineHeight: 1, },
                     { text: "Late: ", fontSize: 9, bold: true, lineHeight: 1, },
                     { text: "Undertime: ", fontSize: 9, bold: true, lineHeight: 1, },
@@ -593,6 +594,7 @@ const DetailedLogs = () => {
                 ],
                 [
 
+                    { text: e.totalDays.toString(), fontSize: 9, bold: true, lineHeight: 1, },
                     { text: e.totalHoursWork.toString(), fontSize: 9, bold: true, lineHeight: 1, },
                     { text: e.totalLate.toString(), fontSize: 9, bold: true, lineHeight: 1, },
                     { text: e.totalUT.toString(), fontSize: 9, bold: true, lineHeight: 1, },
@@ -602,6 +604,7 @@ const DetailedLogs = () => {
                     { text: e.totalHoliday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
                 ],
                 [
+                    { text: "Total Absences: ", fontSize: 9, bold: true, lineHeight: 1, },
                     { text: "Regular Holiday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
                     { text: "Special Holiday: ", fontSize: 9, bold: true, lineHeight: 1, },
                     { text: "Special Holiday OT: ", fontSize: 9, bold: true, lineHeight: 1, },
@@ -611,6 +614,7 @@ const DetailedLogs = () => {
                     { text: "Special Holiday Restday OT:", fontSize: 9, bold: true, lineHeight: 1, },
                 ],
                 [
+                    { text: e.totalAbsent.toString(), fontSize: 9, bold: true, lineHeight: 1, },
                     { text: e.totalHolidayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
                     { text: e.totalSpecialHoliday.toString(), fontSize: 9, bold: true, lineHeight: 1, },
                     { text: e.totalSpecialHolidayOt.toString(), fontSize: 9, bold: true, lineHeight: 1, },
