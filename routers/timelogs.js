@@ -469,8 +469,8 @@ router.post("/detailed-list", async (request, response) => {
                     remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
                     if (remarks === "Overtime" && day !== "Sunday") {
                         if (timeIn && timeOut && Object.keys(nxtDayOT).length === 0) {
-                            var date1 = new Date(convertedTI).getTime();
-                            var date2 = new Date(convertedTO).getTime();
+                            var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                            var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
                             var date3 = new Date(convertedDTO).getTime();
 
                             var msec = date2 - date1;
@@ -478,11 +478,14 @@ router.post("/detailed-list", async (request, response) => {
                             // var hrs = Math.floor(mins / 60);
 
                             var msecOT = date2 - date3;
-                            var otMins = Math.floor(msecOT / 60000);
+                            // var otMins = Math.floor(msecOT / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw > 5 ? hw - 1 : hw;
-                            ot = otMins / 60;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            // ot = otMins / 60;
+
+                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            ot = dtr[0].otHours;
 
                             remarks = "Overtime";
                         } else {
@@ -585,7 +588,7 @@ router.post("/detailed-list", async (request, response) => {
                         ut = 0;
                         ot = 0;
                         remarks = holiday[0].type
-                        reason = holiday[0].title;                        
+                        reason = holiday[0].title;
                     }
 
                     if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
@@ -722,7 +725,7 @@ router.post("/detailed-list", async (request, response) => {
                     const dtr = await dtrcModel.find({
                         employeeNo: emp[i].employeeNo,
                         date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    }).sort({ dateApproved: 1 });
+                    }).sort({ dateApproved: -1 });
 
                     var timeIn = "";
                     var timeOut = "";
@@ -936,8 +939,8 @@ router.post("/detailed-list", async (request, response) => {
                     remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
                     if (remarks === "Overtime" && day !== "Sunday") {
                         if (timeIn && timeOut && Object.keys(nxtDayOT).length === 0) {
-                            var date1 = new Date(convertedTI).getTime();
-                            var date2 = new Date(convertedTO).getTime();
+                            var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                            var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
                             var date3 = new Date(convertedDTO).getTime();
 
                             var msec = date2 - date1;
@@ -945,11 +948,14 @@ router.post("/detailed-list", async (request, response) => {
                             // var hrs = Math.floor(mins / 60);
 
                             var msecOT = date2 - date3;
-                            var otMins = Math.floor(msecOT / 60000);
+                            // var otMins = Math.floor(msecOT / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw > 5 ? hw - 1 : hw;
-                            ot = otMins / 60;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            // ot = otMins / 60;
+
+                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            ot = dtr[0].otHours;
 
                             remarks = "Overtime";
                         } else {
