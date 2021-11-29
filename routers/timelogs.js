@@ -254,7 +254,7 @@ router.post("/detailed-list", async (request, response) => {
                     const dtr = await dtrcModel.find({
                         employeeNo: emp[i].employeeNo,
                         date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    }).sort({ dateApproved: 1 });
+                    }).sort({ dateApproved: -1 });
 
                     var timeIn = "";
                     var timeOut = "";
@@ -585,7 +585,19 @@ router.post("/detailed-list", async (request, response) => {
                         ut = 0;
                         ot = 0;
                         remarks = holiday[0].type
-                        reason = holiday[0].title;
+                        reason = holiday[0].title;                        
+                    }
+
+                    if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
+                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        hoursWork = mins / 60;
+                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
 
                     totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
@@ -1041,6 +1053,18 @@ router.post("/detailed-list", async (request, response) => {
                         ot = 0;
                         remarks = holiday[0].type
                         reason = holiday[0].title;
+                    }
+
+                    if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
+                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        hoursWork = mins / 60;
+                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
 
                     totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
