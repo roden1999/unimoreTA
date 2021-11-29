@@ -549,6 +549,7 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
@@ -1003,6 +1004,7 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
