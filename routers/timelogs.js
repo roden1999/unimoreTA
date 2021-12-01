@@ -613,7 +613,7 @@ router.post("/detailed-list", async (request, response) => {
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
                         "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
-                        "breakIn": moment(breakIn, "h:mm A").format("h:mm A"),
+                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
                         "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
@@ -1083,7 +1083,7 @@ router.post("/detailed-list", async (request, response) => {
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
                         "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
-                        "breakIn": moment(breakIn, "h:mm A").format("h:mm A"),
+                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
                         "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
