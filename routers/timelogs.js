@@ -748,16 +748,16 @@ router.post("/detailed-list", async (request, response) => {
             }
 
             var emp = [];
-            if (Object.keys(request.body.selectedDepartment).length > 0) {
+            if (Object.keys(dep).length > 0) {
                 emp = await employeeModel.find({
-                    '$or': id,
+                    '$or': dep,
                     IsDeleted: false
-                }).skip((page) * perPage).limit(perPage).sort('lastName');
+                }).sort('lastName');
             } else {
                 emp = await employeeModel.find({
                     IsDeleted: false
-                }).skip((page) * perPage).limit(perPage).sort('lastName');
-            };
+                }).sort('lastName');
+            }
 
             var data = [];
             for (const i in emp) {
