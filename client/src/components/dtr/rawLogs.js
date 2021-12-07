@@ -233,7 +233,7 @@ const RawLogs = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, fromDate, toDate, page, loader]);
+    }, [selectedEmployee, fromDate, toDate, page]);
 
     const logList = logData
         ? logData.map((x) => ({
