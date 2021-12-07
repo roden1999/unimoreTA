@@ -279,27 +279,30 @@ const DtrCorrection = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-
+        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
                 // handle success
                 if (Array.isArray(response.data)) {
                     setLogData(response.data);
+                    setLoader(false);
                 } else {
                     var obj = [];
                     obj.push(response.data);
                     setLogData(obj);
+                    setLoader(false);
                 }
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
+                setLoader(false);
             })
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, selectedDepartment, page, loader, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, page, toDate, fromDate]);
 
     const logList = logData
         ? logData.map((x) => ({

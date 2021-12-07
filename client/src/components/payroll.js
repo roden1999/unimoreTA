@@ -231,17 +231,19 @@ const Payroll = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-
+        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
                 // handle success
                 if (Array.isArray(response.data)) {
                     setLogData(response.data);
+                    setLoader(false);
                 } else {
                     var obj = [];
                     obj.push(response.data);
                     setLogData(obj);
+                    setLoader(false);
                 }
             })
             .catch(function (error) {
@@ -251,7 +253,7 @@ const Payroll = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, selectedDepartment, selectedType, page, loader, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, selectedType, page, toDate, fromDate]);
 
     const logList = logData
         ? logData.map((x) => ({

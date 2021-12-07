@@ -177,6 +177,7 @@ const Users = () => {
         var url = window.apihost + route;
         var token = sessionStorage.getItem("auth-token");
 
+        setLoader(true);
         axios
             .post(url, data, {
                 headers: { "auth-token": token },
@@ -185,10 +186,12 @@ const Users = () => {
                 // handle success
                 if (Array.isArray(response.data)) {
                     setUsersData(response.data);
+                    setLoader(false);
                 } else {
                     var obj = [];
                     obj.push(response.data);
                     setUsersData(obj);
+                    setLoader(false);
                 }
             })
             .catch(function (error) {
@@ -198,7 +201,7 @@ const Users = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedUser, loader]);
+    }, [selectedUser]);
 
     const usersList = usersData
         ? usersData.map((x) => ({

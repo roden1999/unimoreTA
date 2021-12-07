@@ -7,6 +7,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -203,27 +204,30 @@ const Employee = () => {
     var url = window.apihost + route;
     // var token = sessionStorage.getItem("auth-token");
     // const user = JSON.parse(sessionStorage.getItem('user'));
-
+    setLoader(true);
     axios
       .post(url, data)
       .then(function (response) {
         // handle success
         if (Array.isArray(response.data)) {
           setEmployeeData(response.data);
+          setLoader(false);
         } else {
           var obj = [];
           obj.push(response.data);
           setEmployeeData(obj);
+          setLoader(false);
         }
       })
       .catch(function (error) {
         // handle error
         console.log(error);
+        setLoader(false);
       })
       .finally(function () {
         // always executed
       });
-  }, [page, selectedEmployee, selectedDepartment, loader]);
+  }, [page, selectedEmployee, selectedDepartment]);
 
   const employeeList = employeeData
     ? employeeData.map((x) => ({
@@ -674,7 +678,7 @@ const Employee = () => {
 
       <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '75vh', maxHeight: '75vh', overflowY: 'scroll' }}>
         <Grid container spacing={3}>
-          {employeeList.length > 0 && employeeList.map(x =>
+          {employeeList.length > 0 && loader === false && employeeList.map(x =>
             <Grid item xs={3}>
               <Card>
                 <CardActionArea>
@@ -710,6 +714,16 @@ const Employee = () => {
             </Grid>
           )}
         </Grid>
+        {loader === true &&
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 200 }}>
+            <CircularProgress />
+          </div>
+        }
+        {employeeList.length === 0 && loader !== true &&
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 200 }}>
+            <h1 style={{ color: '#C4C4C4C4' }}>No Data Found</h1>
+          </div>
+        }
       </div>
 
       {Object.keys(selectedEmployee).length === 0 &&
@@ -722,7 +736,7 @@ const Employee = () => {
           rowsPerPage={20}
           page={page}
           onChangePage={handleChangePage}
-          // onChangeRowsPerPage={handleChangeRowsPerPage}
+        // onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       }
 
