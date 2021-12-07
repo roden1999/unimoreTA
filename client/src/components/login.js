@@ -60,8 +60,10 @@ const Login = (props) => {
                 //Detailed Logs
                 var emp = { "emp": [] };
                 var dept = { "dept": [] };
+                var remarks = { "remarks": [] };
                 sessionStorage.setItem("dlSemp", JSON.stringify(emp));
                 sessionStorage.setItem("dlSdept", JSON.stringify(dept));
+                sessionStorage.setItem("dlSremarks", JSON.stringify(remarks));
                 sessionStorage.setItem("dlSfromDate", moment().startOf('month').format('MM/DD/yyyy').toString());
                 sessionStorage.setItem("dlStoDate", moment().format('MM/DD/yyyy').toString());
 

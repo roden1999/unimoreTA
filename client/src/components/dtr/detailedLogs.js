@@ -205,6 +205,7 @@ const StyledTableRow = withStyles((theme) => ({
 const DetailedLogs = () => {
     const classes = useStyles();
     var dlSemp = JSON.parse(sessionStorage.getItem("dlSemp"));
+    var dlSremarks = JSON.parse(sessionStorage.getItem("dlSremarks"));
     var dlSdept = JSON.parse(sessionStorage.getItem("dlSdept"));
     var dlSfromDate = sessionStorage.getItem("dlSfromDate");
     var dlStoDate = sessionStorage.getItem("dlStoDate");
@@ -214,6 +215,7 @@ const DetailedLogs = () => {
     const [departmentOptions, setDepartmentOptions] = useState(null);
     const [addModal, setAddModal] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(dlSemp.emp);
+    const [selectedRemarks, setSelectedRemarks] = useState(dlSremarks.remarks);
     const [selectedDepartment, setSelectedDepartment] = useState(dlSdept.dept);
     const [fromDate, setFromDate] = useState(dlSfromDate);
     const [toDate, setToDate] = useState(dlStoDate);
@@ -224,6 +226,7 @@ const DetailedLogs = () => {
         var data = {
             selectedDetailedLogs: !selectedEmployee ? [] : selectedEmployee,
             selectedDepartment: !selectedDepartment ? [] : selectedDepartment,
+            selectedRemarks: !selectedRemarks ? [] : selectedRemarks,
             fromDate: fromDate,
             toDate: toDate,
             page: page
@@ -232,27 +235,30 @@ const DetailedLogs = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-
+        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
                 // handle success
                 if (Array.isArray(response.data)) {
                     setLogData(response.data);
+                    setLoader(false);
                 } else {
                     var obj = [];
                     obj.push(response.data);
                     setLogData(obj);
+                    setLoader(false);
                 }
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
+                setLoader(false);
             })
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, selectedDepartment, page, loader, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, selectedRemarks, page, toDate, fromDate]);
 
     const logList = logData
         ? logData.map((x) => ({
@@ -402,6 +408,15 @@ const DetailedLogs = () => {
                 });
             });
         }
+        return list;
+    }
+
+    function RemarksOption(item) {
+        var list = [
+            { label: "Late", value: "Late" },
+            { label: "Overtime", value: "Overtime" },
+        ];
+
         return list;
     }
 
@@ -681,6 +696,12 @@ const DetailedLogs = () => {
         setPage(0);
     }
 
+    const handleFilterRemarks = (e) => {
+        var data = e ? e : [];
+        setSelectedRemarks(data);
+        // setPage(0);
+    }
+
     return (
         <div className={classes.root}>
 
@@ -703,6 +724,30 @@ const DetailedLogs = () => {
                     placeholder='Search...'
                     isClearable
                     isMulti
+                    theme={(theme) => ({
+                        ...theme,
+                        // borderRadius: 0,
+                        colors: {
+                            ...theme.colors,
+                            text: 'black',
+                            primary25: '#66c0f4',
+                            primary: '#B9B9B9',
+                        },
+                    })}
+                    styles={customMultiSelectStyle}
+                />
+            </div>
+
+            <div style={{
+                float: 'right', width: '15%', zIndex: 100, marginRight: 10
+            }}>
+                <Select
+                    defaultValue={selectedRemarks}
+                    options={RemarksOption()}
+                    onChange={e => handleFilterRemarks(e)}
+                    placeholder='Remarks Filter'
+                    isClearable
+                    // isMulti
                     theme={(theme) => ({
                         ...theme,
                         // borderRadius: 0,
@@ -1059,7 +1104,7 @@ const DetailedLogs = () => {
                 }
             </div>
 
-            {Object.keys(selectedEmployee).length === 0 &&
+            {Object.keys(selectedEmployee).length === 0 || Object.keys(selectedRemarks).length === 0 &&
                 <TablePagination
                     // rowsPerPageOptions={[10, 25, 100]}
                     labelRowsPerPage=''

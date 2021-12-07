@@ -183,8 +183,10 @@ router.post("/detailed-list", async (request, response) => {
 
             var id = [];
             var dep = [];
+            var rmrks = [];
             var data = request.body.selectedDetailedLogs;
             var paramDep = request.body.selectedDepartment;
+            var paramRmrks = request.body.selectedRemarks;
             for (const i in data) {
                 // console.log(`_id: ${request.body[i].value}`);
                 id.push({ employeeNo: request.body.selectedDetailedLogs[i].value });
@@ -192,6 +194,10 @@ router.post("/detailed-list", async (request, response) => {
             for (const i in paramDep) {
                 // console.log(`_id: ${request.body[i].value}`);
                 dep.push({ department: request.body.selectedDepartment[i].value });
+            }
+            for (const i in paramRmrks) {
+                // console.log(`_id: ${request.body[i].value}`);
+                rmrks.push({ remarks: request.body.selectedRemarks.value });
             }
 
             var emp = [];
@@ -603,59 +609,117 @@ router.post("/detailed-list", async (request, response) => {
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
 
-                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
-                    totalHrsWork = totalHrsWork + hoursWork;
-                    totalLate = totalLate + late;
-                    totalUT = totalUT + ut;
-                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
-                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+                    if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
 
-                    var logs = {
-                        "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
-                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
-                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
-                        "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
-                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
-                        "dateTime": dateTime,
-                        "day": day,
-                        "hoursWork": hoursWork.toFixed(2),
-                        "late": late.toFixed(2),
-                        "UT": ut.toFixed(2),
-                        "OT": ot.toFixed(2),
-                        "remarks": remarks,
-                        "reason": reason
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = totalUT + ut;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
                     }
+                    if (Object.keys(rmrks).length === 0) {
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = totalUT + ut;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
-                    timeLogs.push(logs);
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
+                    }
 
                     theDate.setDate(theDate.getDate() + 1);
                 }
 
-                var employeeLogs = {
-                    "_id": emp[i]._id,
-                    "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
-                    "department": dep.department,
-                    "timeLogs": timeLogs,
-                    "totalDays": totalDays.toFixed(0),
-                    "totalHoursWork": totalHrsWork.toFixed(2),
-                    "totalRestday": totalRestday.toFixed(2),
-                    "totalRestdayOt": totalRestdayOt.toFixed(2),
-                    "totalHoliday": totalHoliday.toFixed(2),
-                    "totalHolidayOt": totalHolidayOt.toFixed(2),
-                    "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
-                    "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
-                    "totalHolidayRestday": totalHolidayRestday.toFixed(2),
-                    "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
-                    "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
-                    "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
-                    "totalLate": totalLate.toFixed(2),
-                    "totalUT": totalUT.toFixed(2),
-                    "totalOT": totalOT.toFixed(2),
-                    "totalAbsent": totalAbsent
-                }
+                if (Object.keys(rmrks).length > 0 && totalLate > 0 || Object.keys(rmrks).length > 0 && totalOT > 0) {
+                    var employeeLogs = {
+                        "_id": emp[i]._id,
+                        "employeeNo": emp[i].employeeNo,
+                        "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
+                        "department": dep.department,
+                        "timeLogs": timeLogs,
+                        "totalDays": totalDays.toFixed(0),
+                        "totalHoursWork": totalHrsWork.toFixed(2),
+                        "totalRestday": totalRestday.toFixed(2),
+                        "totalRestdayOt": totalRestdayOt.toFixed(2),
+                        "totalHoliday": totalHoliday.toFixed(2),
+                        "totalHolidayOt": totalHolidayOt.toFixed(2),
+                        "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                        "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                        "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                        "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                        "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                        "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
+                        "totalLate": totalLate.toFixed(2),
+                        "totalUT": totalUT.toFixed(2),
+                        "totalOT": totalOT.toFixed(2),
+                        "totalAbsent": totalAbsent
+                    }
 
-                data.push(employeeLogs);
+                    data.push(employeeLogs);
+                }
+                if (Object.keys(rmrks).length === 0) {
+                    var employeeLogs = {
+                        "_id": emp[i]._id,
+                        "employeeNo": emp[i].employeeNo,
+                        "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
+                        "department": dep.department,
+                        "timeLogs": timeLogs,
+                        "totalDays": totalDays.toFixed(0),
+                        "totalHoursWork": totalHrsWork.toFixed(2),
+                        "totalRestday": totalRestday.toFixed(2),
+                        "totalRestdayOt": totalRestdayOt.toFixed(2),
+                        "totalHoliday": totalHoliday.toFixed(2),
+                        "totalHolidayOt": totalHolidayOt.toFixed(2),
+                        "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                        "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                        "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                        "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                        "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                        "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
+                        "totalLate": totalLate.toFixed(2),
+                        "totalUT": totalUT.toFixed(2),
+                        "totalOT": totalOT.toFixed(2),
+                        "totalAbsent": totalAbsent
+                    }
+
+                    data.push(employeeLogs);
+                }
             }
             response.status(200).json(data);
         } else {
@@ -665,10 +729,24 @@ router.post("/detailed-list", async (request, response) => {
 
             //(page -1)
             var id = [];
+            var dep = [];
+            var rmrks = [];
+            var data = request.body.selectedDetailedLogs;
             var paramDep = request.body.selectedDepartment;
-            for (const i in paramDep) {
-                id.push({ department: request.body.selectedDepartment[i].value });
+            var paramRmrks = request.body.selectedRemarks;
+            for (const i in data) {
+                // console.log(`_id: ${request.body[i].value}`);
+                id.push({ employeeNo: request.body.selectedDetailedLogs[i].value });
             }
+            for (const i in paramDep) {
+                // console.log(`_id: ${request.body[i].value}`);
+                dep.push({ department: request.body.selectedDepartment[i].value });
+            }
+            for (const i in paramRmrks) {
+                // console.log(`_id: ${request.body[i].value}`);
+                rmrks.push({ remarks: request.body.selectedRemarks.value });
+            }
+
             var emp = [];
             if (Object.keys(request.body.selectedDepartment).length > 0) {
                 emp = await employeeModel.find({
@@ -1073,59 +1151,117 @@ router.post("/detailed-list", async (request, response) => {
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
 
-                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
-                    totalHrsWork = totalHrsWork + hoursWork;
-                    totalLate = totalLate + late;
-                    totalUT = totalUT + ut;
-                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
-                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+                    if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
 
-                    var logs = {
-                        "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
-                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
-                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
-                        "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
-                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
-                        "dateTime": dateTime,
-                        "day": day,
-                        "hoursWork": hoursWork.toFixed(2),
-                        "late": late.toFixed(2),
-                        "UT": ut.toFixed(2),
-                        "OT": ot.toFixed(2),
-                        "remarks": remarks,
-                        "reason": reason
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = totalUT + ut;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
                     }
+                    if (Object.keys(rmrks).length === 0) {
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = totalUT + ut;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
-                    timeLogs.push(logs);
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
+                    }
 
                     theDate.setDate(theDate.getDate() + 1);
                 }
 
-                var employeeLogs = {
-                    "_id": emp[i]._id,
-                    "employeeNo": emp[i].employeeNo,
-                    "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
-                    "department": dep.department,
-                    "timeLogs": timeLogs,
-                    "totalDays": totalDays.toFixed(0),
-                    "totalHoursWork": totalHrsWork.toFixed(2),
-                    "totalRestday": totalRestday.toFixed(2),
-                    "totalRestdayOt": totalRestdayOt.toFixed(2),
-                    "totalHoliday": totalHoliday.toFixed(2),
-                    "totalHolidayOt": totalHolidayOt.toFixed(2),
-                    "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
-                    "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
-                    "totalHolidayRestday": totalHolidayRestday.toFixed(2),
-                    "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
-                    "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
-                    "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
-                    "totalLate": totalLate.toFixed(2),
-                    "totalUT": totalUT.toFixed(2),
-                    "totalOT": totalOT.toFixed(2),
-                    "totalAbsent": totalAbsent
-                }
+                if (Object.keys(rmrks).length > 0 && totalLate > 0 || Object.keys(rmrks).length > 0 && totalOT > 0) {
+                    var employeeLogs = {
+                        "_id": emp[i]._id,
+                        "employeeNo": emp[i].employeeNo,
+                        "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
+                        "department": dep.department,
+                        "timeLogs": timeLogs,
+                        "totalDays": totalDays.toFixed(0),
+                        "totalHoursWork": totalHrsWork.toFixed(2),
+                        "totalRestday": totalRestday.toFixed(2),
+                        "totalRestdayOt": totalRestdayOt.toFixed(2),
+                        "totalHoliday": totalHoliday.toFixed(2),
+                        "totalHolidayOt": totalHolidayOt.toFixed(2),
+                        "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                        "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                        "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                        "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                        "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                        "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
+                        "totalLate": totalLate.toFixed(2),
+                        "totalUT": totalUT.toFixed(2),
+                        "totalOT": totalOT.toFixed(2),
+                        "totalAbsent": totalAbsent
+                    }
 
-                data.push(employeeLogs);
+                    data.push(employeeLogs);
+                }
+                if (Object.keys(rmrks).length === 0) {
+                    var employeeLogs = {
+                        "_id": emp[i]._id,
+                        "employeeNo": emp[i].employeeNo,
+                        "employeeName": emp[i].lastName + ", " + emp[i].firstName + " " + emp[i].middleName + " " + emp[i].suffix,
+                        "department": dep.department,
+                        "timeLogs": timeLogs,
+                        "totalDays": totalDays.toFixed(0),
+                        "totalHoursWork": totalHrsWork.toFixed(2),
+                        "totalRestday": totalRestday.toFixed(2),
+                        "totalRestdayOt": totalRestdayOt.toFixed(2),
+                        "totalHoliday": totalHoliday.toFixed(2),
+                        "totalHolidayOt": totalHolidayOt.toFixed(2),
+                        "totalSpecialHoliday": totalSpecialHoliday.toFixed(2),
+                        "totalSpecialHolidayOt": totalSpecialHolidayOt.toFixed(2),
+                        "totalHolidayRestday": totalHolidayRestday.toFixed(2),
+                        "totalHolidayRestdayOt": totalHolidayRestdayOt.toFixed(2),
+                        "totalSpecialHolidayRestday": totalSpecialHolidayRestday.toFixed(2),
+                        "totalSpecialHolidayRestdayOt": totalSpecialHolidayRestdayOt.toFixed(2),
+                        "totalLate": totalLate.toFixed(2),
+                        "totalUT": totalUT.toFixed(2),
+                        "totalOT": totalOT.toFixed(2),
+                        "totalAbsent": totalAbsent
+                    }
+
+                    data.push(employeeLogs);
+                }
             }
 
             response.status(200).json(data);
