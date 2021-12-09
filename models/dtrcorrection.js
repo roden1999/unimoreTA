@@ -30,6 +30,12 @@ const dtrCorrectionSchema = new mongoose.Schema({
 	breakTimeHrs: {
 		type: Number,
 	},
+	hourswork: {
+		type: Number,
+	},
+	undertime: {
+		type: Number,
+	},
 	remarks: {
 		type: String,
 	},

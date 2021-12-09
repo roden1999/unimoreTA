@@ -604,7 +604,10 @@ router.post("/detailed-list", async (request, response) => {
                         var msec = date2 > date1 ? date2 - date1 : date1 - date2;
                         var mins = Math.floor(msec / 60000);
 
-                        hoursWork = mins / 60;
+                        // hoursWork = mins / 60;
+                        hoursWork = dtr[0].hourswork,
+                        ot = dtr[0].otHours,
+                        ut = dtr[0].undertime,
                         timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
@@ -1146,7 +1149,10 @@ router.post("/detailed-list", async (request, response) => {
                         var msec = date2 > date1 ? date2 - date1 : date1 - date2;
                         var mins = Math.floor(msec / 60000);
 
-                        hoursWork = mins / 60;
+                        // hoursWork = mins / 60;
+                        hoursWork = dtr[0].hourswork,
+                        ot = dtr[0].otHours,
+                        ut = dtr[0].undertime,
                         timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
@@ -1566,6 +1572,8 @@ router.post("/approved-dtr-correction", async (request, response) => {
                 timeOut: timeOut,
                 otHours: data.otHours,
                 breakTimeHrs: data.breakTimeHrs,
+                hourswork: data.hourswork,
+                undertime: data.undertime,
                 employeeName: data.employeeName,
                 remarks: data.remarks,
                 reason: data.reason,

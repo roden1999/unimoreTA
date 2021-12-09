@@ -60,7 +60,10 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing(0, 4, 0),
+        // minHeight: '700px',
+        maxHeight: '700px',
+        overflowY: "scroll"
     },
     tbcontainer: {
         maxHeight: 375,
@@ -243,7 +246,9 @@ const DtrCorrection = () => {
     const [department, setDepartment] = useState("");
     const [timeIn, setTimeIn] = useState(moment().format("MM DD, yyyy 8:00"));
     const [timeOut, setTimeOut] = useState(moment().format("MM DD, yyyy 17:00"));
-    const [otHours, setOtHours] = useState("");
+    const [otHours, setOtHours] = useState(0);
+    const [hourswork, setHourswork] = useState(0);
+    const [undertime, setUndertime] = useState(0);
     const [breakTimeHrs, setBreakTimeHrs] = useState("");
     const [breakTime, setBreakTime] = useState(false);
     const [date, setDate] = useState(moment().format("MM/DD/yyyy"));
@@ -452,8 +457,10 @@ const DtrCorrection = () => {
         setDate(moment().format("MM/DD/yyyy"));
         setTimeIn(moment().format("MM DD, yyyy 8:00"));
         setTimeOut(moment().format("MM DD, yyyy 17:00"));
-        setOtHours("");
-        setBreakTimeHrs("");
+        setOtHours(0);
+        setHourswork(0);
+        setUndertime(0);
+        setBreakTimeHrs(0);
         setBreakTime(false);
         setRemarks("");
         setReason("");
@@ -506,6 +513,8 @@ const DtrCorrection = () => {
             timeOut: moment(timeOut).format("h:mm A"),
             breakTime: breakTime,
             otHours: otHours,
+            hourswork: hourswork,
+            undertime: undertime,
             breakTimeHrs: breakTimeHrs,
             remarks: !remarks ? "" : remarks.value,
             reason: reason
@@ -529,7 +538,9 @@ const DtrCorrection = () => {
                 setTimeIn(moment().format("MM DD, yyyy 8:00"));
                 setTimeOut(moment().format("MM DD, yyyy 17:00"));
                 setBreakTime(false);
-                setOtHours("");
+                setOtHours(0);
+                setHourswork(0);
+                setUndertime(0);
                 setBreakTimeHrs("");
                 setRemarks("");
                 setReason("");
@@ -778,7 +789,7 @@ const DtrCorrection = () => {
             >
                 <Fade in={addModal}>
                     <div className={classes.modalPaper}>
-                        <div>
+                        <div style={{ position: "sticky", top: 0, backgroundColor: "white", zIndex: 2 }}>
                             <h1>Manage Record</h1>
                             <h3>{employeeName}</h3>
                             <h4>{moment(date).format("MMM DD, yyyy")}</h4>
@@ -903,6 +914,49 @@ const DtrCorrection = () => {
                                     </div>
                                 }
 
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value === "Manual Timelog" &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>Hourswork</strong></label><br />
+                                        <TextField variant="outlined" size="small" type="number" fullWidth placeholder="hourswork" value={hourswork} onChange={e => setHourswork(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+                                        <br />
+                                        <br />
+                                    </div>
+                                }
+
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value === "Manual Timelog" &&
+                                    remarks.value !== "Overtime" &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>OT Hours</strong></label><br />
+                                        <TextField variant="outlined" size="small" type="number" fullWidth placeholder="ot hours" value={otHours} onChange={e => setOtHours(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+                                        <br />
+                                        <br />
+                                    </div>
+                                }
+
+                                {Object.keys(remarks).length > 0 &&
+                                    remarks.value === "Manual Timelog" &&
+                                    remarks.value !== "SL w/ Pay" &&
+                                    remarks.value !== "SL w/o Pay" &&
+                                    remarks.value !== "VL w/ Pay" &&
+                                    remarks.value !== "VL w/o Pay" &&
+                                    <div>
+                                        <label style={{ fontSize: '17px' }}><strong>Undertime</strong></label><br />
+                                        <TextField variant="outlined" size="small" type="number" fullWidth placeholder="undertime" value={undertime} onChange={e => setUndertime(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
+                                        <br />
+                                        <br />
+                                    </div>
+                                }
+
                                 <br />
 
                                 <div>
@@ -912,10 +966,11 @@ const DtrCorrection = () => {
 
                                 <br />
 
-                                <div>
+                                <div style={{ position: "sticky", bottom: 0, backgroundColor: "white", zIndex: 2 }}>
                                     <Button
                                         size="large"
                                         // style={{ float: 'right' }}
+                                        style={{ marginBottom: 20, marginTop: 20 }}
                                         variant="contained"
                                         color="default"
                                         onClick={handleCloseAddModal}
@@ -924,7 +979,7 @@ const DtrCorrection = () => {
                                     </Button>
                                     <Button
                                         size="large"
-                                        style={{ marginLeft: 10 }}
+                                        style={{ marginLeft: 10, marginBottom: 20, marginTop: 20 }}
                                         variant="contained"
                                         color="default"
                                         startIcon={<Save />}
