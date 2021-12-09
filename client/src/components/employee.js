@@ -164,7 +164,7 @@ const customSelectStyle = {
 
 const Employee = () => {
   const classes = useStyles();
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [employeeData, setEmployeeData] = useState(null);
   const [departmentOptions, setDepartmentOptions] = useState(null);
   const [employeeOptions, setEmployeeOptions] = useState(null);
@@ -204,7 +204,6 @@ const Employee = () => {
     var url = window.apihost + route;
     // var token = sessionStorage.getItem("auth-token");
     // const user = JSON.parse(sessionStorage.getItem('user'));
-    setLoader(true);
     axios
       .post(url, data)
       .then(function (response) {
@@ -227,7 +226,7 @@ const Employee = () => {
       .finally(function () {
         // always executed
       });
-  }, [page, selectedEmployee, selectedDepartment]);
+  }, [page, selectedEmployee, selectedDepartment, loader]);
 
   const employeeList = employeeData
     ? employeeData.map((x) => ({

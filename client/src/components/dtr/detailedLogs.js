@@ -209,7 +209,7 @@ const DetailedLogs = () => {
     var dlSdept = JSON.parse(sessionStorage.getItem("dlSdept"));
     var dlSfromDate = sessionStorage.getItem("dlSfromDate");
     var dlStoDate = sessionStorage.getItem("dlStoDate");
-    const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(true);
     const [logData, setLogData] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
@@ -235,7 +235,6 @@ const DetailedLogs = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
@@ -258,7 +257,7 @@ const DetailedLogs = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, selectedDepartment, selectedRemarks, page, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, selectedRemarks, page, toDate, fromDate, loader]);
 
     const logList = logData
         ? logData.map((x) => ({

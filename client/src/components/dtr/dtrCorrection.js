@@ -239,7 +239,7 @@ const DtrCorrection = () => {
     var dtrSdept = JSON.parse(sessionStorage.getItem("dtrSdept"));
     var dtrSfromDate = sessionStorage.getItem("dtrSfromDate");
     var dtrStoDate = sessionStorage.getItem("dtrStoDate");
-    const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(true);
     const [logData, setLogData] = useState(null);
     const [employeeNo, setEmployeeNo] = useState("")
     const [employeeName, setEmployeeName] = useState("")
@@ -284,7 +284,6 @@ const DtrCorrection = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
@@ -307,7 +306,7 @@ const DtrCorrection = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, selectedDepartment, page, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, page, toDate, fromDate, loader]);
 
     const logList = logData
         ? logData.map((x) => ({

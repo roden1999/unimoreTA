@@ -169,7 +169,7 @@ const RawLogs = () => {
     var rawSemp = JSON.parse(sessionStorage.getItem("rawSemp"));
     var rawSfromDate = sessionStorage.getItem("rawSfromDate");
     var rawStoDate = sessionStorage.getItem("rawStoDate");
-    const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(true);
     const [logData, setLogData] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
@@ -210,7 +210,6 @@ const RawLogs = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
@@ -233,7 +232,7 @@ const RawLogs = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, fromDate, toDate, page]);
+    }, [selectedEmployee, fromDate, toDate, page, loader]);
 
     const logList = logData
         ? logData.map((x) => ({

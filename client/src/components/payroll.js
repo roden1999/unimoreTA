@@ -204,7 +204,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 const Payroll = () => {
     const classes = useStyles();
-    const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(true);
     const [logData, setLogData] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
@@ -231,7 +231,6 @@ const Payroll = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
@@ -249,11 +248,12 @@ const Payroll = () => {
             .catch(function (error) {
                 // handle error
                 console.log(error);
+                setLoader(false);
             })
             .finally(function () {
                 // always executed
             });
-    }, [selectedEmployee, selectedDepartment, selectedType, page, toDate, fromDate]);
+    }, [selectedEmployee, selectedDepartment, selectedType, page, toDate, fromDate, loader]);
 
     const logList = logData
         ? logData.map((x) => ({

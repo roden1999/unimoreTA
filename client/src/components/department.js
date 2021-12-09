@@ -254,7 +254,7 @@ const IOSSwitch = withStyles((theme) => ({
 
 const Department = () => {
     const classes = useStyles();
-    const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(true);
     const [departmentData, setDepartmentData] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
@@ -297,7 +297,6 @@ const Department = () => {
         var url = window.apihost + route;
         // var token = sessionStorage.getItem("auth-token");
         // const user = JSON.parse(sessionStorage.getItem('user'));
-        setLoader(true);
         axios
             .post(url, data)
             .then(function (response) {
@@ -320,7 +319,7 @@ const Department = () => {
             .finally(function () {
                 // always executed
             });
-    }, [selectedDepartment]);
+    }, [selectedDepartment, loader]);
 
     const departmentList = departmentData
         ? departmentData.map((x) => ({

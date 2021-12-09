@@ -159,7 +159,7 @@ const Users = () => {
     const [usersData, setUsersData] = useState(null);
     const [selectedUser, setSelectedUser] = useState([]);
     const [userOptions, setUserOptions] = useState([]);
-    const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(true);
     const [addModal, setAddModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [changePassModal, setChangePassModal] = useState(false);
@@ -177,7 +177,6 @@ const Users = () => {
         var url = window.apihost + route;
         var token = sessionStorage.getItem("auth-token");
 
-        setLoader(true);
         axios
             .post(url, data, {
                 headers: { "auth-token": token },
@@ -197,6 +196,7 @@ const Users = () => {
             .catch(function (error) {
                 // handle error
                 console.log(error);
+                setLoader(false);
             })
             .finally(function () {
                 // always executed
