@@ -1103,7 +1103,7 @@ const DetailedLogs = () => {
                 }
             </div>
 
-            {Object.keys(selectedEmployee).length === 0 || Object.keys(selectedRemarks).length === 0 &&
+            {Object.keys(selectedEmployee).length === 0 &&
                 <TablePagination
                     // rowsPerPageOptions={[10, 25, 100]}
                     labelRowsPerPage=''
