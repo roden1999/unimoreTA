@@ -755,11 +755,11 @@ router.post("/detailed-list", async (request, response) => {
                 emp = await employeeModel.find({
                     '$or': dep,
                     IsDeleted: false
-                }).sort('lastName');
+                }).skip((page) * perPage).limit(perPage).sort('lastName');
             } else {
                 emp = await employeeModel.find({
                     IsDeleted: false
-                }).sort('lastName');
+                }).skip((page) * perPage).limit(perPage).sort('lastName');
             }
 
             var data = [];
