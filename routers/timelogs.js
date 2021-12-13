@@ -450,7 +450,7 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date1 = depIn >= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = depOut <= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
@@ -458,7 +458,7 @@ router.post("/detailed-list", async (request, response) => {
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        var hw = mins / 60;
+                        var hw = Math.floor(mins / 60); //fix for labis na computation Math.floor()
                         hoursWork = hw > 5 ? hw - 1 : hw;
                     }
 
@@ -995,7 +995,7 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date1 = depIn >= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = depOut <= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
@@ -1003,7 +1003,7 @@ router.post("/detailed-list", async (request, response) => {
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        var hw = mins / 60;
+                        var hw = Math.floor(mins / 60);
                         hoursWork = hw > 5 ? hw - 1 : hw;
                     }
 
