@@ -518,9 +518,9 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     if (remarks === "Working Rest Day" ||
-                        remarks === "Working Holiday" ||
+                        remarks === "Working Regular Holiday" ||
                         remarks === "Working Special Holiday" ||
-                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Working Regular Holiday Rest Day" ||
                         remarks === "Working Special Holiday Rest Day" ||
                         remarks === "Offset") {
 
@@ -539,8 +539,8 @@ router.post("/detailed-list", async (request, response) => {
                             totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
                             totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
 
-                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
-                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+                            totalHoliday = remarks === "Working Regular Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Regular Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
 
                             totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
                             totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
@@ -1063,9 +1063,9 @@ router.post("/detailed-list", async (request, response) => {
                     }
 
                     if (remarks === "Working Rest Day" ||
-                        remarks === "Working Holiday" ||
+                        remarks === "Working Regular Holiday" ||
                         remarks === "Working Special Holiday" ||
-                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Working Regular Holiday Rest Day" ||
                         remarks === "Working Special Holiday Rest Day" ||
                         remarks === "Offset") {
 
@@ -1084,14 +1084,14 @@ router.post("/detailed-list", async (request, response) => {
                             totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
                             totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
 
-                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
-                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+                            totalHoliday = remarks === "Working Regular Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Regular Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
 
                             totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
                             totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
 
-                            totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
-                            totalHolidayRestdayOt = remarks === "Working Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
+                            totalHolidayRestday = remarks === "Working Regular Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
+                            totalHolidayRestdayOt = remarks === "Working Regular Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
 
                             totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + totalHw : totalSpecialHolidayRestday;
                             totalSpecialHolidayRestdayOt = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestdayOt + totalHwOt : totalSpecialHolidayRestdayOt;
