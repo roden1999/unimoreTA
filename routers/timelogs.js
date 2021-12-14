@@ -450,8 +450,8 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn >= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = depOut <= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(depIn) >= new Date(timeIn) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(depOut) <= new Date(timeOut) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
@@ -536,7 +536,7 @@ router.post("/detailed-list", async (request, response) => {
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
-                            totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
+                            totalRestday = remarks === "Working Rest Day" ? totalRestday + totalHw : totalRestday;
                             totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
 
                             totalHoliday = remarks === "Working Regular Holiday" ? totalHoliday + totalHw : totalHoliday;
@@ -597,6 +597,11 @@ router.post("/detailed-list", async (request, response) => {
                         reason = holiday[0].title;
                     }
 
+                    totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
+                    totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
+                    totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
+                    totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
+
                     if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
@@ -606,9 +611,9 @@ router.post("/detailed-list", async (request, response) => {
 
                         // hoursWork = mins / 60;
                         hoursWork = dtr[0].hourswork,
-                        ot = dtr[0].otHours,
-                        ut = dtr[0].undertime,
-                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                            ot = dtr[0].otHours,
+                            ut = dtr[0].undertime,
+                            timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
 
@@ -995,8 +1000,8 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn >= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = depOut <= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(depIn) >= new Date(timeIn) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(depOut) <= new Date(timeOut) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
@@ -1142,6 +1147,11 @@ router.post("/detailed-list", async (request, response) => {
                         reason = holiday[0].title;
                     }
 
+                    totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
+                    totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
+                    totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
+                    totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
+
                     if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
@@ -1151,9 +1161,9 @@ router.post("/detailed-list", async (request, response) => {
 
                         // hoursWork = mins / 60;
                         hoursWork = dtr[0].hourswork,
-                        ot = dtr[0].otHours,
-                        ut = dtr[0].undertime,
-                        timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                            ot = dtr[0].otHours,
+                            ut = dtr[0].undertime,
+                            timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
                     }
 
