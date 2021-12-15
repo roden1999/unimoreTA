@@ -519,8 +519,8 @@ const Payroll = () => {
                                         { text: deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                                        { text: deductions[0].cashAdvance, fontSize: 8, },
-                                        { text: deductions[0].safetyShoes, fontSize: 8, }
+                                        { text: deductions[0].cashAdvance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].safetyShoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, }
                                     ]
                                 ]
                             },
@@ -632,8 +632,8 @@ const Payroll = () => {
                                         { text: deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                                        { text: deductions[0].cashAdvance, fontSize: 8, },
-                                        { text: deductions[0].safetyShoes, fontSize: 8, }
+                                        { text: deductions[0].cashAdvance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].safetyShoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, }
                                     ],
                                 ]
                             },

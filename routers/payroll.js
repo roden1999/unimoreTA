@@ -530,6 +530,8 @@ router.post("/payroll-list", async (request, response) => {
                     "sss": sss.toFixed(2),
                     "phic": phic.toFixed(2),
                     "hdmf": hdmf.toFixed(2),
+                    "cashAdvance": cashAdvance.toFixed(2),
+                    "safetyShoes": safetyShoes.toFixed(2),
                     "sssLoan": sssLoan.toFixed(2),
                     "pagibigLoan": pagibigLoan.toFixed(2),
                     "careHealthPlus": careHealthPlus.toFixed(2)
