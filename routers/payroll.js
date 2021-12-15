@@ -91,16 +91,19 @@ router.post("/payroll-list", async (request, response) => {
                     const dtr = await dtrcModel.find({
                         employeeNo: emp[i].employeeNo,
                         date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    }).sort({ dateApproved: 1 });
+                    }).sort({ dateApproved: -1 });
 
                     var timeIn = "";
                     var timeOut = "";
+                    var breakOut = "";
+                    var breakIn = "";
 
                     var dt = dateTime;
                     var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
                     var nxtDayOT = [];
 
                     var reason = "";
+                    var breakTime = 0;
 
                     if (Object.keys(dtr).length > 0) {
                         const dateTimeIn = await timeLogsModel.find({
@@ -114,6 +117,35 @@ router.post("/payroll-list", async (request, response) => {
                             dateTime: { $gte: new Date(dt).setHours(00, 00, 00), $lte: new Date(dt).setHours(23, 59, 59) },
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
+
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
+
                         nxtDayOT = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
                             dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
@@ -127,9 +159,13 @@ router.post("/payroll-list", async (request, response) => {
                             } else {
                                 timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
                             }
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         } else {
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                             timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
@@ -154,6 +190,34 @@ router.post("/payroll-list", async (request, response) => {
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
+
                         nxtDayOT = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
                             dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
@@ -166,6 +230,8 @@ router.post("/payroll-list", async (request, response) => {
                         } else {
                             timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
                         }
+                        breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                        breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                     }
 
                     var convertedDate = moment(dateTime, "MM/DD/yyyy").format("MM/DD/yyyy");
@@ -180,7 +246,7 @@ router.post("/payroll-list", async (request, response) => {
                     var convertedTI = moment(convertedDate + " " + timeIn).format();
                     var convertedTO = moment(todt + " " + timeOut).format();
 
-                    var convertedDTI = moment(convertedDate + " " + depIn).format();
+                    var convertedDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
                     var convertedDTO = moment(todt + " " + depOut).format();
 
                     var remarks = "";
@@ -215,15 +281,15 @@ router.post("/payroll-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(depIn) >= new Date(timeIn) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(depOut) <= new Date(timeOut) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        var hw = mins / 60;
+                        var hw = Math.floor(mins / 60); //fix for labis na computation Math.floor()
                         hoursWork = hw > 5 ? hw - 1 : hw;
                     }
 
@@ -234,14 +300,14 @@ router.post("/payroll-list", async (request, response) => {
                         var msec = date2 > date1 ? date2 - date1 : date1 - date2;
                         var mins = Math.floor(msec / 60000);
 
-                        hoursWork = mins / 60;
+                        // hoursWork = mins / 60;
                     }
 
                     remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
                     if (remarks === "Overtime" && day !== "Sunday") {
                         if (timeIn && timeOut && Object.keys(nxtDayOT).length === 0) {
-                            var date1 = new Date(convertedTI).getTime();
-                            var date2 = new Date(convertedTO).getTime();
+                            var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                            var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
                             var date3 = new Date(convertedDTO).getTime();
 
                             var msec = date2 - date1;
@@ -249,11 +315,14 @@ router.post("/payroll-list", async (request, response) => {
                             // var hrs = Math.floor(mins / 60);
 
                             var msecOT = date2 - date3;
-                            var otMins = Math.floor(msecOT / 60000);
+                            // var otMins = Math.floor(msecOT / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw > 5 ? hw - 1 : hw;
-                            ot = otMins / 60;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            // ot = otMins / 60;
+
+                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            ot = dtr[0].otHours;
 
                             remarks = "Overtime";
                         } else {
@@ -280,9 +349,9 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     if (remarks === "Working Rest Day" ||
-                        remarks === "Working Holiday" ||
+                        remarks === "Working Regular Holiday" ||
                         remarks === "Working Special Holiday" ||
-                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Working Regular Holiday Rest Day" ||
                         remarks === "Working Special Holiday Rest Day" ||
                         remarks === "Offset") {
 
@@ -298,17 +367,17 @@ router.post("/payroll-list", async (request, response) => {
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
-                            totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
+                            totalRestday = remarks === "Working Rest Day" ? totalRestday + totalHw : totalRestday;
                             totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
 
-                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
-                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+                            totalHoliday = remarks === "Working Regular Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Regular Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
 
                             totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
                             totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
 
-                            totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
-                            totalHolidayRestdayOt = remarks === "Working Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
+                            totalHolidayRestday = remarks === "Working Regular Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
+                            totalHolidayRestdayOt = remarks === "Working Regular Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
 
                             totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + totalHw : totalSpecialHolidayRestday;
                             totalSpecialHolidayRestdayOt = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestdayOt + totalHwOt : totalSpecialHolidayRestdayOt;
@@ -320,8 +389,9 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
-                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
+                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).add(11, 'minutes').minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
                     }
 
@@ -354,10 +424,30 @@ router.post("/payroll-list", async (request, response) => {
                         late = 0;
                         ut = 0;
                         ot = 0;
-                        remarks = holiday[0].type;
+                        remarks = holiday[0].type
                         reason = holiday[0].title;
                     }
 
+                    totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
+                    totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
+                    totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
+                    totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
+
+                    if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
+                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        // hoursWork = mins / 60;
+                        hoursWork = dtr[0].hourswork,
+                            ot = dtr[0].otHours,
+                            ut = dtr[0].undertime,
+                            timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                    }
+                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                     totalHrsWork = totalHrsWork + hoursWork;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
@@ -366,6 +456,8 @@ router.post("/payroll-list", async (request, response) => {
 
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
                         "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
@@ -475,6 +567,7 @@ router.post("/payroll-list", async (request, response) => {
 
                     "timeLogs": timeLogs,
 
+                    "totalDays": totalDays.toFixed(0),
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
                     "totalRestdayOt": totalRestdayOt.toFixed(2),
@@ -544,6 +637,7 @@ router.post("/payroll-list", async (request, response) => {
                 var depIn = '';
                 var depOut = '';
 
+                var totalDays = 0;
                 var totalHrsWork = 0;
                 var totalRestday = 0;
                 var totalRestdayOt = 0;
@@ -580,16 +674,20 @@ router.post("/payroll-list", async (request, response) => {
                     const dtr = await dtrcModel.find({
                         employeeNo: emp[i].employeeNo,
                         date: { $gte: new Date(dateTime).setHours(00, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) }
-                    }).sort({ dateApproved: 1 });
+                    }).sort({ dateApproved: -1 });
 
                     var timeIn = "";
                     var timeOut = "";
+                    var breakOut = "";
+                    var breakIn = "";
+
 
                     var dt = dateTime;
                     var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
                     var nxtDayOT = [];
 
                     var reason = "";
+                    var breakTime = 0;
 
                     if (Object.keys(dtr).length > 0) {
                         const dateTimeIn = await timeLogsModel.find({
@@ -597,6 +695,34 @@ router.post("/payroll-list", async (request, response) => {
                             dateTime: { $gte: new Date(dateTime).setHours(05, 00, 00), $lte: new Date(dateTime).setHours(23, 59, 59) },
                             timeInOut: "S"
                         }).sort({ dateTime: 1 });
+
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
 
                         const dateTimeOut = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
@@ -616,9 +742,13 @@ router.post("/payroll-list", async (request, response) => {
                             } else {
                                 timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
                             }
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         } else {
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                             timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                            breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                            breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
@@ -643,6 +773,34 @@ router.post("/payroll-list", async (request, response) => {
                             timeInOut: "E"
                         }).sort({ dateTime: -1 });
 
+                        var breakTimeOut;
+                        var breakTimeIn;
+                        if (day !== "Saturday") {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 00, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(12, 01, 00), $lte: new Date(dt).setHours(13, 15, 59) },
+                                timeInOut: "E"
+                            }).sort({ dateTime: -1 });
+                        } else {
+                            breakTimeOut = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 00, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: 1 });
+
+                            breakTimeIn = await timeLogsModel.find({
+                                employeeNo: emp[i].employeeNo,
+                                dateTime: { $gte: new Date(dt).setHours(10, 01, 00), $lte: new Date(dt).setHours(11, 15, 59) },
+                                timeInOut: "S"
+                            }).sort({ dateTime: -1 });
+                        }
+
                         nxtDayOT = await timeLogsModel.find({
                             employeeNo: emp[i].employeeNo,
                             dateTime: { $gte: new Date(nxtDay).setHours(00, 00, 00), $lte: new Date(nxtDay).setHours(04, 59, 59) },
@@ -655,6 +813,8 @@ router.post("/payroll-list", async (request, response) => {
                         } else {
                             timeOut = Object.keys(nxtDayOT).length !== 0 ? moment(nxtDayOT[0].dateTime).format("h:mm A") : "";
                         }
+                        breakOut = Object.keys(breakTimeOut).length !== 0 ? moment(breakTimeOut[0].dateTime).format("h:mm A") : "";
+                        breakIn = Object.keys(breakTimeIn).length !== 0 ? moment(breakTimeIn[0].dateTime).format("h:mm A") : "";
                     }
 
                     var convertedDate = moment(dateTime, "MM/DD/yyyy").format("MM/DD/yyyy");
@@ -669,7 +829,7 @@ router.post("/payroll-list", async (request, response) => {
                     var convertedTI = moment(convertedDate + " " + timeIn).format();
                     var convertedTO = moment(todt + " " + timeOut).format();
 
-                    var convertedDTI = moment(convertedDate + " " + depIn).format();
+                    var convertedDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
                     var convertedDTO = moment(todt + " " + depOut).format();
 
                     var remarks = "";
@@ -704,15 +864,15 @@ router.post("/payroll-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(depIn) >= new Date(timeIn) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(depOut) <= new Date(timeOut) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        var hw = mins / 60;
+                        var hw = Math.floor(mins / 60);
                         hoursWork = hw > 5 ? hw - 1 : hw;
                     }
 
@@ -729,8 +889,8 @@ router.post("/payroll-list", async (request, response) => {
                     remarks = Object.keys(dtr).length !== 0 ? dtr[0].remarks : remarks;
                     if (remarks === "Overtime" && day !== "Sunday") {
                         if (timeIn && timeOut && Object.keys(nxtDayOT).length === 0) {
-                            var date1 = new Date(convertedTI).getTime();
-                            var date2 = new Date(convertedTO).getTime();
+                            var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                            var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
                             var date3 = new Date(convertedDTO).getTime();
 
                             var msec = date2 - date1;
@@ -738,11 +898,14 @@ router.post("/payroll-list", async (request, response) => {
                             // var hrs = Math.floor(mins / 60);
 
                             var msecOT = date2 - date3;
-                            var otMins = Math.floor(msecOT / 60000);
+                            // var otMins = Math.floor(msecOT / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw > 5 ? hw - 1 : hw;
-                            ot = otMins / 60;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            // ot = otMins / 60;
+
+                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            ot = dtr[0].otHours;
 
                             remarks = "Overtime";
                         } else {
@@ -769,9 +932,9 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     if (remarks === "Working Rest Day" ||
-                        remarks === "Working Holiday" ||
+                        remarks === "Working Regular Holiday" ||
                         remarks === "Working Special Holiday" ||
-                        remarks === "Working Holiday Rest Day" ||
+                        remarks === "Working Regular Holiday Rest Day" ||
                         remarks === "Working Special Holiday Rest Day" ||
                         remarks === "Offset") {
 
@@ -790,14 +953,14 @@ router.post("/payroll-list", async (request, response) => {
                             totalRestday = remarks === "Working Restday" ? totalRestday + totalHw : totalRestday;
                             totalRestdayOt = remarks === "Working Restday" ? totalRestdayOt + totalHwOt : totalRestdayOt;
 
-                            totalHoliday = remarks === "Working Holiday" ? totalHoliday + totalHw : totalHoliday;
-                            totalHolidayOt = remarks === "Working Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
+                            totalHoliday = remarks === "Working Regular Holiday" ? totalHoliday + totalHw : totalHoliday;
+                            totalHolidayOt = remarks === "Working Regular Holiday" ? totalHolidayOt + totalHwOt : totalHolidayOt;
 
                             totalSpecialHoliday = remarks === "Working Special Holiday" ? totalSpecialHoliday + totalHw : totalSpecialHoliday;
                             totalSpecialHolidayOt = remarks === "Working Special Holiday" ? totalSpecialHolidayOt + totalHwOt : totalSpecialHolidayOt;
 
-                            totalHolidayRestday = remarks === "Working Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
-                            totalHolidayRestdayOt = remarks === "Working Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
+                            totalHolidayRestday = remarks === "Working Regular Holiday Rest Day" ? totalHolidayRestday + totalHw : totalHolidayRestday;
+                            totalHolidayRestdayOt = remarks === "Working Regular Holiday Rest Day" ? totalHolidayRestdayOt + totalHwOt : totalHolidayRestdayOt;
 
                             totalSpecialHolidayRestday = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestday + totalHw : totalSpecialHolidayRestday;
                             totalSpecialHolidayRestdayOt = remarks === "Working Special Holiday Rest Day" ? totalSpecialHolidayRestdayOt + totalHwOt : totalSpecialHolidayRestdayOt;
@@ -809,8 +972,9 @@ router.post("/payroll-list", async (request, response) => {
                     }
 
                     if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
-                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).minutes() / 60) && day !== "Sunday") {
+                    if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).add(15, 'minutes').minutes() / 60) && day !== "Sunday") {
                         remarks = "Late";
                     }
 
@@ -843,10 +1007,31 @@ router.post("/payroll-list", async (request, response) => {
                         late = 0;
                         ut = 0;
                         ot = 0;
-                        remarks = holiday[0].type;
+                        remarks = holiday[0].type
                         reason = holiday[0].title;
                     }
 
+                    totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
+                    totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
+                    totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
+                    totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
+
+                    if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
+                        var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = depOut >= timeOut ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+
+                        var msec = date2 > date1 ? date2 - date1 : date1 - date2;
+                        var mins = Math.floor(msec / 60000);
+
+                        // hoursWork = mins / 60;
+                        hoursWork = dtr[0].hourswork,
+                            ot = dtr[0].otHours,
+                            ut = dtr[0].undertime,
+                            timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
+                        timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+                    }
+
+                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                     totalHrsWork = totalHrsWork + hoursWork;
                     totalLate = totalLate + late;
                     totalUT = totalUT + ut;
@@ -855,6 +1040,8 @@ router.post("/payroll-list", async (request, response) => {
 
                     var logs = {
                         "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
                         "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
                         "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
                         "dateTime": dateTime,
@@ -964,6 +1151,7 @@ router.post("/payroll-list", async (request, response) => {
 
                     "timeLogs": timeLogs,
 
+                    "totalDays": totalDays.toFixed(0),
                     "totalHoursWork": totalHrsWork.toFixed(2),
                     "totalRestday": totalRestday.toFixed(2),
                     "totalRestdayOt": totalRestdayOt.toFixed(2),
