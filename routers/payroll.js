@@ -498,10 +498,10 @@ router.post("/payroll-list", async (request, response) => {
                 var amountRestday = (totalMonthly / monthly) / 8 * totalRestday * 1.3;
                 var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
 
-                var amountHoliday = (totalMonthly / monthly) / 8 * totalHoliday * 2;
+                var amountHoliday = (totalMonthly / monthly) * 2 / 2;
                 var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
 
-                var amountSH = (totalMonthly / monthly) / 8 * totalSpecialHoliday * 1.3;
+                var amountSH = (totalMonthly / monthly) * 1.3 - (totalMonthly / monthly);
                 var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
 
                 var amountHolidayRestday = (totalMonthly / monthly) / 8 * totalHolidayRestday * 3;
@@ -1082,10 +1082,10 @@ router.post("/payroll-list", async (request, response) => {
                 var amountRestday = (totalMonthly / monthly) / 8 * totalRestday * 1.3;
                 var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
 
-                var amountHoliday = (totalMonthly / monthly) / 8 * totalHoliday * 2;
+                var amountHoliday = (totalMonthly / monthly) * 2 / 2;
                 var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
 
-                var amountSH = (totalMonthly / monthly) / 8 * totalSpecialHoliday * 1.3;
+                var amountSH = (totalMonthly / monthly) * 1.3 - (totalMonthly / monthly);
                 var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
 
                 var amountHolidayRestday = (totalMonthly / monthly) / 8 * totalHolidayRestday * 3;
