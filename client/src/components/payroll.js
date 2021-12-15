@@ -1043,11 +1043,15 @@ const Payroll = () => {
                                                             <Typography style={{ fontSize: 16 }}><b>SSS: </b></Typography>
                                                             <Typography style={{ fontSize: 16 }}><b>PHIC: </b></Typography>
                                                             <Typography style={{ fontSize: 16 }}><b>HDMF: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Cash Advance: </b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>Safety Shoes: </b></Typography>
                                                         </Grid>
                                                         <Grid item xs={3}>
                                                             <Typography style={{ fontSize: 16 }}><b>{j.sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
                                                             <Typography style={{ fontSize: 16 }}><b>{j.phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
                                                             <Typography style={{ fontSize: 16 }}><b>{j.hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.cashAdvance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
+                                                            <Typography style={{ fontSize: 16 }}><b>{j.safetyShoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</b></Typography>
                                                         </Grid>
                                                     </Grid>
 
