@@ -493,26 +493,22 @@ router.post("/payroll-list", async (request, response) => {
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
                 var tmonthPayMetalAsia = ((basic + allowance - absensesTardiness) / 12);
 
-                var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);
-                var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
-                var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalRestdayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalRestdayOt);
-                var amountHoliday = params.type === "Full Month" ? (basic / 26) / 8 * totalHoliday * 1 : (basic / 13) / 8 * totalHoliday * 1;
-                var amountHolidayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayOt * 2 * 1.3 : ((basic / 13) / 8 * totalHolidayOt * 2 * 1.3) + ((allowance / 13) / 8 * totalHolidayOt);
-                var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
-                var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayOt);
-                var amountHolidayRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestday * 2 * 1.3 : (basic / 13) / 8 * totalHolidayRestday * 2 * 1.3;
-                var amountHolidayRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3 : ((basic / 13) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3) + ((allowance / 13) / 8 * totalHolidayRestdayOt);
-                var amountSHRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestday * 1.5 : ((basic / 13) / 8 * totalSpecialHolidayRestday * 1.5);
-                var amountSHRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayRestdayOt);
+                var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalOT);
 
-                // Old Formula
-                // var amountOt = ((((basicMetalAsia / monthly / 8) * totalOT) * 1.25 / 2) + ((allowanceMetalAsia / monthly / 8) * totalOT / 2));
-                // var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.32 : dailyRate / 8 * totalRestday * 1.3;
-                // var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.32 * 1.32 : dailyRate / 8 * totalRestdayOt * 0.13 * 13;
-                // var amountHoliday = params.type === "Full Month" ? (basic / 26) / 8 * totalHoliday * 1 : (basic / 13) / 8 * totalHoliday * 1;
-                // var amountHolidayOt = params.type === "Full Month" ? (basic /26) / 8 * totalHolidayOt * 2 * 1.3 : (basic / 13) / 8 * totalHolidayOt * 2 * 1.3;
-                // var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
-                // var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : (basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3;
+                var amountRestday = (totalMonthly / monthly) / 8 * totalRestday * 1.3;
+                var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
+
+                var amountHoliday = (totalMonthly / monthly) / 8 * totalHoliday * 2;
+                var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
+
+                var amountSH = (totalMonthly / monthly) / 8 * totalSpecialHoliday * 1.3;
+                var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
+
+                var amountHolidayRestday = (totalMonthly / monthly) / 8 * totalHolidayRestday * 3;
+                var amountHolidayRestdayOt = (((373 * monthly) / monthly) / 8 * totalHolidayRestdayOt * 3.38) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayRestdayOt);
+
+                var amountSHRestday = (totalMonthly / monthly) / 8 * totalSpecialHolidayRestday * 1.6;
+                var amountSHRestdayOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayRestdayOt * 1.95) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayRestdayOt);
 
                 var tmonthPay = ((basic + allowance - absensesTardiness) / 12);
 
@@ -520,6 +516,8 @@ router.post("/payroll-list", async (request, response) => {
                 var sss = !salary || params.type === "1st Half" ? 0 : salary.sss;
                 var phic = !salary || params.type === "1st Half" ? 0 : salary.phic;
                 var hdmf = !salary || params.type === "1st Half" ? 0 : salary.hdmf;
+                var cashAdvance = !salary || params.type === "1st Half" ? 0 : salary.cashAdvance;
+                var safetyShoes = !salary || params.type === "1st Half" ? 0 : salary.safetyShoes;
                 var sssLoan = !salary || params.type === "2nd Half" ? 0 : salary.sssLoan;
                 var pagibigLoan = !salary || params.type === "2nd Half" ? 0 : salary.pagibigLoan;
                 var careHealthPlus = !salary || params.type === "2nd Half" ? 0 : salary.careHealthPlus;
@@ -582,7 +580,7 @@ router.post("/payroll-list", async (request, response) => {
                     "totalLate": totalLate.toFixed(2),
                     "totalUT": totalUT.toFixed(2),
                     "totalOT": totalOT.toFixed(2),
-                    "totalAbsent": totalAbsent.toFixed,
+                    "totalAbsent": totalAbsent.toFixed(0),
 
                     "deductions": [deductions],
                     "earnings": [earnings],
@@ -1077,26 +1075,34 @@ router.post("/payroll-list", async (request, response) => {
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
                 var tmonthPayMetalAsia = ((basic + allowance - absensesTardiness) / 12);
 
-                var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);;
-                var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
-                var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalRestdayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalRestdayOt);
-                var amountHoliday = params.type === "Full Month" ? (basic / 26) / 8 * totalHoliday * 1 : (basic / 13) / 8 * totalHoliday * 1;
-                var amountHolidayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayOt * 2 * 1.3 : ((basic / 13) / 8 * totalHolidayOt * 2 * 1.3) + ((allowance / 13) / 8 * totalHolidayOt);
-                var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
-                var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayOt);
-                var amountHolidayRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestday * 2 * 1.3 : (basic / 13) / 8 * totalHolidayRestday * 2 * 1.3;
-                var amountHolidayRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3 : ((basic / 13) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3) + ((allowance / 13) / 8 * totalHolidayRestdayOt);
-                var amountSHRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestday * 1.5 : ((basic / 13) / 8 * totalSpecialHolidayRestday * 1.5);
-                var amountSHRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayRestdayOt);
+                var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalOT);
 
-                // Old Formula
-                // var amountOt = ((((basicMetalAsia / monthly / 8) * totalOT) * 1.25 / 2) + ((allowanceMetalAsia / monthly / 8) * totalOT / 2));
-                // var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.32 : dailyRate / 8 * totalRestday * 1.3;
-                // var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.32 * 1.32 : dailyRate / 8 * totalRestdayOt * 0.13 * 13;
+                var amountRestday = (totalMonthly / monthly) / 8 * totalRestday * 1.3;
+                var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
+
+                var amountHoliday = (totalMonthly / monthly) / 8 * totalHoliday * 2;
+                var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
+
+                var amountSH = (totalMonthly / monthly) / 8 * totalSpecialHoliday * 1.3;
+                var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
+
+                var amountHolidayRestday = (totalMonthly / monthly) / 8 * totalHolidayRestday * 3;
+                var amountHolidayRestdayOt = (((373 * monthly) / monthly) / 8 * totalHolidayRestdayOt * 3.38) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayRestdayOt);
+
+                var amountSHRestday = (totalMonthly / monthly) / 8 * totalSpecialHolidayRestday * 1.6;
+                var amountSHRestdayOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayRestdayOt * 1.95) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayRestdayOt);
+
+                // var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);;
+                // var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
+                // var amountRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalRestdayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalRestdayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalRestdayOt);
                 // var amountHoliday = params.type === "Full Month" ? (basic / 26) / 8 * totalHoliday * 1 : (basic / 13) / 8 * totalHoliday * 1;
-                // var amountHolidayOt = params.type === "Full Month" ? (basic /26) / 8 * totalHolidayOt * 2 * 1.3 : (basic / 13) / 8 * totalHolidayOt * 2 * 1.3;
+                // var amountHolidayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayOt * 2 * 1.3 : ((basic / 13) / 8 * totalHolidayOt * 2 * 1.3) + ((allowance / 13) / 8 * totalHolidayOt);
                 // var amountSH = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHoliday * 0.3 : (basic / 13) / 8 * totalSpecialHoliday * 0.3;
-                // var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : (basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3;
+                // var amountSHOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayOt * 1.3 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayOt * 1.3 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayOt);
+                // var amountHolidayRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestday * 2 * 1.3 : (basic / 13) / 8 * totalHolidayRestday * 2 * 1.3;
+                // var amountHolidayRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3 : ((basic / 13) / 8 * totalHolidayRestdayOt * 2 * 1.3 * 1.3) + ((allowance / 13) / 8 * totalHolidayRestdayOt);
+                // var amountSHRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestday * 1.5 : ((basic / 13) / 8 * totalSpecialHolidayRestday * 1.5);
+                // var amountSHRestdayOt = params.type === "Full Month" ? (basic / 26) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3 : ((basic / 13) / 8 * totalSpecialHolidayRestdayOt * 1.5 * 1.3) + ((allowance / 13) / 8 * totalSpecialHolidayRestdayOt);
 
                 var tmonthPay = ((basic + allowance - absensesTardiness) / 12);
 
@@ -1104,6 +1110,8 @@ router.post("/payroll-list", async (request, response) => {
                 var sss = !salary || params.type === "1st Half" ? 0 : salary.sss;
                 var phic = !salary || params.type === "1st Half" ? 0 : salary.phic;
                 var hdmf = !salary || params.type === "1st Half" ? 0 : salary.hdmf;
+                var cashAdvance = !salary || params.type === "1st Half" ? 0 : salary.cashAdvance;
+                var safetyShoes = !salary || params.type === "1st Half" ? 0 : salary.safetyShoes;
                 var sssLoan = !salary || params.type === "2nd Half" ? 0 : salary.sssLoan;
                 var pagibigLoan = !salary || params.type === "2nd Half" ? 0 : salary.pagibigLoan;
                 var careHealthPlus = !salary || params.type === "2nd Half" ? 0 : salary.careHealthPlus;
@@ -1116,6 +1124,8 @@ router.post("/payroll-list", async (request, response) => {
                     "sss": sss.toFixed(2),
                     "phic": phic.toFixed(2),
                     "hdmf": hdmf.toFixed(2),
+                    "cashAdvance": cashAdvance.toFixed(2),
+                    "safetyShoes": safetyShoes.toFixed(2),
                     "sssLoan": sssLoan.toFixed(2),
                     "pagibigLoan": pagibigLoan.toFixed(2),
                     "careHealthPlus": careHealthPlus.toFixed(2)

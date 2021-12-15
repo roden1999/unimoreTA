@@ -512,11 +512,15 @@ const Payroll = () => {
                                         { text: "SSS: ", fontSize: 8, },
                                         { text: "PHIC: ", fontSize: 8, },
                                         { text: "HDMF: ", fontSize: 8, },
+                                        { text: "Cash Advance: ", fontSize: 8, },
+                                        { text: "Safety Shoes: ", fontSize: 8, },
                                     ],
                                     [
                                         { text: deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
+                                        { text: deductions[0].cashAdvance, fontSize: 8, },
+                                        { text: deductions[0].safetyShoes, fontSize: 8, }
                                     ]
                                 ]
                             },
@@ -621,12 +625,16 @@ const Payroll = () => {
                                         { text: "SSS: ", fontSize: 8, },
                                         { text: "PHIC: ", fontSize: 8, },
                                         { text: "HDMF: ", fontSize: 8, },
+                                        { text: "Cash Advance: ", fontSize: 8, },
+                                        { text: "Safety Shoes: ", fontSize: 8, },
                                     ],
                                     [
                                         { text: deductions[0].sss.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].phic.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
                                         { text: deductions[0].hdmf.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), fontSize: 8, },
-                                    ]
+                                        { text: deductions[0].cashAdvance, fontSize: 8, },
+                                        { text: deductions[0].safetyShoes, fontSize: 8, }
+                                    ],
                                 ]
                             },
                             { text: "Other Deductions", bold: true, fontSize: 9, alignment: 'center', margin: [0, 5] },
