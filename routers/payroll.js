@@ -281,8 +281,8 @@ router.post("/payroll-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = new Date(depIn) >= new Date(timeIn) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = new Date(depOut) <= new Date(timeOut) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(convertedDTI) >= new Date(convertedTI) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedDTO) <= new Date(convertedTO) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
@@ -864,8 +864,8 @@ router.post("/payroll-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = new Date(depIn) >= new Date(timeIn) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = new Date(depOut) <= new Date(timeOut) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(convertedDTI) >= new Date(convertedTI) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedDTO) <= new Date(convertedTO) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
