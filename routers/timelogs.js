@@ -338,7 +338,7 @@ router.post("/detailed-list", async (request, response) => {
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
-                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 0;
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -459,7 +459,8 @@ router.post("/detailed-list", async (request, response) => {
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
                         var hw = Math.floor(mins / 60); //fix for labis na computation Math.floor()
-                        hoursWork = hw > 5 ? hw - 1 : hw;
+                        // hoursWork = hw > 5 ? hw - 1 : hw;
+                        hoursWork = hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -490,7 +491,8 @@ router.post("/detailed-list", async (request, response) => {
                             // hoursWork = hw > 5 ? hw - 1 : hw;
                             // ot = otMins / 60;
 
-                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            // hoursWork = (hw + dtr[0].otHours) - 1;
+                            hoursWork = (hw + dtr[0].otHours);
                             ot = dtr[0].otHours;
 
                             remarks = "Overtime";
@@ -506,7 +508,8 @@ router.post("/detailed-list", async (request, response) => {
 
                             var hw = hrswrk / 36e5;
 
-                            hoursWork = hw > 5 ? hw - 1 : hw;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            hoursWork = hw;
                             ot = nsecOt / 36e5;
 
                         }
@@ -532,7 +535,8 @@ router.post("/detailed-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw - breaktime;
+                            // hoursWork = hw - breaktime;
+                            hoursWork = hw;
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
@@ -888,7 +892,7 @@ router.post("/detailed-list", async (request, response) => {
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
-                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 0;
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -1009,7 +1013,8 @@ router.post("/detailed-list", async (request, response) => {
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
                         var hw = Math.floor(mins / 60);
-                        hoursWork = hw > 5 ? hw - 1 : hw;
+                        // hoursWork = hw > 5 ? hw - 1 : hw;
+                        hoursWork = hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -1040,7 +1045,8 @@ router.post("/detailed-list", async (request, response) => {
                             // hoursWork = hw > 5 ? hw - 1 : hw;
                             // ot = otMins / 60;
 
-                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            // hoursWork = (hw + dtr[0].otHours) - 1;
+                            hoursWork = (hw + dtr[0].otHours);
                             ot = dtr[0].otHours;
 
                             remarks = "Overtime";
@@ -1056,7 +1062,8 @@ router.post("/detailed-list", async (request, response) => {
 
                             var hw = hrswrk / 36e5;
 
-                            hoursWork = hw > 5 ? hw - 1 : hw;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            hoursWork = hw;
                             ot = nsecOt / 36e5;
 
                         }
@@ -1082,7 +1089,8 @@ router.post("/detailed-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw - breaktime;
+                            // hoursWork = hw - breaktime;
+                            hoursWork = hw;
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
