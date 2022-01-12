@@ -415,13 +415,14 @@ router.post("/detailed-list", async (request, response) => {
                     var convertedTI = moment(convertedDate + " " + timeIn).format();
                     var convertedTO = moment(todt + " " + timeOut).format();
 
-                    var convertedDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
+                    var convertedDTI = moment(convertedDate + " " + depIn).format();
+                    var convertedLateDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
                     var convertedDTO = moment(todt + " " + depOut).format();
 
                     var remarks = "";
 
                     var late = 0;
-                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
+                    if (new Date(convertedTI).getTime() > new Date(convertedLateDTI).getTime() && day !== "Sunday") {
                         var date1 = new Date(convertedDTI).getTime();
 
                         var date2 = new Date(convertedTI).getTime();
@@ -459,8 +460,7 @@ router.post("/detailed-list", async (request, response) => {
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
                         var hw = Math.floor(mins / 60); //fix for labis na computation Math.floor()
-                        // hoursWork = hw > 5 ? hw - 1 : hw;
-                        hoursWork = hw;
+                        hoursWork = hw > 5 ? hw - 0 : hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -969,13 +969,14 @@ router.post("/detailed-list", async (request, response) => {
                     var convertedTI = moment(convertedDate + " " + timeIn).format();
                     var convertedTO = moment(todt + " " + timeOut).format();
 
-                    var convertedDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
+                    var convertedDTI = moment(convertedDate + " " + depIn).format();
+                    var convertedLateDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
                     var convertedDTO = moment(todt + " " + depOut).format();
 
                     var remarks = "";
 
                     var late = 0;
-                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
+                    if (new Date(convertedTI).getTime() > new Date(convertedLateDTI).getTime() && day !== "Sunday") {
                         var date1 = new Date(convertedDTI).getTime();
 
                         var date2 = new Date(convertedTI).getTime();
