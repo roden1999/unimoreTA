@@ -246,13 +246,14 @@ router.post("/payroll-list", async (request, response) => {
                     var convertedTI = moment(convertedDate + " " + timeIn).format();
                     var convertedTO = moment(todt + " " + timeOut).format();
 
-                    var convertedDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
+                    var convertedDTI = moment(convertedDate + " " + depIn).format();
+                    var convertedLateDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
                     var convertedDTO = moment(todt + " " + depOut).format();
 
                     var remarks = "";
 
                     var late = 0;
-                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
+                    if (new Date(convertedTI).getTime() > new Date(convertedLateDTI).getTime() && day !== "Sunday") {
                         var date1 = new Date(convertedDTI).getTime();
 
                         var date2 = new Date(convertedTI).getTime();
@@ -290,7 +291,7 @@ router.post("/payroll-list", async (request, response) => {
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
                         var hw = Math.floor(mins / 60); //fix for labis na computation Math.floor()
-                        hoursWork = hw > 5 ? hw - 1 : hw;
+                        hoursWork = hw > 5 ? hw - 0 : hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -321,7 +322,7 @@ router.post("/payroll-list", async (request, response) => {
                             // hoursWork = hw > 5 ? hw - 1 : hw;
                             // ot = otMins / 60;
 
-                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            hoursWork = (hw + dtr[0].otHours) - 0;
                             ot = dtr[0].otHours;
 
                             remarks = "Overtime";
@@ -337,7 +338,7 @@ router.post("/payroll-list", async (request, response) => {
 
                             var hw = hrswrk / 36e5;
 
-                            hoursWork = hw > 5 ? hw - 1 : hw;
+                            hoursWork = hw > 5 ? hw - 0 : hw;
                             ot = nsecOt / 36e5;
 
                         }
@@ -388,7 +389,7 @@ router.post("/payroll-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay" || remarks === "Personal Leave" || remarks === "Emergency Leave") hoursWork = 8;
                     if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).add(11, 'minutes').minutes() / 60) && day !== "Sunday") {
@@ -829,13 +830,14 @@ router.post("/payroll-list", async (request, response) => {
                     var convertedTI = moment(convertedDate + " " + timeIn).format();
                     var convertedTO = moment(todt + " " + timeOut).format();
 
-                    var convertedDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
+                    var convertedDTI = moment(convertedDate + " " + depIn).format();
+                    var convertedLateDTI = moment(convertedDate + " " + depIn).add(15, 'minutes').format();
                     var convertedDTO = moment(todt + " " + depOut).format();
 
                     var remarks = "";
 
                     var late = 0;
-                    if (new Date(convertedTI).getTime() > new Date(convertedDTI).getTime() && day !== "Sunday") {
+                    if (new Date(convertedTI).getTime() > new Date(convertedLateDTI).getTime() && day !== "Sunday") {
                         var date1 = new Date(convertedDTI).getTime();
 
                         var date2 = new Date(convertedTI).getTime();
@@ -864,16 +866,16 @@ router.post("/payroll-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = new Date(convertedDTI) >= new Date(convertedTI) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = new Date(convertedDTO) <= new Date(convertedTO) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(convertedLateDTI).getTime() >= new Date(convertedTI).getTime() ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedDTO).getTime() <= new Date(convertedTO).getTime() ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        var hw = Math.floor(mins / 60);
-                        hoursWork = hw > 5 ? hw - 1 : hw;
+                        var hw = Math.floor(mins / 60); //fix for labis na computation Math.floor()
+                        hoursWork = hw > 5 ? hw - 0 : hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -904,7 +906,7 @@ router.post("/payroll-list", async (request, response) => {
                             // hoursWork = hw > 5 ? hw - 1 : hw;
                             // ot = otMins / 60;
 
-                            hoursWork = (hw + dtr[0].otHours) - 1;
+                            hoursWork = (hw + dtr[0].otHours) - 0;
                             ot = dtr[0].otHours;
 
                             remarks = "Overtime";
@@ -920,7 +922,7 @@ router.post("/payroll-list", async (request, response) => {
 
                             var hw = hrswrk / 36e5;
 
-                            hoursWork = hw > 5 ? hw - 1 : hw;
+                            hoursWork = hw > 5 ? hw - 0 : hw;
                             ot = nsecOt / 36e5;
 
                         }
@@ -971,7 +973,7 @@ router.post("/payroll-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay" || remarks === "Personal Leave" || remarks === "Emergency Leave") hoursWork = 8;
                     if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).add(15, 'minutes').minutes() / 60) && day !== "Sunday") {
