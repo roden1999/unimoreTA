@@ -451,7 +451,7 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = new Date(convertedDTI).getTime() >= new Date(convertedTI).getTime() ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date1 = new Date(convertedLateDTI).getTime() >= new Date(convertedTI).getTime() ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = new Date(convertedDTO).getTime() <= new Date(convertedTO).getTime() ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
@@ -561,7 +561,7 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay" || remarks === "Personal Leave" || remarks === "Emergency Leave") hoursWork = 8;
                     if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).add(11, 'minutes').minutes() / 60) && day !== "Sunday") {
@@ -1005,7 +1005,7 @@ router.post("/detailed-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = new Date(convertedDTI) >= new Date(convertedTI) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date1 = new Date(convertedLateDTI) >= new Date(convertedTI) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
                         var date2 = new Date(convertedDTO) <= new Date(convertedTO) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
@@ -1116,7 +1116,7 @@ router.post("/detailed-list", async (request, response) => {
                         }
                     }
 
-                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay") hoursWork = 8;
+                    if (remarks === "SL w/ Pay" || remarks === "VL w/ Pay" || remarks === "Personal Leave" || remarks === "Emergency Leave") hoursWork = 8;
                     if (remarks === "SL w/o Pay" || remarks === "VL w/o Pay") hoursWork = 0;
 
                     if (remarks === "" && moment(timeIn, "h:mm").hour() + (moment(timeIn, "h:mm").minutes() / 60) > moment(depIn).hours() + (moment(depIn).add(15, 'minutes').minutes() / 60) && day !== "Sunday") {

@@ -493,6 +493,8 @@ const DtrCorrection = () => {
             { label: "Sick Leave w/o Pay", value: "SL w/o Pay" },
             { label: "Vacation Leave w/ Pay", value: "VL w/ Pay" },
             { label: "Vacation Leave w/o Pay", value: "VL w/o Pay" },
+            { label: "Personal Leave", value: "Personal Leave" },
+            { label: "Emergency Leave", value: "Emergency Leave" },
         ];
 
         return list;
@@ -826,6 +828,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
 
                                     <div style={{ marginBottom: 10 }}>
                                         <label style={{ fontSize: '17px' }}><strong>Time In</strong></label><br />
@@ -849,6 +853,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
 
                                     <div style={{ marginBottom: 10 }}>
                                         <label style={{ fontSize: '17px' }}><strong>Time Out</strong></label><br />
@@ -874,6 +880,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>OT Hours</strong></label><br />
                                         <TextField variant="outlined" size="small" type="number" fullWidth placeholder="ot hours" value={otHours} onChange={e => setOtHours(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
@@ -888,6 +896,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
                                     <div>
                                         <Typography component="div" style={{ marginBottom: 10 }}>
                                             <Grid component="label" container alignItems="center" spacing={1}>
@@ -906,6 +916,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
                                     breakTime === true &&
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>Breaktime Hours</strong></label><br />
@@ -919,6 +931,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>Hourswork</strong></label><br />
                                         <TextField variant="outlined" size="small" type="number" fullWidth placeholder="hourswork" value={hourswork} onChange={e => setHourswork(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
@@ -934,6 +948,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>OT Hours</strong></label><br />
                                         <TextField variant="outlined" size="small" type="number" fullWidth placeholder="ot hours" value={otHours} onChange={e => setOtHours(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
@@ -948,6 +964,8 @@ const DtrCorrection = () => {
                                     remarks.value !== "SL w/o Pay" &&
                                     remarks.value !== "VL w/ Pay" &&
                                     remarks.value !== "VL w/o Pay" &&
+                                    remarks.value !== "Personal Leave" &&
+                                    remarks.value !== "Emergency Leave" &&
                                     <div>
                                         <label style={{ fontSize: '17px' }}><strong>Undertime</strong></label><br />
                                         <TextField variant="outlined" size="small" type="number" fullWidth placeholder="undertime" value={undertime} onChange={e => setUndertime(e.target.value)} inputProps={{ 'aria-label': 'description' }} />
