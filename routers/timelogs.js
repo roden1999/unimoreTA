@@ -619,6 +619,8 @@ router.post("/detailed-list", async (request, response) => {
                             ut = dtr[0].undertime,
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+
+                        totalOT = dtr[0].otHours ? totalOT + ot : totalOT;
                     }
 
                     if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
@@ -1174,6 +1176,8 @@ router.post("/detailed-list", async (request, response) => {
                             ut = dtr[0].undertime,
                             timeIn = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeIn, "h:mm A").format("h:mm A") : "";
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
+
+                        totalOT = dtr[0].otHours ? totalOT + ot : totalOT;
                     }
 
                     if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
