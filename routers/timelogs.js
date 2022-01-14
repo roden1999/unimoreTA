@@ -621,6 +621,7 @@ router.post("/detailed-list", async (request, response) => {
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
 
                         totalOT = dtr[0].otHours ? totalOT + ot : totalOT;
+                        totalUT = dtr[0].undertime ? totalUT + ut : totalUT;
                     }
 
                     if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
@@ -1178,6 +1179,7 @@ router.post("/detailed-list", async (request, response) => {
                         timeOut = Object.keys(dtr).length !== 0 ? moment(dtr[0].timeOut, "h:mm A").format("h:mm A") : "";
 
                         totalOT = dtr[0].otHours ? totalOT + ot : totalOT;
+                        totalUT = dtr[0].undertime ? totalUT + ut : totalUT;
                     }
 
                     if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
@@ -1584,6 +1586,18 @@ router.post("/approved-dtr-correction", async (request, response) => {
                     timeOut = "";
                 }
             }
+        }
+
+        if (data.hourswork === "") {
+            errors.push({ error: "Hourswork must be a number value." });
+        }
+
+        if (data.otHours === "") {
+            errors.push({ error: "OT Hours must be a number value." });
+        }
+
+        if (data.undertime === "") {
+            errors.push({ error: "UT Hours must be a number value." });
         }
 
         if (Object.keys(errors).length === 0) {
