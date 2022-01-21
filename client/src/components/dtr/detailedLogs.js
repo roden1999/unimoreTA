@@ -954,7 +954,7 @@ const DetailedLogs = () => {
                                                                     />
                                                                 }
 
-                                                                {y.remarks === "Working Holiday" &&
+                                                                {y.remarks === "Working Regular Holiday" &&
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
