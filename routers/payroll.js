@@ -364,7 +364,8 @@ router.post("/payroll-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw - breaktime;
+                            // hoursWork = hw - breaktime;
+                            hoursWork = hw - dtr[0].breakTimeHrs;
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
@@ -951,7 +952,8 @@ router.post("/payroll-list", async (request, response) => {
                             var mins = Math.floor(msec / 60000);
 
                             var hw = mins / 60;
-                            hoursWork = hw - breaktime;
+                            // hoursWork = hw - breaktime;
+                            hoursWork = hw - dtr[0].breakTimeHrs;
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 

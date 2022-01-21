@@ -536,7 +536,7 @@ router.post("/detailed-list", async (request, response) => {
 
                             var hw = mins / 60;
                             // hoursWork = hw - breaktime;
-                            hoursWork = hw;
+                            hoursWork = hw - dtr[0].breakTimeHrs;
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
@@ -1094,7 +1094,7 @@ router.post("/detailed-list", async (request, response) => {
 
                             var hw = mins / 60;
                             // hoursWork = hw - breaktime;
-                            hoursWork = hw;
+                            hoursWork = hw - dtr[0].breakTimeHrs;
                             var totalHw = hoursWork > 8 ? 8 : hoursWork;
                             var totalHwOt = hoursWork > 8.5 ? hoursWork - 8 : 0;
 
