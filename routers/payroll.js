@@ -491,6 +491,7 @@ router.post("/payroll-list", async (request, response) => {
                 var allowanceMetalAsia = totalMonthly > basicMetalAsia ? totalMonthly - basicMetalAsia - 0 : 0;
                 var dailyRate = (basicMetalAsia + allowanceMetalAsia) / monthly;
 
+                var totalMonthlyBaseOnType = params.type === "Full Month" ? totalMonthly : totalMonthly / 2;
                 var basic = params.type === "Full Month" ? basicMetalAsia : basicMetalAsia / 2;
                 var allowance = params.type === "Full Month" ? allowanceMetalAsia : allowanceMetalAsia / 2;
 
@@ -498,22 +499,23 @@ router.post("/payroll-list", async (request, response) => {
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
                 var tmonthPayMetalAsia = ((basic + allowance - absensesTardiness) / 12);
 
-                var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalOT);
+                // var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalOT); //old formula
+                var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthlyBaseOnType - basic) / monthly) / 8 * totalOT);
 
-                var amountRestday = (totalMonthly / monthly) / 8 * totalRestday * 1.3;
-                var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
+                var amountRestday = (totalMonthlyBaseOnType / monthly) / 8 * totalRestday * 1.3;
+                var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
 
-                var amountHoliday = (totalMonthly / monthly) * 2 / 2;
-                var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
+                var amountHoliday = (totalMonthlyBaseOnType / monthly) / 8 * totalHoliday * 2;
+                var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
 
-                var amountSH = (totalMonthly / monthly) * 1.3 - (totalMonthly / monthly);
-                var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
+                var amountSH = (totalMonthlyBaseOnType / monthly) / 8 * totalSpecialHoliday * 1.3;
+                var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
 
-                var amountHolidayRestday = (totalMonthly / monthly) / 8 * totalHolidayRestday * 3;
-                var amountHolidayRestdayOt = (((373 * monthly) / monthly) / 8 * totalHolidayRestdayOt * 3.38) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayRestdayOt);
+                var amountHolidayRestday = (totalMonthlyBaseOnType / monthly) / 8 * totalHolidayRestday * 3.38;
+                var amountHolidayRestdayOt = (((373 * monthly) / monthly) / 8 * totalHolidayRestdayOt * 3.38) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalHolidayRestdayOt);
 
-                var amountSHRestday = (totalMonthly / monthly) / 8 * totalSpecialHolidayRestday * 1.6;
-                var amountSHRestdayOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayRestdayOt * 1.95) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayRestdayOt);
+                var amountSHRestday = (totalMonthlyBaseOnType / monthly) / 8 * totalSpecialHolidayRestday * 1.6;
+                var amountSHRestdayOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayRestdayOt * 1.95) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayRestdayOt);
 
                 var tmonthPay = ((basic + allowance - absensesTardiness) / 12);
 
@@ -1080,6 +1082,7 @@ router.post("/payroll-list", async (request, response) => {
                 var allowanceMetalAsia = totalMonthly > basicMetalAsia ? totalMonthly - basicMetalAsia - 0 : 0;
                 var dailyRate = (basicMetalAsia + allowanceMetalAsia) / monthly;
 
+                var totalMonthlyBaseOnType = params.type === "Full Month" ? totalMonthly : totalMonthly / 2;
                 var basic = params.type === "Full Month" ? basicMetalAsia : basicMetalAsia / 2;
                 var allowance = params.type === "Full Month" ? allowanceMetalAsia : allowanceMetalAsia / 2;
 
@@ -1087,22 +1090,23 @@ router.post("/payroll-list", async (request, response) => {
                 var netOfTardiness = (basic + allowance) - absensesTardiness;
                 var tmonthPayMetalAsia = ((basic + allowance - absensesTardiness) / 12);
 
-                var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalOT);
+                // var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalOT); old formula
+                var amountOt = (((373 * monthly) / monthly) / 8 * totalOT * 1.25) + (((totalMonthlyBaseOnType - basic) / monthly) / 8 * totalOT);
 
-                var amountRestday = (totalMonthly / monthly) / 8 * totalRestday * 1.3;
-                var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
+                var amountRestday = (totalMonthlyBaseOnType / monthly) / 8 * totalRestday * 1.3;
+                var amountRestdayOt = (((373 * monthly) / monthly) / 8 * totalRestdayOt * 1.69) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalRestdayOt);
 
-                var amountHoliday = (totalMonthly / monthly) * 2 / 2;
-                var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
+                var amountHoliday = (totalMonthlyBaseOnType / monthly) / 8 * totalHoliday * 2;
+                var amountHolidayOt = (((373 * monthly) / monthly) / 8 * totalHolidayOt * 2.6) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalHolidayOt);
 
-                var amountSH = (totalMonthly / monthly) * 1.3 - (totalMonthly / monthly);
-                var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
+                var amountSH = (totalMonthlyBaseOnType / monthly) / 8 * totalSpecialHoliday * 1.3;
+                var amountSHOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayOt * 1.69) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayOt);
 
-                var amountHolidayRestday = (totalMonthly / monthly) / 8 * totalHolidayRestday * 3;
-                var amountHolidayRestdayOt = (((373 * monthly) / monthly) / 8 * totalHolidayRestdayOt * 3.38) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalHolidayRestdayOt);
+                var amountHolidayRestday = (totalMonthlyBaseOnType / monthly) / 8 * totalHolidayRestday * 3.38;
+                var amountHolidayRestdayOt = (((373 * monthly) / monthly) / 8 * totalHolidayRestdayOt * 3.38) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalHolidayRestdayOt);
 
-                var amountSHRestday = (totalMonthly / monthly) / 8 * totalSpecialHolidayRestday * 1.6;
-                var amountSHRestdayOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayRestdayOt * 1.95) + (((totalMonthly - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayRestdayOt);
+                var amountSHRestday = (totalMonthlyBaseOnType / monthly) / 8 * totalSpecialHolidayRestday * 1.6;
+                var amountSHRestdayOt = (((373 * monthly) / monthly) / 8 * totalSpecialHolidayRestdayOt * 1.95) + (((totalMonthlyBaseOnType - (373 * monthly)) / monthly) / 8 * totalSpecialHolidayRestdayOt);
 
                 // var amountOt = params.type === "Full Month" ? (basic / 26) / 8 * totalOT * 1.25 : ((basic / 13) / 8 * totalOT * 1.25) + ((allowance / 13) / 8 * totalOT);;
                 // var amountRestday = params.type === "Full Month" ? (basic / 26) / 8 * totalRestday * 1.3 : dailyRate / 8 * totalRestday * 1.3;
