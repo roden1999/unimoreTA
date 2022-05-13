@@ -7,7 +7,7 @@ const departmentModel = require("../models/department");
 const fs = require('fs');
 const { salaryValidation } = require("../utils/validation");
 
-//Insert new department to the database
+//Insert new salary to the database
 router.post("/", async (request, response) => {
     //Validate before creating
     const { error } = salaryValidation(request.body);
@@ -42,7 +42,7 @@ router.post("/", async (request, response) => {
                 sssLoan: request.body.sssLoan,
                 pagibigLoan: request.body.pagibigLoan,
                 careHealthPlus: request.body.careHealthPlus,
-                cashAdvance: request.body.cashhAdvance,
+                cashAdvance: request.body.cashAdvance,
                 safetyShoes: request.body.safetyShoes
             });
             const salary = await newSalary.save();
