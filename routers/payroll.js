@@ -430,10 +430,10 @@ router.post("/payroll-list", async (request, response) => {
                         reason = holiday[0].title;
                     }
 
-                    totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
-                    totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
-                    totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
-                    totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
+                    // totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
+                    // totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
+                    // totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
+                    // totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
 
                     if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
@@ -1020,10 +1020,10 @@ router.post("/payroll-list", async (request, response) => {
                         reason = holiday[0].title;
                     }
 
-                    totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
-                    totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
-                    totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
-                    totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
+                    // totalSpecialHoliday = remarks === "Special Holiday" ? totalSpecialHoliday + 8 : totalSpecialHoliday;
+                    // totalHoliday = remarks === "Regular Holiday" ? totalHoliday + 8 : totalHoliday;
+                    // totalHolidayRestday = remarks === "Regular Holiday Rest Day" ? totalHolidayRestday + 8 : totalHolidayRestday;
+                    // totalSpecialHolidayRestday = remarks === "Special Holiday Rest Day" ? totalSpecialHolidayRestday + 8 : totalSpecialHolidayRestday;
 
                     if (timeIn && timeOut && Object.keys(dtr).length > 0 && dtr[0].remarks === "Manual Timelog") {
                         var date1 = depIn <= timeIn ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
