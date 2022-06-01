@@ -67,6 +67,16 @@ const Login = (props) => {
                 sessionStorage.setItem("dlSfromDate", moment().startOf('month').format('MM/DD/yyyy').toString());
                 sessionStorage.setItem("dlStoDate", moment().format('MM/DD/yyyy').toString());
 
+                //Payroll
+                var emp = { "emp": [] };
+                var dept = { "dept": [] };
+                var remarks = { "type": [] };
+                sessionStorage.setItem("payrollemp", JSON.stringify(emp));
+                sessionStorage.setItem("payrollemp", JSON.stringify(emp));
+                sessionStorage.setItem("payrolldept", JSON.stringify(dept));
+                sessionStorage.setItem("payrollfromDate", moment().startOf('month').format('MM/DD/yyyy').toString());
+                sessionStorage.setItem("payrolltoDate", moment().format('MM/DD/yyyy').toString());
+
                 //Dtr Logs
                 sessionStorage.setItem("dtrSemp", JSON.stringify(emp));
                 sessionStorage.setItem("dtrSdept", JSON.stringify(dept));

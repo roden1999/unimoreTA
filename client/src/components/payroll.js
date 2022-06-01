@@ -204,16 +204,21 @@ const StyledTableRow = withStyles((theme) => ({
 
 const Payroll = () => {
     const classes = useStyles();
+    var payrollemp = JSON.parse(sessionStorage.getItem("payrollemp"));
+    var payrolltype = JSON.parse(sessionStorage.getItem("payrolltype"));
+    var payrolldept = JSON.parse(sessionStorage.getItem("payrolldept"));
+    var payrollfromDate = sessionStorage.getItem("payrollfromDate");
+    var payrolltoDate = sessionStorage.getItem("payrolltoDate");
     const [loader, setLoader] = useState(true);
     const [logData, setLogData] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
     const [addModal, setAddModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState([]);
-    const [selectedDepartment, setSelectedDepartment] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState(payrollemp.emp);
+    const [selectedDepartment, setSelectedDepartment] = useState(payrolldept.dept);
     const [selectedType, setSelectedType] = useState({ label: "Full Month", value: "Full Month" });
-    const [fromDate, setFromDate] = useState(moment().startOf('month').format('MM/DD/yyyy'));
-    const [toDate, setToDate] = useState(moment().format('MM/DD/yyyy'));
+    const [fromDate, setFromDate] = useState(payrollfromDate);
+    const [toDate, setToDate] = useState(payrolltoDate);
     const [department, setDepartment] = useState("");
     const [totalEmployee, setTotalEmployee] = useState(0);
     const [page, setPage] = useState(0);
@@ -838,6 +843,30 @@ const Payroll = () => {
     const handleFilterDepartment = (e) => {
         setSelectedDepartment(e);
         setPage(0);
+         var dept = { "dept": e }
+        sessionStorage.setItem("payrolldept", JSON.stringify(dept));
+    }
+
+    const onSelectedEmployee = (e) => {
+        setSelectedEmployee(e);
+        var emp = { "emp": e }
+        sessionStorage.setItem("payrollemp", JSON.stringify(emp));
+    };
+
+    const onSelectedType = (e) => {
+        setSelectedType(e);
+        var type = { "type": e }
+        sessionStorage.setItem("payrolltype", JSON.stringify(type));
+    };
+
+    const onToDate = (e) => {
+        setToDate(e);
+        sessionStorage.setItem("payrolltoDate", e.toString());
+    };
+
+    const onFromDate = (e) => {
+        setFromDate(e);
+        sessionStorage.setItem("payrollfromDate", e.toString());
     }
 
     return (
@@ -858,7 +887,7 @@ const Payroll = () => {
                 <Select
                     defaultValue={selectedEmployee}
                     options={EmployeeOption(employeeOptionsList)}
-                    onChange={e => setSelectedEmployee(e)}
+                    onChange={e => onSelectedEmployee(e)}
                     placeholder='Search...'
                     isClearable
                     isMulti
@@ -908,7 +937,7 @@ const Payroll = () => {
                 size="small"
                 defaultValue={moment().format("DD/MM/yyyy")}
                 value={toDate}
-                onChange={e => setToDate(e.target.value)}
+                onChange={e => onToDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
@@ -923,7 +952,7 @@ const Payroll = () => {
                 size="small"
                 defaultValue={moment().startOf('month').format("DD/MM/yyyy")}
                 value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
+                onChange={e => onFromDate(e.target.value)}
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,
@@ -936,7 +965,7 @@ const Payroll = () => {
                 <Select
                     defaultValue={selectedType}
                     options={TypeOption()}
-                    onChange={e => setSelectedType(e)}
+                    onChange={e => onSelectedType(e)}
                     placeholder='Type'
                     theme={(theme) => ({
                         ...theme,
