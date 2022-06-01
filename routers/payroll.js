@@ -23,15 +23,23 @@ router.post("/payroll-list", async (request, response) => {
 
             var id = [];
             var dep = [];
+            var rmrks = [];
             var data = request.body.selectedEmployee;
             var paramDep = request.body.selectedDepartment;
+            var paramRmrks = request.body.selectedRemarks;
             for (const i in data) {
+                // console.log(`_id: ${request.body[i].value}`);
                 id.push({ _id: data[i].value });
             }
             for (const i in paramDep) {
                 // console.log(`_id: ${request.body[i].value}`);
                 dep.push({ department: request.body.selectedDepartment[i].value });
             }
+            for (const i in paramRmrks) {
+                // console.log(`_id: ${request.body[i].value}`);
+                rmrks.push({ remarks: request.body.selectedRemarks.value });
+            }
+
             var emp = [];
             if (Object.keys(dep).length > 0) {
                 emp = await employeeModel.find({
@@ -55,6 +63,7 @@ router.post("/payroll-list", async (request, response) => {
                 var depIn = '';
                 var depOut = '';
 
+                var totalDays = 0;
                 var totalHrsWork = 0;
                 var totalRestday = 0;
                 var totalRestdayOt = 0;
@@ -169,7 +178,7 @@ router.post("/payroll-list", async (request, response) => {
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
-                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 0;
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -282,8 +291,8 @@ router.post("/payroll-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = new Date(convertedDTI) >= new Date(convertedTI) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = new Date(convertedDTO) <= new Date(convertedTO) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(convertedLateDTI).getTime() >= new Date(convertedTI).getTime() ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedDTO).getTime() <= new Date(convertedTO).getTime() ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
@@ -322,7 +331,8 @@ router.post("/payroll-list", async (request, response) => {
                             // hoursWork = hw > 5 ? hw - 1 : hw;
                             // ot = otMins / 60;
 
-                            hoursWork = (hw + dtr[0].otHours) - 0;
+                            // hoursWork = (hw + dtr[0].otHours) - 1;
+                            hoursWork = (hw + dtr[0].otHours);
                             ot = dtr[0].otHours;
 
                             remarks = "Overtime";
@@ -338,7 +348,8 @@ router.post("/payroll-list", async (request, response) => {
 
                             var hw = hrswrk / 36e5;
 
-                            hoursWork = hw > 5 ? hw - 0 : hw;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            hoursWork = hw;
                             ot = nsecOt / 36e5;
 
                         }
@@ -452,30 +463,60 @@ router.post("/payroll-list", async (request, response) => {
                         totalOT = dtr[0].otHours ? totalOT + ot : totalOT;
                         totalUT = dtr[0].undertime ? totalUT + ut : totalUT;
                     }
-                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
-                    totalHrsWork = totalHrsWork + hoursWork;
-                    totalLate = totalLate + late;
-                    totalUT = totalUT + ut;
-                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
-                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
-                    var logs = {
-                        "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
-                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
-                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
-                        "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
-                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
-                        "dateTime": dateTime,
-                        "day": day,
-                        "hoursWork": hoursWork.toFixed(2),
-                        "late": late.toFixed(2),
-                        "UT": ut.toFixed(2),
-                        "OT": ot.toFixed(2),
-                        "remarks": remarks,
-                        "reason": reason
+                    if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
+
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
                     }
+                    if (Object.keys(rmrks).length === 0) {
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
-                    timeLogs.push(logs);
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
+                    }
 
                     theDate.setDate(theDate.getDate() + 1);
                 }
@@ -617,7 +658,13 @@ router.post("/payroll-list", async (request, response) => {
             var fromDate = params.fromDate !== "" ? params.fromDate : moment("01/01/2020", "yyyy-MM-DD");
             var toDate = params.toDate !== "" ? params.toDate : moment().format("yyyy-MM-DD");
 
+            //(page -1)
             var id = [];
+            var dep = [];
+            var rmrks = [];
+            var data = request.body.selectedDetailedLogs;
+            var paramDep = request.body.selectedDepartment;
+            var paramRmrks = request.body.selectedRemarks;
             var paramDep = request.body.selectedDepartment;
             for (const i in paramDep) {
                 id.push({ department: request.body.selectedDepartment[i].value });
@@ -687,7 +734,6 @@ router.post("/payroll-list", async (request, response) => {
                     var timeOut = "";
                     var breakOut = "";
                     var breakIn = "";
-
 
                     var dt = dateTime;
                     var nxtDay = moment(theDate, "yyyy-MM-DD").add(1, 'd');
@@ -759,7 +805,7 @@ router.post("/payroll-list", async (request, response) => {
                         }
 
                         reason = Object.keys(dtr).length !== 0 ? dtr[0].reason : "";
-                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 1;
+                        breaktime = Object.keys(dtr).length !== 0 && dtr[0].breakTime === true ? 0 : 0;
                     } else {
                         // var dt = dateTime;
                         if (dep.dayNightShift === false) {
@@ -872,16 +918,17 @@ router.post("/payroll-list", async (request, response) => {
 
                     var hoursWork = 0;
                     if (timeIn && timeOut && day !== "Sunday") {
-                        var date1 = new Date(convertedLateDTI).getTime() >= new Date(convertedTI).getTime() ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
-                        var date2 = new Date(convertedDTO).getTime() <= new Date(convertedTO).getTime() ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
+                        var date1 = new Date(convertedLateDTI) >= new Date(convertedTI) ? new Date(convertedDTI).getTime() : new Date(convertedTI).getTime();
+                        var date2 = new Date(convertedDTO) <= new Date(convertedTO) ? new Date(convertedDTO).getTime() : new Date(convertedTO).getTime();
 
                         var msec = date2 - date1;
                         var mins = Math.floor(msec / 60000);
                         // var hrs = Math.floor(mins / 60);
 
                         // var sync = moment((hrs % 24) + ":" + mins, "h:mm");
-                        var hw = Math.floor(mins / 60); //fix for labis na computation Math.floor()
-                        hoursWork = hw > 5 ? hw - 0 : hw;
+                        var hw = Math.floor(mins / 60);
+                        // hoursWork = hw > 5 ? hw - 1 : hw;
+                        hoursWork = hw;
                     }
 
                     if (timeIn && timeOut && day === "Sunday") {
@@ -912,7 +959,8 @@ router.post("/payroll-list", async (request, response) => {
                             // hoursWork = hw > 5 ? hw - 1 : hw;
                             // ot = otMins / 60;
 
-                            hoursWork = (hw + dtr[0].otHours) - 0;
+                            // hoursWork = (hw + dtr[0].otHours) - 1;
+                            hoursWork = (hw + dtr[0].otHours);
                             ot = dtr[0].otHours;
 
                             remarks = "Overtime";
@@ -928,7 +976,8 @@ router.post("/payroll-list", async (request, response) => {
 
                             var hw = hrswrk / 36e5;
 
-                            hoursWork = hw > 5 ? hw - 0 : hw;
+                            // hoursWork = hw > 5 ? hw - 1 : hw;
+                            hoursWork = hw;
                             ot = nsecOt / 36e5;
 
                         }
@@ -1043,30 +1092,59 @@ router.post("/payroll-list", async (request, response) => {
                         totalUT = dtr[0].undertime ? totalUT + ut : totalUT;
                     }
 
-                    totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
-                    totalHrsWork = totalHrsWork + hoursWork;
-                    totalLate = totalLate + late;
-                    totalUT = totalUT + ut;
-                    totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
-                    totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+                    if (Object.keys(rmrks).length > 0 && rmrks[0].remarks === remarks) {
 
-                    var logs = {
-                        "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
-                        "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
-                        "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
-                        "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
-                        "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
-                        "dateTime": dateTime,
-                        "day": day,
-                        "hoursWork": hoursWork.toFixed(2),
-                        "late": late.toFixed(2),
-                        "UT": ut.toFixed(2),
-                        "OT": ot.toFixed(2),
-                        "remarks": remarks,
-                        "reason": reason
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
+
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
                     }
+                    if (Object.keys(rmrks).length === 0) {
+                        totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
+                        totalHrsWork = totalHrsWork + hoursWork;
+                        totalLate = totalLate + late;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
+                        totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
+                        totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
-                    timeLogs.push(logs);
+                        var logs = {
+                            "timeIn": moment(timeIn, "h:mm A").format("h:mm A"),
+                            "breakOut": moment(breakOut, "h:mm A").format("h:mm A"),
+                            "breakIn": breakIn === breakOut ? "" : moment(breakIn, "h:mm A").format("h:mm A"),
+                            "timeOut": moment(timeOut, "h:mm A").format("h:mm A"),
+                            "timeStartEnd": day !== "Sunday" ? moment(depIn, "h:mm A").format("h:mm A") + " - " + moment(depOut, "h:mm A").format("h:mm A") : "",
+                            "dateTime": dateTime,
+                            "day": day,
+                            "hoursWork": hoursWork.toFixed(2),
+                            "late": late.toFixed(2),
+                            "UT": ut.toFixed(2),
+                            "OT": ot.toFixed(2),
+                            "remarks": remarks,
+                            "reason": reason
+                        }
+
+                        timeLogs.push(logs);
+                    }
 
                     theDate.setDate(theDate.getDate() + 1);
                 }
