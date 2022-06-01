@@ -629,7 +629,7 @@ router.post("/detailed-list", async (request, response) => {
                         totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                         totalHrsWork = totalHrsWork + hoursWork;
                         totalLate = totalLate + late;
-                        totalUT = totalUT + ut;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
                         totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
                         totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
@@ -655,7 +655,7 @@ router.post("/detailed-list", async (request, response) => {
                         totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                         totalHrsWork = totalHrsWork + hoursWork;
                         totalLate = totalLate + late;
-                        totalUT = totalUT + ut;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
                         totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
                         totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
@@ -1187,7 +1187,7 @@ router.post("/detailed-list", async (request, response) => {
                         totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                         totalHrsWork = totalHrsWork + hoursWork;
                         totalLate = totalLate + late;
-                        totalUT = totalUT + ut;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
                         totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
                         totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
@@ -1213,7 +1213,7 @@ router.post("/detailed-list", async (request, response) => {
                         totalDays = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" || remarks === "Rest Day" ? totalDays : totalDays + 1;
                         totalHrsWork = totalHrsWork + hoursWork;
                         totalLate = totalLate + late;
-                        totalUT = totalUT + ut;
+                        totalUT = Object.keys(dtr).length === 0 ? totalUT + ut : totalUT;
                         totalOT = remarks === "Overtime" ? totalOT + ot : totalOT;
                         totalAbsent = remarks === "Absent" || remarks === "SL w/o Pay" || remarks === "VL w/o Pay" ? totalAbsent + 1 : totalAbsent;
 
