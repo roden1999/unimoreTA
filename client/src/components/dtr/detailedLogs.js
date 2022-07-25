@@ -559,7 +559,9 @@ const DetailedLogs = () => {
 
         e.timeLogs.forEach(y => {
             var color = "";
-            if (y.remarks === "Regular Holiday" || y.remarks === "Special Holiday") color = "#7BFF66";
+            if (y.remarks === "Special Holiday") color = "#FF0C0C";
+
+            if (y.remarks === "Regular Holiday") color = "#7BFF66";
 
             if (y.remarks === "Working Regular Holiday" || y.remarks === "Working Special Holiday") color = "#20E700";
 
@@ -950,7 +952,7 @@ const DetailedLogs = () => {
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
-                                                                        style={{ backgroundColor: '#7BFF66' }}
+                                                                        style={{ backgroundColor: '#FF0C0C' }}
                                                                     />
                                                                 }
 
