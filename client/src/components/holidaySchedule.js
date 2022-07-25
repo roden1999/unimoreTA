@@ -321,6 +321,8 @@ const HolidaySchedule = () => {
         var list = [
             { label: "Regular Holiday", value: "Regular Holiday" },
             { label: "Special Holiday", value: "Special Holiday" },
+            { label: "Regular Holiday w/o Pay", value: "Regular Holiday w/o Pay" },
+            { label: "Special Holiday w/o Pay", value: "Special Holiday w/o Pay" },
             { label: "Regular Holiday Rest Day", value: "Regular Holiday Rest Day" },
             { label: "Special Holiday Rest Day", value: "Special Holiday Rest Day" },
         ];
