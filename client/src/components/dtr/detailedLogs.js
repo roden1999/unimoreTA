@@ -559,9 +559,13 @@ const DetailedLogs = () => {
 
         e.timeLogs.forEach(y => {
             var color = "";
-            if (y.remarks === "Special Holiday") color = "#FF0C0C";
+            if (y.remarks === "Special Holiday") color = "#7BFF66";
 
             if (y.remarks === "Regular Holiday") color = "#7BFF66";
+
+            if (y.remarks === "Special Holiday w/o Pay") color = "#FF0C0C";
+
+            if (y.remarks === "Regular Holiday w/o Pay") color = "#FF0C0C";
 
             if (y.remarks === "Working Regular Holiday" || y.remarks === "Working Special Holiday") color = "#20E700";
 
@@ -949,6 +953,22 @@ const DetailedLogs = () => {
                                                                 }
 
                                                                 {y.remarks === "Special Holiday" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor: '#7BFF66' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Regular Holiday w/o Pay" &&
+                                                                    <Chip
+                                                                        label={y.remarks}
+                                                                        color="default"
+                                                                        style={{ backgroundColor: '#FF0C0C' }}
+                                                                    />
+                                                                }
+
+                                                                {y.remarks === "Special Holiday w/o Pay" &&
                                                                     <Chip
                                                                         label={y.remarks}
                                                                         color="default"
