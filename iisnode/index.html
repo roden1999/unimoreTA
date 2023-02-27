@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>iisnode logs</title>
+    <style type="text/css">
+        body
+        {
+            font-family: "Trebuchet MS" , Arial, Helvetica, sans-serif;
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        td, th
+        {
+            border: 1px solid lightgray;
+            padding: 3px 7px 2px 7px;
+        }
+        th
+        {
+            text-align: left;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            background-color: Gray;
+            color: #ffffff;
+        }
+        td.stderr
+        {
+            color: Red;
+        }
+    </style>
+</head>
+<body>
+    <table id="logFilesTable">
+        <tr>
+            <th>
+                Computer name
+            </th>
+            <th>
+                PID
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Created
+            </th>
+            <th>
+                Link
+            </th>
+        </tr>
+    </table>
+    <p id="lastUpdated"></p>
+    <script type="text/javascript">
+
+        // this is replaced with actual data at runtime by code in interceptor.js
+        var logFiles = [{"file":"MAIL-10332-stderr-1677140291219.txt","computername":"MAIL","pid":10332,"type":"stderr","created":1677140291219},{"file":"MAIL-10332-stdout-1677140291216.txt","computername":"MAIL","pid":10332,"type":"stdout","created":1677140291216},{"file":"MAIL-10424-stderr-1677467892112.txt","computername":"MAIL","pid":10424,"type":"stderr","created":1677467892112},{"file":"MAIL-10424-stdout-1677467892086.txt","computername":"MAIL","pid":10424,"type":"stdout","created":1677467892086},{"file":"MAIL-10976-stderr-1677201607277.txt","computername":"MAIL","pid":10976,"type":"stderr","created":1677201607277},{"file":"MAIL-10976-stdout-1677201607269.txt","computername":"MAIL","pid":10976,"type":"stdout","created":1677201607269},{"file":"MAIL-12128-stderr-1677458976998.txt","computername":"MAIL","pid":12128,"type":"stderr","created":1677458976998},{"file":"MAIL-12128-stdout-1677458976974.txt","computername":"MAIL","pid":12128,"type":"stdout","created":1677458976974},{"file":"MAIL-13176-stderr-1677467049223.txt","computername":"MAIL","pid":13176,"type":"stderr","created":1677467049223},{"file":"MAIL-13176-stdout-1677467049218.txt","computername":"MAIL","pid":13176,"type":"stdout","created":1677467049218},{"file":"MAIL-13664-stderr-1677459172135.txt","computername":"MAIL","pid":13664,"type":"stderr","created":1677459172135},{"file":"MAIL-13664-stdout-1677459172129.txt","computername":"MAIL","pid":13664,"type":"stdout","created":1677459172129},{"file":"MAIL-4944-stderr-1677462018391.txt","computername":"MAIL","pid":4944,"type":"stderr","created":1677462018391},{"file":"MAIL-4944-stdout-1677462018384.txt","computername":"MAIL","pid":4944,"type":"stdout","created":1677462018384},{"file":"MAIL-4944-stdout-1677464253893.txt","computername":"MAIL","pid":4944,"type":"stdout","created":1677464253893},{"file":"MAIL-4944-stdout-1677464640684.txt","computername":"MAIL","pid":4944,"type":"stdout","created":1677464640684},{"file":"MAIL-5156-stderr-1677467057026.txt","computername":"MAIL","pid":5156,"type":"stderr","created":1677467057026},{"file":"MAIL-5156-stdout-1677467057017.txt","computername":"MAIL","pid":5156,"type":"stdout","created":1677467057017},{"file":"MAIL-52-stderr-1677140381929.txt","computername":"MAIL","pid":52,"type":"stderr","created":1677140381929},{"file":"MAIL-52-stdout-1677140381926.txt","computername":"MAIL","pid":52,"type":"stdout","created":1677140381926},{"file":"MAIL-5300-stderr-1677466862479.txt","computername":"MAIL","pid":5300,"type":"stderr","created":1677466862479},{"file":"MAIL-5300-stdout-1677466862475.txt","computername":"MAIL","pid":5300,"type":"stdout","created":1677466862475},{"file":"MAIL-7220-stderr-1677135512466.txt","computername":"MAIL","pid":7220,"type":"stderr","created":1677135512466},{"file":"MAIL-7220-stdout-1677135512459.txt","computername":"MAIL","pid":7220,"type":"stdout","created":1677135512459},{"file":"MAIL-7292-stderr-1677467704492.txt","computername":"MAIL","pid":7292,"type":"stderr","created":1677467704492},{"file":"MAIL-7292-stdout-1677467704467.txt","computername":"MAIL","pid":7292,"type":"stdout","created":1677467704467},{"file":"MAIL-9292-stderr-1677203654050.txt","computername":"MAIL","pid":9292,"type":"stderr","created":1677203654050},{"file":"MAIL-9292-stdout-1677203654045.txt","computername":"MAIL","pid":9292,"type":"stdout","created":1677203654045}];
+        var lastUpdated = 1677467893935;
+        var date = new Date();
+
+        date.setTime(lastUpdated);
+        document.getElementById('lastUpdated').innerHTML = 'Index was last updated ' + date;
+
+        logFiles.sort(function (a, b) {
+            return b.created - a.created;
+        });
+
+        var logFilesTable = document.getElementById("logFilesTable");
+        for (var i = 0; i < logFiles.length; i++) {
+            var logFile = logFiles[i];
+            date.setTime(logFile.created);
+            var row = logFilesTable.insertRow(-1);
+            var computerNameCell = row.insertCell(0);
+            var pidCell = row.insertCell(1);
+            var typeCell = row.insertCell(2);
+            var dateCell = row.insertCell(3);
+            var logCell = row.insertCell(4);
+            computerNameCell.innerHTML = logFile.computername;
+            pidCell.innerHTML = logFile.pid.toString();
+            typeCell.innerHTML = logFile.type;
+            typeCell.setAttribute('class', logFile.type);
+            dateCell.innerHTML = date.toString();
+            logCell.innerHTML = '<a href="' + logFile.file + '">log</a>';
+        };
+
+    </script>
+</body>
+</html>

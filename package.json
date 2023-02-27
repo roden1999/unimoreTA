@@ -2,7 +2,7 @@
   "name": "utta",
   "version": "1.0.0",
   "description": "Time & Attendance",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm run build",
