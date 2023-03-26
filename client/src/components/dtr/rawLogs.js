@@ -21,7 +21,7 @@ import Chip from '@material-ui/core/Chip';
 import Input from '@material-ui/core/Input';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
-import { Save, Edit, Delete, Add } from '@material-ui/icons/';
+import { Save, Edit, Delete, Add, Print } from '@material-ui/icons/';
 import { useSpring, animated } from 'react-spring/web.cjs';
 import Select from 'react-select';
 import Portal from '@material-ui/core/Portal';
@@ -30,6 +30,12 @@ import 'react-toastify/dist/ReactToastify.css'
 import { TextField } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone'
 import XLSX from "xlsx";
+
+//import pdfmake
+import pdfMake from 'pdfmake/build/pdfmake.js';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const axios = require("axios");
 const moment = require("moment");
@@ -171,6 +177,7 @@ const RawLogs = () => {
     var rawStoDate = sessionStorage.getItem("rawStoDate");
     const [loader, setLoader] = useState(true);
     const [logData, setLogData] = useState(null);
+    const [printData, setPrintData] = useState(null);
     const [departmentOptions, setDepartmentOptions] = useState(null);
     const [employeeOptions, setEmployeeOptions] = useState(null);
     const [id, setId] = useState(-1);
@@ -234,8 +241,52 @@ const RawLogs = () => {
             });
     }, [selectedEmployee, fromDate, toDate, page, loader]);
 
+    useEffect(() => {
+        var data = {
+            selectedLogs: !selectedEmployee ? [] : selectedEmployee,
+            fromDate: fromDate,
+            toDate: toDate,
+        };
+        var route = "timeLogs/print-raw-list";
+        var url = window.apihost + route;
+        // var token = sessionStorage.getItem("auth-token");
+        // const user = JSON.parse(sessionStorage.getItem('user'));
+        axios
+            .post(url, data)
+            .then(function (response) {
+                // handle success
+                if (Array.isArray(response.data)) {
+                    setPrintData(response.data);
+                    setLoader(false);
+                } else {
+                    var obj = [];
+                    obj.push(response.data);
+                    setPrintData(obj);
+                    setLoader(false);
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+                setLoader(false);
+            })
+            .finally(function () {
+                // always executed
+            });
+    }, [selectedEmployee, fromDate, toDate, page, loader]);
+
     const logList = logData
         ? logData.map((x) => ({
+            id: x._id,
+            employeeNo: x.employeeNo,
+            employeeName: x.employeeName,
+            timeInOut: x.timeInOut,
+            dateTime: x.dateTime
+        }))
+        : [];
+
+    const printList = printData
+        ? printData.map((x) => ({
             id: x._id,
             employeeNo: x.employeeNo,
             employeeName: x.employeeName,
@@ -425,6 +476,96 @@ const RawLogs = () => {
         sessionStorage.setItem("rawSfromDate", e.toString());
     }
 
+    const exportToPDF = (e) => {
+        const document = {
+            content: [
+                { image: 'unimore', width: 210, height: 60, alignment: "center" },
+                {
+                    columns: [
+                        [
+                            { text: "UNIMORE TRADING CORPORATION", fontSize: 10, bold: true, lineHeight: 2 },
+                            { text: "Raw Logs Copy (Biometrics Data)", fontSize: 10, bold: true, lineHeight: 2, },
+                        ],
+                        [
+                            { text: "Date/Time Printed: " + moment().format("MM/DD/yyy hh:mm A"), fontSize: 10, bold: true, lineHeight: 2, },
+                            { text: "Date Range: " + moment(fromDate).format("MM/DD/yyy").toString() + " - " + moment(toDate).format("MM/DD/yyyy").toString(), fontSize: 10, bold: true, lineHeight: 2, },
+                        ]
+                    ]
+                },
+            ],
+            images: {
+                unimore: 'https://i.ibb.co/mTwt2jt/unimore-logo-back-black.png'
+            }
+        }
+        document.content.push({
+            // layout: 'lightHorizontalLines',
+            table: {
+                headerRows: 1,
+                widths: [80, 160, 60, 60, 100],
+                body: [
+                    //Data
+                    //Header
+                    [
+                        { text: 'Employee No.', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Employee Name', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Mode | In/Out', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Time', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                        { text: 'Date', bold: true, fontSize: 9, alignment: "center", fillColor: '#C8C9CA' },
+                    ],
+                ]
+            },
+        });
+
+        e.map(y => {
+            var color = "";
+
+            document.content.push({
+                // layout: 'lightHorizontalLines',
+                table: {
+                    headerRows: 1,
+                    widths: [80, 160, 60, 60, 100],
+                    body: [
+                        //Data
+                        [
+                            { text: y.employeeNo, fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.employeeName, fontSize: 7, alignment: "center", fillColor: color },
+                            { text: y.timeInOut === "S" ? "Time In" : "Time Out", fontSize: 7, alignment: "center", color: y.timeInOut === "S" ? "blue" : "red", fillColor: color },
+                            { text: moment(y.dateTime).format("hh:mm A").toString(), fontSize: 7, alignment: "center", fillColor: color },
+                            { text: moment(y.dateTime).format("MMM DD, yyyy").toString(), fontSize: 7, alignment: "center", fillColor: color },
+                        ],
+                    ],
+                    lineHeight: 2
+                },
+            });
+        });
+
+        pdfMake.tableLayouts = {
+            exampleLayout: {
+                hLineWidth: function (i, node) {
+                    if (i === 0 || i === node.table.body.length) {
+                        return 0;
+                    }
+                    return (i === node.table.headerRows) ? 2 : 1;
+                },
+                vLineWidth: function (i) {
+                    return 0;
+                },
+                hLineColor: function (i) {
+                    return i === 1 ? 'black' : '#aaa';
+                },
+                paddingLeft: function (i) {
+                    return i === 0 ? 0 : 8;
+                },
+                paddingRight: function (i, node) {
+                    return (i === node.table.widths.length - 1) ? 0 : 8;
+                }
+            }
+        };
+
+        // pdfMake.createPdf(document).download();
+        pdfMake.createPdf(document).print({}, window.frames['printPdf']);
+    }
+
     return (
         <div className={classes.root}>
             <Portal>
@@ -496,6 +637,15 @@ const RawLogs = () => {
                 }}
                 style={{ float: 'right', marginRight: 10 }}
             />
+
+            <Button
+                size="large"
+                style={{ float: 'right', marginRight: 10 }}
+                variant="contained"
+                color="default"
+                startIcon={<Print />}
+                disabled={role === "Administrator" || role === "Device Manager" ? false : true}
+                onClick={() => exportToPDF(printList)}>Print Raw Logs</Button>
 
             <div style={{ padding: 10, backgroundColor: '#F4F4F4', marginTop: 60, height: '100', minHeight: '68vh', maxHeight: '68vh', overFlowY: 'auto' }}>
                 <TableContainer className={classes.tbcontainer}>

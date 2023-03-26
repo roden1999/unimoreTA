@@ -161,7 +161,7 @@ function Main(props) {
 
             <Divider />
 
-            {role === "Administrator" || role === "HR" ?
+            {/*role === "Administrator" || role === "HR" ?
                 <List>
                     <List>
                         <ListItem button onClick={() => handlePage("Payroll")}>
@@ -175,7 +175,7 @@ function Main(props) {
                     </List>
                 </List> :
                 <></>
-            }
+            */}
 
             <Divider />
 
@@ -295,13 +295,13 @@ function Main(props) {
                     <HolidaySchedule />
                 }
 
-                {pageName === "Salary & Deductions" && role === "Administrator" || pageName === "Salary & Deductions" && role === "HR" ?
+                {/*pageName === "Salary & Deductions" && role === "Administrator" || pageName === "Salary & Deductions" && role === "HR" ?
                     <SalaryAndDeduction /> : <></>
-                }
+                */}
 
-                {pageName === "Payroll" && role === "Administrator" || pageName === "Payroll" && role === "HR" ?
+                {/*pageName === "Payroll" && role === "Administrator" || pageName === "Payroll" && role === "HR" ?
                     <Payroll /> : <></>
-                }
+                */}
 
                 {pageName === "Users" && role === "Administrator" &&
                     <User />
