@@ -28,13 +28,13 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { Save, Edit, Delete, Add, PictureAsPdf, Print } from '@material-ui/icons/';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { useSpring, animated } from 'react-spring';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { TextField } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone'
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 //import pdfmake
 import pdfMake from 'pdfmake/build/pdfmake.js';

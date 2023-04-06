@@ -1,2 +1,3 @@
 # .gitignore
 node_modules
+app_data/importedfiles/

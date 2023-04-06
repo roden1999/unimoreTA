@@ -12,7 +12,7 @@ import { Save, Edit, Delete, Add } from '@material-ui/icons/';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { useSpring, animated } from 'react-spring';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
 import { TextField } from '@material-ui/core';

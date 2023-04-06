@@ -13,6 +13,7 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/pickers": "^3.3.10",
     "@material-ui/styles": "^4.11.4",
+    "@react-spring/web": "^9.7.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -24,13 +25,13 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-loader-spinner": "^4.0.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "react-select": "^4.3.0",
     "react-spring": "^9.1.2",
     "react-swipeable-views": "^0.13.9",
     "react-toastify": "^7.0.3",
     "web-vitals": "^1.0.1",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -12,7 +12,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FilledInput from '@material-ui/core/FilledInput';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { useSpring, animated } from 'react-spring';
 import 'react-toastify/dist/ReactToastify.css'
 import { TextField } from '@material-ui/core';
 

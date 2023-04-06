@@ -28,7 +28,7 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { Save, Edit, Delete, Add } from '@material-ui/icons/';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { useSpring, animated } from 'react-spring';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'

@@ -16,7 +16,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import { Save, Edit, Delete, Add } from '@material-ui/icons/';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { useSpring, animated } from 'react-spring';
+// import { useSpring, animated } from 'react-spring/web.cjs';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
