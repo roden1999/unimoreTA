@@ -15,7 +15,7 @@ import Input from '@material-ui/core/Input';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import { Save, Edit, Delete, Add } from '@material-ui/icons/';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { useSpring, animated } from 'react-spring';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -553,19 +553,15 @@ const Employee = () => {
     axios
       .delete(url, {
         headers: { "auth-token": token },
-      })
-      .then(function (response) {
+      }).then(function (response) {
         // handle success
-        if (response.status <= 200) {
-          toast.success('Employee successfully deleted.', {
-            position: "top-center"
-          })
-          setId(-1);
-          setLoader(false);
-          setDeletePopup(false);
-        }
-      })
-      .catch((err) => {
+        toast.success('Employee successfully deleted.', {
+          position: "top-center"
+        })
+        setId(-1);
+        setLoader(false);
+        setDeletePopup(false);
+      }).catch((err) => {
         if (err.response.status === 400) {
           const error = {
             status: err.response.status,

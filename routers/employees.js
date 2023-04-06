@@ -218,7 +218,7 @@ router.delete("/:id", async (request, response) => {
 		const employee = await employeeModel.findById(request.params.id);
 		const updates = { IsDeleted: true };
 		const options = { new: true };
-		const deletedDept = await employeeModel.findByIdAndUpdate(
+		const deletedEmployee = await employeeModel.findByIdAndUpdate(
 			employee,
 			updates,
 			options
