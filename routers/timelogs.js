@@ -9,7 +9,90 @@ const holidaySchedule = require("../models/holidaySchedule");
 const fs = require('fs');
 const xlsxFile = require('read-excel-file/node');
 const moment = require('moment');
+const XLSX = require('xlsx');
+
 // const { registrationValidation } = require("../utils/validation");
+
+router.post("/uploadxls", async (request, response) => {
+    try {
+        if (request.files == null) {
+            return response.status(400).json({ msg: 'No file uploaded: Please Upload an excel file!' });
+        }
+
+        const file = request.files.file;
+        const fileName = file.name;
+
+        file.mv(`${__dirname}/../app_data/importedfiles/${fileName}`, async err => {
+            if (err) {
+                console.error(err);
+                response.status(500).json({ error: error.message });
+            }
+
+            //response.json({ fileName: file.name, filePath: `/importedfiles/${fileName}`});
+            console.log(`${fileName} File Uploaded`);
+
+            const wb = XLSX.readFile(`${__dirname}/../app_data/importedfiles/${fileName}`);
+            var sheet_name_list = wb.SheetNames[0];
+            var jsonFromExcel = XLSX.utils.sheet_to_csv(wb.Sheets[sheet_name_list], {
+                raw: false,
+                dateNF: "MM-DD-YYYY",
+                header: 1,
+                defval: ""
+            })
+            var lines = jsonFromExcel.split("\n");
+
+            var result = [];
+
+            var headers = lines[0].split(",");
+
+            for (var i = 1; i < lines.length; i++) {
+                var obj = {};
+                var currentline = lines[i].split(",");
+
+                for (var j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentline[j];
+                }
+
+                if (obj.EnNo && obj.DaiGong) {
+                    result.push(obj);
+                }
+            }
+
+            if (Object.keys(result).length > 0) {
+                var id = [];
+                var data = result;
+                for (const i in data) {
+                    if (!data[i].EnNo && !data[i].DaiGong) response.status(400).json({ error: `The file you are trying to import can't be read. Are you sure this is the correct file?` });
+
+                    const employees = await employeeModel.findOne({ employeeNo: data[i].EnNo });
+                    const dateTime = moment(data[i].DaiGong);
+
+                    console.log(moment(dateTime).format("MM-DD-yyyy h:mm A"));
+                    var dateValidation = moment(dateTime).format("MM-DD-yyyy h:mm A").toString();
+                    if (dateValidation == "Invalid date") {
+                        response.status(400).json({ error: `Invalid Date in line: ${(parseInt(i) + 1).toString()}` });
+                    }
+
+                    const timelogs = new timeLogsModel({
+                        employeeNo: data[i].EnNo,
+                        timeInOut: data[i].Mode,
+                        dateTime: moment(dateTime).format("MM-DD-yyyy h:mm A"),
+                        employeeName: !employees ? "" : employees.firstName + " " + employees.middleName + " " + employees.lastName,
+                        remarks: "",
+                        reason: "",
+                    });
+                    const logs = await timelogs.save();
+                }
+                response.status(200).json({ logs: "Logs successfully imported." });
+            }
+
+            if (Object.keys(result).length === 0) response.status(400).json({ error: 'Please select file before importing!' });
+
+        });
+    } catch (err) {
+        response.status(500).json({ error: err.message });
+    }
+})
 
 //Import attendance to the database
 router.post("/import", async (request, response) => {

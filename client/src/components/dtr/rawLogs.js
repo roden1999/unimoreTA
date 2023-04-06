@@ -22,14 +22,14 @@ import Input from '@material-ui/core/Input';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import { Save, Edit, Delete, Add, Print } from '@material-ui/icons/';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { useSpring, animated } from 'react-spring';
 import Select from 'react-select';
 import Portal from '@material-ui/core/Portal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { TextField } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone'
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 //import pdfmake
 import pdfMake from 'pdfmake/build/pdfmake.js';
@@ -456,6 +456,45 @@ const RawLogs = () => {
         reader.readAsBinaryString(selectedFile);
     }
 
+    const handleUploadXlsFile = (e) => {
+        const formData = new FormData();
+        formData.append('file', e[0]);
+
+        var route = `timeLogs/uploadxls`;
+        var url = window.apihost + route;
+        var token = sessionStorage.getItem("auth-token");
+
+        setLoader(true);
+
+        axios
+            .post(url, formData, {
+                headers: {
+                    'access-control-allow-origin': '*',
+                    'accept': 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                    'auth-token': token,
+                },
+            })
+            .then(function (response) {
+                // handle success
+                toast.success(response.data.logs, {
+                    position: "top-center"
+                });
+                setAddModal(false);
+                setLoader(false);
+            })
+            .catch(function (error) {
+                // handle error
+                toast.error(JSON.stringify(error.response.data), {
+                    position: "top-center"
+                });
+                setLoader(false);
+            })
+            .finally(function () {
+                // always executed
+            });
+    }
+
     const handleCloseAddModal = () => {
         setAddModal(false);
     }
@@ -725,7 +764,8 @@ const RawLogs = () => {
             <DropzoneDialog
                 open={addModal}
                 // onSave={this.handleSave.bind(this)}
-                onSave={e => handleImportLogs(e)}
+                // onSave={e => handleImportLogs(e)}
+                onSave={e => handleUploadXlsFile(e)}
                 // acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
                 acceptedFiles={['.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel']}
                 showPreviews={true}

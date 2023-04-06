@@ -2,14 +2,19 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const connectToMongodb = require("./utils/connectToMongodb");
+const fileUpload = require('express-fileupload');
 const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
+const savePath = require('path').join(__dirname, '/app_data');
 const { PORT } = require("./config");
 
 connectToMongodb();
 
 app.use(express.json());
+
+app.use(fileUpload());
+
 app.use(cors());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
